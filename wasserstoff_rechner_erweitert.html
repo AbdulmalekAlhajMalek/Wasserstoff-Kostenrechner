@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasserstoff-Kostenrechner - Erweiterte Version</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        /* Tab-Styling */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .tab-button:hover {
+            background: #d0d0d0;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        small {
+            display: block;
+            margin-top: 3px;
+            color: #777;
+            font-size: 0.8em;
+        }
+
+        .calculate-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .calculate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .results-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item.total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .result-label {
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .result-item.total .result-value {
+            color: white;
+        }
+
+        .summary-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .summary-value.highlight {
+            font-size: 1.5em;
+            color: #764ba2;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            height: 500px;
+        }
+
+        #resultsSection {
+            display: none;
+        }
+
+        #resultsSection.show {
+            display: block;
+        }
+
+        /* Info Icon Tooltip Styles */
+        .info-icon {
+            display: inline-block;
+            margin-left: 5px;
+            color: #667eea;
+            cursor: help;
+            font-size: 0.9em;
+            position: relative;
+        }
+
+        .info-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 20px;
+            top: 0;
+            background: #ffffe0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px 12px;
+            white-space: normal;
+            width: 300px;
+            z-index: 1000;
+            font-size: 0.85em;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        .section-header {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .optional-section {
+            font-style: italic;
+            color: #777;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 Wasserstoff-Kostenrechner - Erweiterte Version</h1>
+            <p class="subtitle">Berechnung aller Kostenkomponenten für Wasserstoffproduktion</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Eingabeparameter</h2>
+                
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-button active" onclick="showTab(0)">1. Produktion</button>
+                    <button class="tab-button" onclick="showTab(1)">2. Windpark</button>
+                    <button class="tab-button" onclick="showTab(2)">3. Elektrolyse</button>
+                    <button class="tab-button" onclick="showTab(3)">4. Ammoniak</button>
+                    <button class="tab-button" onclick="showTab(4)">5. Transport</button>
+                    <button class="tab-button" onclick="showTab(5)">6. Cracking</button>
+                    <button class="tab-button" onclick="showTab(6)">7. Sonstiges</button>
+                </div>
+
+                <!-- Tab 1: Produktion -->
+                <div class="tab-content active" id="tab0">
+                    <div class="form-group">
+                        <label for="zielproduktion_kt">Zielproduktion (kt H₂/Jahr)
+                            <span class="info-icon" data-tooltip="Zielproduktion in Kilotonnen Wasserstoff pro Jahr. Aus der Präsentation: 110 kt H₂/a.">ℹ️</span>
+                        </label>
+                        <input type="number" id="zielproduktion_kt" step="0.1" value="110" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="energiebedarf_twh_a">Elektrischer Energiebedarf (TWh/a)
+                            <span class="info-icon" data-tooltip="Gesamter elektrischer Energiebedarf in Terawattstunden pro Jahr. Aus der Präsentation: 5,5 TWh/a.">ℹ️</span>
+                        </label>
+                        <input type="number" id="energiebedarf_twh_a" step="0.1" value="5.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="strombedarf_kwh_kg">Spezifischer Strombedarf (kWh/kg H₂)
+                            <span class="info-icon" data-tooltip="Spezifischer Strombedarf für die Elektrolyse in kWh pro kg H₂. Typischer Wert: 50 kWh/kg H₂.">ℹ️</span>
+                        </label>
+                        <input type="number" id="strombedarf_kwh_kg" step="0.1" value="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usd_zu_eur_kurs">USD zu EUR Kurs
+                            <span class="info-icon" data-tooltip="Wechselkurs für die Umrechnung von USD zu EUR. Standard: 0.92 (1 USD = 0.92 EUR).">ℹ️</span>
+                        </label>
+                        <input type="number" id="usd_zu_eur_kurs" step="0.01" value="0.92" required>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Windpark -->
+                <div class="tab-content" id="tab1">
+                    <div class="form-group">
+                        <label for="anzahl_turbinen">Anzahl Windkraftanlagen
+                            <span class="info-icon" data-tooltip="Anzahl der Offshore-Windkraftanlagen. Aus der Präsentation: 240 Turbinen.">ℹ️</span>
+                        </label>
+                        <input type="number" id="anzahl_turbinen" step="1" value="240" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="windpark_leistung_gw">Installierte Gesamtleistung (GW)
+                            <span class="info-icon" data-tooltip="Installierte Gesamtleistung des Windparks in Gigawatt. Aus der Präsentation: 2,4 GW.">ℹ️</span>
+                        </label>
+                        <input type="number" id="windpark_leistung_gw" step="0.1" value="2.4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kapazitaetsfaktor_prozent">Kapazitätsfaktor (%)
+                            <span class="info-icon" data-tooltip="Kapazitätsfaktor des Windparks in Prozent. Aus der Präsentation: ≈51%.">ℹ️</span>
+                        </label>
+                        <input type="number" id="kapazitaetsfaktor_prozent" step="0.1" value="51" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="windpark_opex_jaehrlich_mio_usd">Jährliche OpEx Windpark (Mio USD/a)
+                            <span class="info-icon" data-tooltip="Jährliche Betriebskosten (OpEx) des Windparks in Millionen USD. Aus der Präsentation: 229,5 Mio. USD/a.">ℹ️</span>
+                        </label>
+                        <input type="number" id="windpark_opex_jaehrlich_mio_usd" step="0.1" value="229.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="windpark_capex_25j_mrd_usd">Gesamtkosten über 25 Jahre (Mrd USD)
+                            <span class="info-icon" data-tooltip="Gesamtkosten (CapEx) des Windparks über 25 Jahre in Milliarden USD. Aus der Präsentation: 5,74 Mrd. USD.">ℹ️</span>
+                        </label>
+                        <input type="number" id="windpark_capex_25j_mrd_usd" step="0.01" value="5.74" required>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Elektrolyse -->
+                <div class="tab-content" id="tab2">
+                    <div class="section-header">Variable Kosten:</div>
+                    <div class="form-group">
+                        <label for="strompreis_eur_kwh">Strompreis (EUR/kWh) *
+                            <span class="info-icon" data-tooltip="KRITISCH: LCOE (Levelized Cost of Energy) oder Strompreis in EUR/kWh. Wichtigster Parameter für variable Kosten. Berechnung: Stromkosten pro kg = Strombedarf (kWh/kg) × Strompreis (EUR/kWh).">ℹ️</span>
+                        </label>
+                        <input type="number" id="strompreis_eur_kwh" step="0.001" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lcoe_eur_kwh">oder LCOE (EUR/kWh)
+                            <span class="info-icon" data-tooltip="Alternative zu strompreis_eur_kwh: Levelized Cost of Energy in EUR/kWh. Stromkosten aus erneuerbarer Energiequelle (Offshore-Wind).">ℹ️</span>
+                        </label>
+                        <input type="number" id="lcoe_eur_kwh" step="0.001" value="0" required>
+                    </div>
+                    
+                    <div class="section-header">CapEx (Investition):</div>
+                    <div class="form-group">
+                        <label for="elektrolyseur_leistung_mw">Elektrolyseur-Leistung (MW)
+                            <span class="info-icon" data-tooltip="Leistung des Elektrolyseurs in Megawatt. Aus der Präsentation: ca. 630 MW bei 8760 h/a. Technologie: PEM-Elektrolyseur.">ℹ️</span>
+                        </label>
+                        <input type="number" id="elektrolyseur_leistung_mw" step="1" value="630" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="elektrolyse_capex_mio_eur">CAPEX Elektrolyse (Mio EUR)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für die Elektrolyseanlage in Millionen EUR. Falls 0: automatische Schätzung basierend auf Leistung (ca. 1000 EUR/kW).">ℹ️</span>
+                        </label>
+                        <input type="number" id="elektrolyse_capex_mio_eur" step="0.1" value="0" required>
+                        <small>0 = automatische Schätzung</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="elektrolyse_nutzungsdauer_jahre">Nutzungsdauer Elektrolyse (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Elektrolyseanlage in Jahren für die Amortisation. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="elektrolyse_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    
+                    <div class="section-header">OpEx (Betriebskosten):</div>
+                    <div class="form-group">
+                        <label for="elektrolyse_opex_mio_eur_a">OpEx Elektrolyse (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Betriebskosten (OpEx) für die Elektrolyseanlage in Millionen EUR pro Jahr. Enthält Wartung, Personal, etc.">ℹ️</span>
+                        </label>
+                        <input type="number" id="elektrolyse_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="elektrolyse_opex_prozent_capex">oder OpEx (% vom CapEx)
+                            <span class="info-icon" data-tooltip="Alternative zu elektrolyse_opex_mio_eur_a: OpEx als Prozentsatz des CapEx pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="elektrolyse_opex_prozent_capex" step="0.1" value="0" required>
+                    </div>
+                    
+                    <div class="section-header">Wasseraufbereitung:</div>
+                    <div class="form-group">
+                        <label for="wasserbedarf_l_h">Wasserbedarf (Liter/Stunde)
+                            <span class="info-icon" data-tooltip="Wasserbedarf in Litern pro Stunde. Aus der Präsentation: ca. 125.000 Liter pro Stunde. Wasserquelle: Meerwasser mit Umkehrosmose.">ℹ️</span>
+                        </label>
+                        <input type="number" id="wasserbedarf_l_h" step="1000" value="125000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wasseraufbereitung_capex_mio_eur">CAPEX Wasseraufbereitung (Mio EUR)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für die Wasseraufbereitungsanlage in Millionen EUR.">ℹ️</span>
+                        </label>
+                        <input type="number" id="wasseraufbereitung_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wasseraufbereitung_nutzungsdauer_jahre">Nutzungsdauer Wasseraufbereitung (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Wasseraufbereitungsanlage in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="wasseraufbereitung_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wasseraufbereitung_opex_mio_eur_a">OpEx Wasseraufbereitung (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Betriebskosten (OpEx) für die Wasseraufbereitung in Millionen EUR pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="wasseraufbereitung_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wasserpreis_eur_m3">oder Wasserpreis (EUR/m³)
+                            <span class="info-icon" data-tooltip="Alternative zu OpEx: Wasserpreis in EUR pro m³. Berechnung: Wasserkosten pro kg = (Wasserbedarf m³/kg) × (Wasserpreis EUR/m³).">ℹ️</span>
+                        </label>
+                        <input type="number" id="wasserpreis_eur_m3" step="0.01" value="0" required>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Ammoniak -->
+                <div class="tab-content" id="tab3">
+                    <div class="form-group">
+                        <label for="nh3_bedarf_kt">NH₃-Bedarf (kt NH₃/Jahr)
+                            <span class="info-icon" data-tooltip="NH₃-Bedarf inkl. Verluste in Kilotonnen pro Jahr. Aus der Präsentation: 687 kt NH₃ pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="nh3_bedarf_kt" step="0.1" value="687" required>
+                    </div>
+                    
+                    <div class="section-header">Haber-Bosch (Ammoniaksynthese):</div>
+                    <div class="form-group">
+                        <label for="haber_bosch_leistung_mw">Leistung (MW) [optional]
+                            <span class="info-icon" data-tooltip="OPTIONAL: Haber-Bosch Leistung in MW. Nur nötig wenn CapEx über Leistung skaliert wird. Referenz: 100 MW ≈ 25 Mio. USD, 1 GW ≈ 125 Mio. USD.">ℹ️</span>
+                        </label>
+                        <input type="number" id="haber_bosch_leistung_mw" step="1" value="0" required>
+                        <small>0 = automatische Schätzung</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="haber_bosch_capex_mio_usd">CAPEX Haber-Bosch (Mio USD)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für die Haber-Bosch-Anlage in Millionen USD. Falls 0: automatische Schätzung basierend auf Leistung.">ℹ️</span>
+                        </label>
+                        <input type="number" id="haber_bosch_capex_mio_usd" step="0.1" value="0" required>
+                        <small>0 = automatische Schätzung</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="haber_bosch_nutzungsdauer_jahre">Nutzungsdauer Haber-Bosch (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Haber-Bosch-Anlage in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="haber_bosch_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="haber_bosch_opex_mio_eur_a">OpEx Haber-Bosch (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Betriebskosten (OpEx) für Haber-Bosch in Millionen EUR pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="haber_bosch_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="haber_bosch_strombedarf_gwh_a">oder Strombedarf (GWh/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährlicher Strombedarf für Haber-Bosch in GWh/a. OpEx überwiegend Stromkosten (aus Windpark gedeckt).">ℹ️</span>
+                        </label>
+                        <input type="number" id="haber_bosch_strombedarf_gwh_a" step="0.1" value="0" required>
+                    </div>
+                    
+                    <div class="section-header">ASU (Stickstoffbereitstellung):</div>
+                    <div class="form-group">
+                        <label for="asu_kapazitaet_t_n2_tag">ASU-Kapazität (t N₂/Tag)
+                            <span class="info-icon" data-tooltip="ASU-Kapazität in Tonnen N₂ pro Tag. Aus der Präsentation: 1550 t N₂ pro Tag.">ℹ️</span>
+                        </label>
+                        <input type="number" id="asu_kapazitaet_t_n2_tag" step="0.1" value="1550" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asu_capex_mio_usd">CAPEX ASU (Mio USD)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für die ASU-Anlage in Millionen USD. Aus der Präsentation: ≈200 Mio. USD.">ℹ️</span>
+                        </label>
+                        <input type="number" id="asu_capex_mio_usd" step="0.1" value="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asu_nutzungsdauer_jahre">Nutzungsdauer ASU (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der ASU-Anlage in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="asu_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asu_opex_mio_eur_a">OpEx ASU (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Betriebskosten (OpEx) für ASU in Millionen EUR pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="asu_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asu_strombedarf_kwh_t_n2">oder Strombedarf (kWh/t N₂)
+                            <span class="info-icon" data-tooltip="NEU: Spezifischer Strombedarf für ASU in kWh pro t N₂. Alternative zu OpEx.">ℹ️</span>
+                        </label>
+                        <input type="number" id="asu_strombedarf_kwh_t_n2" step="0.1" value="0" required>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Transport -->
+                <div class="tab-content" id="tab4">
+                    <div class="form-group">
+                        <label for="transport_distanz_km">Transportdistanz (km)
+                            <span class="info-icon" data-tooltip="Transportdistanz in Kilometern. Aus der Präsentation: ca. 13.000 km (Montevideo → Hamburg/Rotterdam → Köln).">ℹ️</span>
+                        </label>
+                        <input type="number" id="transport_distanz_km" step="100" value="13000" required>
+                    </div>
+                    
+                    <div class="section-header">NH₃-Terminal:</div>
+                    <div class="form-group">
+                        <label for="nh3_terminal_capex_mio_eur">CAPEX Terminal (Mio EUR)
+                            <span class="info-icon" data-tooltip="NEU: Investitionskosten (CapEx) für NH₃-Terminals (Export + Import) in Millionen EUR.">ℹ️</span>
+                        </label>
+                        <input type="number" id="nh3_terminal_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nh3_terminal_nutzungsdauer_jahre">Nutzungsdauer Terminal (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Terminal-Infrastruktur in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="nh3_terminal_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nh3_terminal_opex_mio_eur_a">OpEx Terminal (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Betriebskosten (OpEx) für NH₃-Terminals in Millionen EUR pro Jahr.">ℹ️</span>
+                        </label>
+                        <input type="number" id="nh3_terminal_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    
+                    <div class="section-header">Schiffe:</div>
+                    <div class="form-group">
+                        <label for="schiffe_capex_mio_eur">CAPEX Schiffe (Mio EUR)
+                            <span class="info-icon" data-tooltip="NEU: Investitionskosten (CapEx) für NH₃-Tanker in Millionen EUR. Alternative: Charter-OpEx verwenden.">ℹ️</span>
+                        </label>
+                        <input type="number" id="schiffe_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="schiffe_nutzungsdauer_jahre">Nutzungsdauer Schiffe (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Schiffe in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="schiffe_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="charter_opex_mio_eur_a">oder Charter OpEx (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Charterkosten (OpEx) für NH₃-Tanker in Millionen EUR pro Jahr. Alternative zu Schiffs-CapEx.">ℹ️</span>
+                        </label>
+                        <input type="number" id="charter_opex_mio_eur_a" step="0.1" value="0" required>
+                    </div>
+                    
+                    <div class="section-header">Lager:</div>
+                    <div class="form-group">
+                        <label for="lager_tanks_capex_mio_eur">CAPEX Lager Tanks (Mio EUR)
+                            <span class="info-icon" data-tooltip="NEU: Investitionskosten (CapEx) für NH₃-Speichertanks im Hafen in Millionen EUR.">ℹ️</span>
+                        </label>
+                        <input type="number" id="lager_tanks_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lager_tanks_nutzungsdauer_jahre">Nutzungsdauer Lager (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Lager-Tanks in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="lager_tanks_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    
+                    <div class="optional-section">Optional (nur für Info):</div>
+                    <div class="form-group">
+                        <label for="transport_dauer_tage">Transportdauer (Tage)
+                            <span class="info-icon" data-tooltip="OPTIONAL: Transportdauer in Tagen. Aus der Präsentation: ca. 26 Tage pro Fahrt. Nur relevant wenn in Kostenberechnung verwendet.">ℹ️</span>
+                        </label>
+                        <input type="number" id="transport_dauer_tage" step="1" value="26" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="anzahl_schiffe">Anzahl Schiffe
+                            <span class="info-icon" data-tooltip="OPTIONAL: Anzahl benötigter Schiffe. Aus der Präsentation: 4 NH₃-Tanker. Nur relevant wenn in Kostenberechnung verwendet.">ℹ️</span>
+                        </label>
+                        <input type="number" id="anzahl_schiffe" step="1" value="4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="anzahl_fahrten_pro_jahr">Anzahl Fahrten pro Jahr
+                            <span class="info-icon" data-tooltip="OPTIONAL: Anzahl Schiffstransporte pro Jahr. Aus der Präsentation: ≈24 Fahrten pro Jahr. Nur relevant wenn in Kostenberechnung verwendet.">ℹ️</span>
+                        </label>
+                        <input type="number" id="anzahl_fahrten_pro_jahr" step="1" value="24" required>
+                    </div>
+                </div>
+
+                <!-- Tab 6: Cracking -->
+                <div class="tab-content" id="tab5">
+                    <div class="form-group">
+                        <label for="cracker_kapazitaet_t_h2_d">Cracker-Kapazität (t H₂/Tag)
+                            <span class="info-icon" data-tooltip="Cracker-Kapazität in Tonnen H₂ pro Tag. Referenz: 200 t H₂/d. Hochskalierung: 330 t H₂/d.">ℹ️</span>
+                        </label>
+                        <input type="number" id="cracker_kapazitaet_t_h2_d" step="0.1" value="330" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cracker_capex_mio_eur">CAPEX Cracker (Mio EUR)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für NH₃-Cracker in Millionen EUR. Referenz: ≈369 Mio. € (200 t/d). Hochskalierung: ≈500 Mio. € (330 t/d).">ℹ️</span>
+                        </label>
+                        <input type="number" id="cracker_capex_mio_eur" step="0.1" value="500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cracker_nutzungsdauer_jahre">Nutzungsdauer Cracker (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer des Crackers in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="cracker_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cracking_thermisch_eur_kg">Thermische Energiekosten (EUR/kg H₂)
+                            <span class="info-icon" data-tooltip="NEU: Thermische Energiekosten für Cracking in EUR pro kg H₂. Standard: 0 (wenn Abwärme aus DRI-Stahlwerk verwendet wird, wie in Präsentation).">ℹ️</span>
+                        </label>
+                        <input type="number" id="cracking_thermisch_eur_kg" step="0.001" value="0" required>
+                    </div>
+                </div>
+
+                <!-- Tab 7: Sonstiges -->
+                <div class="tab-content" id="tab6">
+                    <div class="form-group">
+                        <label for="speicher_capex_mio_eur">CAPEX Speicher (Mio EUR)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für H₂- und NH₃-Speicher in Millionen EUR.">ℹ️</span>
+                        </label>
+                        <input type="number" id="speicher_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="speicher_nutzungsdauer_jahre">Nutzungsdauer Speicher (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Speicher in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="speicher_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="infrastruktur_capex_mio_eur">CAPEX Infrastruktur (Mio EUR)
+                            <span class="info-icon" data-tooltip="Investitionskosten (CapEx) für Transportinfrastruktur in Millionen EUR.">ℹ️</span>
+                        </label>
+                        <input type="number" id="infrastruktur_capex_mio_eur" step="0.1" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="infrastruktur_nutzungsdauer_jahre">Nutzungsdauer Infrastruktur (Jahre)
+                            <span class="info-icon" data-tooltip="Nutzungsdauer der Infrastruktur in Jahren. Standard: 20 Jahre.">ℹ️</span>
+                        </label>
+                        <input type="number" id="infrastruktur_nutzungsdauer_jahre" step="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="steuern_zoll_mio_eur_a">Steuern & Zoll (Mio EUR/a)
+                            <span class="info-icon" data-tooltip="NEU: Jährliche Steuern und Zollkosten in Millionen EUR pro Jahr. Aus der Präsentation: 75,688 Mio. €/a.">ℹ️</span>
+                        </label>
+                        <input type="number" id="steuern_zoll_mio_eur_a" step="0.001" value="75.688" required>
+                    </div>
+                </div>
+
+                <button class="calculate-button" onclick="berechneKosten()">🔢 BERECHNUNG DURCHFÜHREN</button>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <h2>Ergebnisse</h2>
+                
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span>Kosten pro kg H₂:</span>
+                        <span class="summary-value" id="kostenProKg">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Jährliche Gesamtkosten:</span>
+                        <span class="summary-value highlight" id="gesamtkosten">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Jahresproduktion:</span>
+                        <span class="summary-value" id="jahresproduktion">-</span>
+                    </div>
+                </div>
+
+                <div class="results-box" id="kostenDetails">
+                    <!-- Wird dynamisch gefüllt -->
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="kostenChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart = null;
+
+        function showTab(index) {
+            // Alle Tabs verstecken
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Gewählten Tab anzeigen
+            tabs[index].classList.add('active');
+            buttons[index].classList.add('active');
+        }
+
+        function berechneKosten() {
+            try {
+                // Alle Parameter sammeln
+                const parameter = {
+                    // Produktion
+                    zielproduktion_kt: parseFloat(document.getElementById('zielproduktion_kt').value),
+                    energiebedarf_twh_a: parseFloat(document.getElementById('energiebedarf_twh_a').value),
+                    strombedarf_kwh_kg: parseFloat(document.getElementById('strombedarf_kwh_kg').value),
+                    usd_zu_eur_kurs: parseFloat(document.getElementById('usd_zu_eur_kurs').value),
+                    
+                    // Windpark
+                    anzahl_turbinen: parseFloat(document.getElementById('anzahl_turbinen').value),
+                    windpark_leistung_gw: parseFloat(document.getElementById('windpark_leistung_gw').value),
+                    kapazitaetsfaktor_prozent: parseFloat(document.getElementById('kapazitaetsfaktor_prozent').value),
+                    windpark_opex_jaehrlich_mio_usd: parseFloat(document.getElementById('windpark_opex_jaehrlich_mio_usd').value),
+                    windpark_capex_25j_mrd_usd: parseFloat(document.getElementById('windpark_capex_25j_mrd_usd').value),
+                    
+                    // Elektrolyse
+                    elektrolyseur_leistung_mw: parseFloat(document.getElementById('elektrolyseur_leistung_mw').value),
+                    elektrolyse_capex_mio_eur: parseFloat(document.getElementById('elektrolyse_capex_mio_eur').value),
+                    elektrolyse_nutzungsdauer_jahre: parseFloat(document.getElementById('elektrolyse_nutzungsdauer_jahre').value),
+                    strompreis_eur_kwh: parseFloat(document.getElementById('strompreis_eur_kwh').value),
+                    lcoe_eur_kwh: parseFloat(document.getElementById('lcoe_eur_kwh').value),
+                    elektrolyse_opex_mio_eur_a: parseFloat(document.getElementById('elektrolyse_opex_mio_eur_a').value),
+                    elektrolyse_opex_prozent_capex: parseFloat(document.getElementById('elektrolyse_opex_prozent_capex').value),
+                    wasserbedarf_l_h: parseFloat(document.getElementById('wasserbedarf_l_h').value),
+                    wasseraufbereitung_capex_mio_eur: parseFloat(document.getElementById('wasseraufbereitung_capex_mio_eur').value),
+                    wasseraufbereitung_nutzungsdauer_jahre: parseFloat(document.getElementById('wasseraufbereitung_nutzungsdauer_jahre').value),
+                    wasseraufbereitung_opex_mio_eur_a: parseFloat(document.getElementById('wasseraufbereitung_opex_mio_eur_a').value),
+                    wasserpreis_eur_m3: parseFloat(document.getElementById('wasserpreis_eur_m3').value),
+                    
+                    // Ammoniak
+                    nh3_bedarf_kt: parseFloat(document.getElementById('nh3_bedarf_kt').value),
+                    haber_bosch_leistung_mw: parseFloat(document.getElementById('haber_bosch_leistung_mw').value),
+                    haber_bosch_capex_mio_usd: parseFloat(document.getElementById('haber_bosch_capex_mio_usd').value),
+                    haber_bosch_nutzungsdauer_jahre: parseFloat(document.getElementById('haber_bosch_nutzungsdauer_jahre').value),
+                    haber_bosch_opex_mio_eur_a: parseFloat(document.getElementById('haber_bosch_opex_mio_eur_a').value),
+                    haber_bosch_strombedarf_gwh_a: parseFloat(document.getElementById('haber_bosch_strombedarf_gwh_a').value),
+                    asu_kapazitaet_t_n2_tag: parseFloat(document.getElementById('asu_kapazitaet_t_n2_tag').value),
+                    asu_capex_mio_usd: parseFloat(document.getElementById('asu_capex_mio_usd').value),
+                    asu_nutzungsdauer_jahre: parseFloat(document.getElementById('asu_nutzungsdauer_jahre').value),
+                    asu_opex_mio_eur_a: parseFloat(document.getElementById('asu_opex_mio_eur_a').value),
+                    asu_strombedarf_kwh_t_n2: parseFloat(document.getElementById('asu_strombedarf_kwh_t_n2').value),
+                    
+                    // Transport
+                    transport_distanz_km: parseFloat(document.getElementById('transport_distanz_km').value),
+                    nh3_terminal_capex_mio_eur: parseFloat(document.getElementById('nh3_terminal_capex_mio_eur').value),
+                    nh3_terminal_nutzungsdauer_jahre: parseFloat(document.getElementById('nh3_terminal_nutzungsdauer_jahre').value),
+                    nh3_terminal_opex_mio_eur_a: parseFloat(document.getElementById('nh3_terminal_opex_mio_eur_a').value),
+                    schiffe_capex_mio_eur: parseFloat(document.getElementById('schiffe_capex_mio_eur').value),
+                    schiffe_nutzungsdauer_jahre: parseFloat(document.getElementById('schiffe_nutzungsdauer_jahre').value),
+                    charter_opex_mio_eur_a: parseFloat(document.getElementById('charter_opex_mio_eur_a').value),
+                    lager_tanks_capex_mio_eur: parseFloat(document.getElementById('lager_tanks_capex_mio_eur').value),
+                    lager_tanks_nutzungsdauer_jahre: parseFloat(document.getElementById('lager_tanks_nutzungsdauer_jahre').value),
+                    // Optional
+                    transport_dauer_tage: parseFloat(document.getElementById('transport_dauer_tage').value),
+                    anzahl_schiffe: parseFloat(document.getElementById('anzahl_schiffe').value),
+                    anzahl_fahrten_pro_jahr: parseFloat(document.getElementById('anzahl_fahrten_pro_jahr').value),
+                    
+                    // Cracking
+                    cracker_kapazitaet_t_h2_d: parseFloat(document.getElementById('cracker_kapazitaet_t_h2_d').value),
+                    cracker_capex_mio_eur: parseFloat(document.getElementById('cracker_capex_mio_eur').value),
+                    cracker_nutzungsdauer_jahre: parseFloat(document.getElementById('cracker_nutzungsdauer_jahre').value),
+                    cracking_thermisch_eur_kg: parseFloat(document.getElementById('cracking_thermisch_eur_kg').value),
+                    
+                    // Sonstiges
+                    speicher_capex_mio_eur: parseFloat(document.getElementById('speicher_capex_mio_eur').value),
+                    speicher_nutzungsdauer_jahre: parseFloat(document.getElementById('speicher_nutzungsdauer_jahre').value),
+                    infrastruktur_capex_mio_eur: parseFloat(document.getElementById('infrastruktur_capex_mio_eur').value),
+                    infrastruktur_nutzungsdauer_jahre: parseFloat(document.getElementById('infrastruktur_nutzungsdauer_jahre').value),
+                    steuern_zoll_mio_eur_a: parseFloat(document.getElementById('steuern_zoll_mio_eur_a').value)
+                };
+
+                // Validierung
+                if (parameter.zielproduktion_kt <= 0) {
+                    alert('Zielproduktion muss größer als 0 sein!');
+                    return;
+                }
+
+                // Berechnung durchführen
+                const ergebnis = berechneAlleKosten(parameter);
+                
+                // Ergebnisse anzeigen
+                zeigeErgebnisse(ergebnis);
+                
+            } catch (error) {
+                alert('Fehler bei der Berechnung: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        function berechneAlleKosten(parameter) {
+            // Umrechnungen
+            const jahresproduktion_kg = parameter.zielproduktion_kt * 1_000_000;
+            const usd_zu_eur = parameter.usd_zu_eur_kurs || 0.92;
+
+            // ====================================================================
+            // VARIABLE KOSTEN (€/kWh oder €/kg)
+            // ====================================================================
+            
+            // 1. STROMKOSTEN (Variable) - KRITISCH
+            const strombedarf_kwh_kg = parameter.strombedarf_kwh_kg || 50.0;
+            let strompreis_eur_kwh = parameter.strompreis_eur_kwh || 0.0;
+            if (strompreis_eur_kwh === 0) {
+                strompreis_eur_kwh = parameter.lcoe_eur_kwh || 0.0;
+            }
+            
+            if (strompreis_eur_kwh === 0) {
+                throw new Error('KRITISCH: Strompreis (strompreis_eur_kwh) oder LCOE (lcoe_eur_kwh) muss eingegeben werden!');
+            }
+            
+            const stromkosten_pro_kg = strombedarf_kwh_kg * strompreis_eur_kwh;
+            
+            // 2. WASSERKOSTEN (Variable, falls wasserpreis verwendet)
+            const wasserpreis_eur_m3 = parameter.wasserpreis_eur_m3 || 0.0;
+            let wasserkosten_pro_kg = 0.0;
+            if (wasserpreis_eur_m3 > 0) {
+                const wasserbedarf_m3_a = (parameter.wasserbedarf_l_h || 125000) / 1000 * 8760;
+                wasserkosten_pro_kg = (wasserbedarf_m3_a * wasserpreis_eur_m3) / jahresproduktion_kg;
+            }
+            
+            // 3. CRACKING THERMISCHE ENERGIE (Variable, kann 0 sein)
+            const cracking_thermisch_eur_kg = parameter.cracking_thermisch_eur_kg || 0.0;
+            
+            // ====================================================================
+            // CAPEX (Investition, amortisiert über Nutzungsdauer)
+            // ====================================================================
+            
+            // 1. OFFSHORE-WINDPARK CAPEX
+            const windpark_capex_25j = parameter.windpark_capex_25j_mrd_usd * 1_000_000_000;
+            const windpark_capex_25j_eur = windpark_capex_25j * usd_zu_eur;
+            const windpark_amortisation_jaehrlich = windpark_capex_25j_eur / 25;
+            const windpark_capex_pro_kg = windpark_amortisation_jaehrlich / jahresproduktion_kg;
+            
+            // 2. ELEKTROLYSE CAPEX
+            const elektrolyseur_leistung_mw = parameter.elektrolyseur_leistung_mw || 630;
+            const elektrolyse_capex = parameter.elektrolyse_capex_mio_eur * 1_000_000;
+            const elektrolyse_nutzungsdauer = parameter.elektrolyse_nutzungsdauer_jahre || 20;
+            
+            let elektrolyse_amortisation_jaehrlich;
+            if (elektrolyse_capex > 0) {
+                elektrolyse_amortisation_jaehrlich = elektrolyse_capex / elektrolyse_nutzungsdauer;
+            } else {
+                const elektrolyse_capex_geschätzt = elektrolyseur_leistung_mw * 1_000 * 1_000;
+                elektrolyse_amortisation_jaehrlich = elektrolyse_capex_geschätzt / elektrolyse_nutzungsdauer;
+            }
+            const elektrolyse_capex_pro_kg = elektrolyse_amortisation_jaehrlich / jahresproduktion_kg;
+            
+            // 3. WASSERAUFBEREITUNG CAPEX
+            const wasseraufbereitung_capex = parameter.wasseraufbereitung_capex_mio_eur * 1_000_000;
+            const wasseraufbereitung_nutzungsdauer = parameter.wasseraufbereitung_nutzungsdauer_jahre || 20;
+            let wasseraufbereitung_capex_pro_kg = 0.0;
+            if (wasseraufbereitung_capex > 0) {
+                const wasseraufbereitung_amortisation = wasseraufbereitung_capex / wasseraufbereitung_nutzungsdauer;
+                wasseraufbereitung_capex_pro_kg = wasseraufbereitung_amortisation / jahresproduktion_kg;
+            }
+            
+            // 4. HABER-BOSCH CAPEX
+            const nh3_bedarf_kt = parameter.nh3_bedarf_kt || 687;
+            const haber_bosch_leistung_mw = parameter.haber_bosch_leistung_mw || 0;
+            const haber_bosch_capex = parameter.haber_bosch_capex_mio_usd * 1_000_000 * usd_zu_eur;
+            
+            let haber_bosch_capex_pro_kg_h2 = 0.0;
+            if (haber_bosch_capex > 0) {
+                const haber_bosch_nutzungsdauer = parameter.haber_bosch_nutzungsdauer_jahre || 20;
+                const haber_bosch_amortisation = haber_bosch_capex / haber_bosch_nutzungsdauer;
+                const nh3_produktion_kg = nh3_bedarf_kt * 1_000_000;
+                const haber_bosch_kosten_pro_kg_nh3 = haber_bosch_amortisation / nh3_produktion_kg;
+                haber_bosch_capex_pro_kg_h2 = haber_bosch_kosten_pro_kg_nh3 * (nh3_bedarf_kt / parameter.zielproduktion_kt);
+            } else if (haber_bosch_leistung_mw > 0) {
+                let geschätzte_capex;
+                if (haber_bosch_leistung_mw < 1000) {
+                    geschätzte_capex = (haber_bosch_leistung_mw / 100) * 25_000_000 * usd_zu_eur;
+                } else {
+                    geschätzte_capex = (haber_bosch_leistung_mw / 1000) * 125_000_000 * usd_zu_eur;
+                }
+                const haber_bosch_amortisation = geschätzte_capex / 20;
+                const nh3_produktion_kg = nh3_bedarf_kt * 1_000_000;
+                const haber_bosch_kosten_pro_kg_nh3 = haber_bosch_amortisation / nh3_produktion_kg;
+                haber_bosch_capex_pro_kg_h2 = haber_bosch_kosten_pro_kg_nh3 * (nh3_bedarf_kt / parameter.zielproduktion_kt);
+            }
+            
+            // 5. ASU CAPEX
+            const asu_capex = (parameter.asu_capex_mio_usd || 200) * 1_000_000 * usd_zu_eur;
+            const asu_nutzungsdauer = parameter.asu_nutzungsdauer_jahre || 20;
+            const asu_amortisation = asu_capex / asu_nutzungsdauer;
+            const asu_capex_pro_kg_h2 = asu_amortisation / jahresproduktion_kg;
+            
+            // 6. TRANSPORT TERMINAL CAPEX
+            const nh3_terminal_capex = parameter.nh3_terminal_capex_mio_eur * 1_000_000;
+            const nh3_terminal_nutzungsdauer = parameter.nh3_terminal_nutzungsdauer_jahre || 20;
+            let nh3_terminal_capex_pro_kg = 0.0;
+            if (nh3_terminal_capex > 0) {
+                const nh3_terminal_amortisation = nh3_terminal_capex / nh3_terminal_nutzungsdauer;
+                nh3_terminal_capex_pro_kg = nh3_terminal_amortisation / jahresproduktion_kg;
+            }
+            
+            // 7. SCHIFFE CAPEX
+            const schiffe_capex = parameter.schiffe_capex_mio_eur * 1_000_000;
+            const schiffe_nutzungsdauer = parameter.schiffe_nutzungsdauer_jahre || 20;
+            let schiffe_capex_pro_kg = 0.0;
+            if (schiffe_capex > 0) {
+                const schiffe_amortisation = schiffe_capex / schiffe_nutzungsdauer;
+                schiffe_capex_pro_kg = schiffe_amortisation / jahresproduktion_kg;
+            }
+            
+            // 8. LAGER TANKS CAPEX
+            const lager_tanks_capex = parameter.lager_tanks_capex_mio_eur * 1_000_000;
+            const lager_tanks_nutzungsdauer = parameter.lager_tanks_nutzungsdauer_jahre || 20;
+            let lager_tanks_capex_pro_kg = 0.0;
+            if (lager_tanks_capex > 0) {
+                const lager_tanks_amortisation = lager_tanks_capex / lager_tanks_nutzungsdauer;
+                lager_tanks_capex_pro_kg = lager_tanks_amortisation / jahresproduktion_kg;
+            }
+            
+            // 9. CRACKER CAPEX
+            const cracker_capex = parameter.cracker_capex_mio_eur * 1_000_000;
+            const cracker_nutzungsdauer = parameter.cracker_nutzungsdauer_jahre || 20;
+            const cracker_amortisation = cracker_capex / cracker_nutzungsdauer;
+            const cracker_capex_pro_kg_h2 = cracker_amortisation / jahresproduktion_kg;
+            
+            // 10. SPEICHER CAPEX
+            const speicher_capex = parameter.speicher_capex_mio_eur * 1_000_000;
+            const speicher_nutzungsdauer = parameter.speicher_nutzungsdauer_jahre || 20;
+            let speicher_capex_pro_kg = 0.0;
+            if (speicher_capex > 0) {
+                const speicher_amortisation = speicher_capex / speicher_nutzungsdauer;
+                speicher_capex_pro_kg = speicher_amortisation / jahresproduktion_kg;
+            }
+            
+            // 11. INFRASTRUKTUR CAPEX
+            const infrastruktur_capex = parameter.infrastruktur_capex_mio_eur * 1_000_000;
+            const infrastruktur_nutzungsdauer = parameter.infrastruktur_nutzungsdauer_jahre || 20;
+            let infrastruktur_capex_pro_kg = 0.0;
+            if (infrastruktur_capex > 0) {
+                const infrastruktur_amortisation = infrastruktur_capex / infrastruktur_nutzungsdauer;
+                infrastruktur_capex_pro_kg = infrastruktur_amortisation / jahresproduktion_kg;
+            }
+            
+            // ====================================================================
+            // OPEX (Jährliche Fixkosten, €/a)
+            // ====================================================================
+            
+            // 1. WINDPARK OPEX
+            const windpark_opex_jaehrlich = parameter.windpark_opex_jaehrlich_mio_usd * 1_000_000 * usd_zu_eur;
+            const windpark_opex_pro_kg = windpark_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 2. ELEKTROLYSE OPEX
+            let elektrolyse_opex_jaehrlich = parameter.elektrolyse_opex_mio_eur_a * 1_000_000;
+            if (elektrolyse_opex_jaehrlich === 0) {
+                const elektrolyse_opex_prozent = parameter.elektrolyse_opex_prozent_capex || 0;
+                if (elektrolyse_opex_prozent > 0) {
+                    let elektrolyse_capex_fuer_opex;
+                    if (elektrolyse_capex > 0) {
+                        elektrolyse_capex_fuer_opex = elektrolyse_capex;
+                    } else {
+                        elektrolyse_capex_fuer_opex = elektrolyseur_leistung_mw * 1_000 * 1_000;
+                    }
+                    elektrolyse_opex_jaehrlich = (elektrolyse_capex_fuer_opex * elektrolyse_opex_prozent / 100);
+                }
+            }
+            const elektrolyse_opex_pro_kg = elektrolyse_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 3. WASSERAUFBEREITUNG OPEX
+            const wasseraufbereitung_opex_jaehrlich = parameter.wasseraufbereitung_opex_mio_eur_a * 1_000_000;
+            const wasseraufbereitung_opex_pro_kg = wasseraufbereitung_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 4. HABER-BOSCH OPEX
+            let haber_bosch_opex_jaehrlich = parameter.haber_bosch_opex_mio_eur_a * 1_000_000;
+            if (haber_bosch_opex_jaehrlich === 0) {
+                const haber_bosch_strombedarf_gwh_a = parameter.haber_bosch_strombedarf_gwh_a || 0;
+                if (haber_bosch_strombedarf_gwh_a > 0) {
+                    haber_bosch_opex_jaehrlich = haber_bosch_strombedarf_gwh_a * 1_000_000 * strompreis_eur_kwh;
+                }
+            }
+            const haber_bosch_opex_pro_kg_h2 = haber_bosch_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 5. ASU OPEX
+            let asu_opex_jaehrlich = parameter.asu_opex_mio_eur_a * 1_000_000;
+            if (asu_opex_jaehrlich === 0) {
+                const asu_strombedarf_kwh_t_n2 = parameter.asu_strombedarf_kwh_t_n2 || 0;
+                if (asu_strombedarf_kwh_t_n2 > 0) {
+                    const asu_kapazitaet_t_n2_tag = parameter.asu_kapazitaet_t_n2_tag || 1550;
+                    const asu_produktion_t_n2_a = asu_kapazitaet_t_n2_tag * 365;
+                    const asu_strombedarf_kwh_a = asu_produktion_t_n2_a * asu_strombedarf_kwh_t_n2;
+                    asu_opex_jaehrlich = (asu_strombedarf_kwh_a / 1_000_000) * strompreis_eur_kwh * 1_000_000;
+                }
+            }
+            const asu_opex_pro_kg_h2 = asu_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 6. TRANSPORT TERMINAL OPEX
+            const nh3_terminal_opex_jaehrlich = parameter.nh3_terminal_opex_mio_eur_a * 1_000_000;
+            const nh3_terminal_opex_pro_kg = nh3_terminal_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 7. SCHIFFE CHARTER OPEX
+            const charter_opex_jaehrlich = parameter.charter_opex_mio_eur_a * 1_000_000;
+            const schiffe_opex_pro_kg = charter_opex_jaehrlich / jahresproduktion_kg;
+            
+            // 8. STEUERN & ZOLL OPEX
+            const steuern_zoll_jaehrlich = (parameter.steuern_zoll_mio_eur_a || 75.688) * 1_000_000;
+            const steuern_zoll_pro_kg = steuern_zoll_jaehrlich / jahresproduktion_kg;
+            
+            // ====================================================================
+            // ZUSAMMENFASSUNG
+            // ====================================================================
+            
+            const kosten_pro_kg = {
+                // Variable Kosten
+                'Stromkosten (variabel)': stromkosten_pro_kg,
+                'Wasserkosten (variabel)': wasserkosten_pro_kg,
+                'Cracking thermisch (variabel)': cracking_thermisch_eur_kg,
+                
+                // CapEx (amortisiert)
+                'Offshore-Windpark (CapEx)': windpark_capex_pro_kg,
+                'Elektrolyse (CapEx)': elektrolyse_capex_pro_kg,
+                'Wasseraufbereitung (CapEx)': wasseraufbereitung_capex_pro_kg,
+                'Ammoniaksynthese (CapEx)': haber_bosch_capex_pro_kg_h2,
+                'ASU (CapEx)': asu_capex_pro_kg_h2,
+                'NH₃-Terminal (CapEx)': nh3_terminal_capex_pro_kg,
+                'Schiffe (CapEx)': schiffe_capex_pro_kg,
+                'Lager Tanks (CapEx)': lager_tanks_capex_pro_kg,
+                'NH₃-Cracking (CapEx)': cracker_capex_pro_kg_h2,
+                'Speicher (CapEx)': speicher_capex_pro_kg,
+                'Infrastruktur (CapEx)': infrastruktur_capex_pro_kg,
+                
+                // OpEx (jährlich)
+                'Offshore-Windpark (OpEx)': windpark_opex_pro_kg,
+                'Elektrolyse (OpEx)': elektrolyse_opex_pro_kg,
+                'Wasseraufbereitung (OpEx)': wasseraufbereitung_opex_pro_kg,
+                'Ammoniaksynthese (OpEx)': haber_bosch_opex_pro_kg_h2,
+                'ASU (OpEx)': asu_opex_pro_kg_h2,
+                'NH₃-Terminal (OpEx)': nh3_terminal_opex_pro_kg,
+                'Schiffe Charter (OpEx)': schiffe_opex_pro_kg,
+                'Steuern & Zoll (OpEx)': steuern_zoll_pro_kg,
+            };
+            
+            const gesamt_kosten_pro_kg = Object.values(kosten_pro_kg).reduce((a, b) => a + b, 0);
+            const gesamtkosten_jaehrlich = gesamt_kosten_pro_kg * jahresproduktion_kg;
+            
+            return {
+                kosten_pro_kg: kosten_pro_kg,
+                gesamt_kosten_pro_kg: gesamt_kosten_pro_kg,
+                jahresproduktion_kg: jahresproduktion_kg,
+                gesamtkosten_jaehrlich_eur: gesamtkosten_jaehrlich,
+                parameter: parameter
+            };
+        }
+
+        function zeigeErgebnisse(ergebnis) {
+            // Ergebnisse-Sektion anzeigen
+            document.getElementById('resultsSection').classList.add('show');
+
+            // Zusammenfassung
+            document.getElementById('kostenProKg').textContent = 
+                formatCurrency(ergebnis.gesamt_kosten_pro_kg) + ' /kg';
+            document.getElementById('gesamtkosten').textContent = 
+                formatCurrency(ergebnis.gesamtkosten_jaehrlich_eur);
+            document.getElementById('jahresproduktion').textContent = 
+                formatNumber(ergebnis.jahresproduktion_kg / 1_000_000) + ' Mio kg';
+
+            // Detaillierte Kosten - gruppiert nach Typ
+            const kostenDetails = document.getElementById('kostenDetails');
+            kostenDetails.innerHTML = '';
+            
+            const kosten_pro_kg = ergebnis.kosten_pro_kg;
+            
+            // Variable Kosten
+            const variableHeader = document.createElement('div');
+            variableHeader.className = 'result-item';
+            variableHeader.style.fontWeight = 'bold';
+            variableHeader.style.color = '#667eea';
+            variableHeader.style.marginTop = '10px';
+            variableHeader.textContent = 'VARIABLE KOSTEN:';
+            kostenDetails.appendChild(variableHeader);
+            
+            for (const [kategorie, kosten] of Object.entries(kosten_pro_kg)) {
+                if (kategorie.includes('(variabel)')) {
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <span class="result-label">  ${kategorie}</span>
+                        <span class="result-value">${formatCurrency(kosten)} EUR/kg</span>
+                    `;
+                    kostenDetails.appendChild(item);
+                }
+            }
+            
+            // CapEx
+            const capexHeader = document.createElement('div');
+            capexHeader.className = 'result-item';
+            capexHeader.style.fontWeight = 'bold';
+            capexHeader.style.color = '#667eea';
+            capexHeader.style.marginTop = '10px';
+            capexHeader.textContent = 'CAPEX (amortisiert):';
+            kostenDetails.appendChild(capexHeader);
+            
+            for (const [kategorie, kosten] of Object.entries(kosten_pro_kg)) {
+                if (kategorie.includes('(CapEx)')) {
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <span class="result-label">  ${kategorie}</span>
+                        <span class="result-value">${formatCurrency(kosten)} EUR/kg</span>
+                    `;
+                    kostenDetails.appendChild(item);
+                }
+            }
+            
+            // OpEx
+            const opexHeader = document.createElement('div');
+            opexHeader.className = 'result-item';
+            opexHeader.style.fontWeight = 'bold';
+            opexHeader.style.color = '#667eea';
+            opexHeader.style.marginTop = '10px';
+            opexHeader.textContent = 'OPEX (jährlich):';
+            kostenDetails.appendChild(opexHeader);
+            
+            for (const [kategorie, kosten] of Object.entries(kosten_pro_kg)) {
+                if (kategorie.includes('(OpEx)')) {
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <span class="result-label">  ${kategorie}</span>
+                        <span class="result-value">${formatCurrency(kosten)} EUR/kg</span>
+                    `;
+                    kostenDetails.appendChild(item);
+                }
+            }
+
+            // Gesamt hinzufügen
+            const totalItem = document.createElement('div');
+            totalItem.className = 'result-item total';
+            totalItem.innerHTML = `
+                <span class="result-label">GESAMT</span>
+                <span class="result-value">${formatCurrency(ergebnis.gesamt_kosten_pro_kg)} EUR/kg</span>
+            `;
+            kostenDetails.appendChild(totalItem);
+
+            // Diagramm erstellen
+            erstelleDiagramm(ergebnis);
+
+            // Nach oben scrollen
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function erstelleDiagramm(ergebnis) {
+            const ctx = document.getElementById('kostenChart').getContext('2d');
+            
+            // Altes Diagramm zerstören falls vorhanden
+            if (chart) {
+                chart.destroy();
+            }
+
+            const kosten_pro_kg = ergebnis.kosten_pro_kg;
+            const kategorien = Object.keys(kosten_pro_kg);
+            const werte = Object.values(kosten_pro_kg);
+
+            // Farben für jede Kategorie
+            const farben = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF6384'
+            ];
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: kategorien,
+                    datasets: [{
+                        label: 'Kosten (EUR/kg H₂)',
+                        data: werte,
+                        backgroundColor: farben.slice(0, kategorien.length),
+                        borderColor: '#333',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Kostenverteilung nach Kategorien (Gestapeltes Säulendiagramm)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.x.toFixed(4) + ' EUR/kg H₂';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kosten (EUR/kg H₂)',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(4);
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Kategorien',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+            }).format(value);
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat('de-DE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+    </script>
+</body>
+</html>

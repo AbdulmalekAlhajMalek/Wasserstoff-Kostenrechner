@@ -1,0 +1,57 @@
+========================================
+WASSERSTOFF-KOSTENRECHNER - ANLEITUNG
+========================================
+
+PROBLEM: App öffnet sich nicht?
+
+LÖSUNG 1: Windows Desktop-App starten
+----------------------------------------
+1. Doppelklick auf: start_app.bat
+   
+   ODER manuell im Terminal:
+   py wasserstoff_app.py
+
+2. Falls das nicht funktioniert, versuchen Sie:
+   python wasserstoff_app.py
+   python3 wasserstoff_app.py
+
+LÖSUNG 2: HTML-Version (funktioniert IMMER!)
+--------------------------------------------
+1. Doppelklick auf: wasserstoff_rechner.html
+   
+   Die Datei öffnet sich in Ihrem Browser.
+   Keine Python-Installation nötig!
+
+LÖSUNG 3: Web-Version
+---------------------
+1. Terminal öffnen
+2. Eingeben: py app.py
+3. Browser öffnen: http://localhost:5000
+
+========================================
+FEHLERBEHEBUNG
+========================================
+
+Problem: "Python wurde nicht gefunden"
+Lösung: 
+- Python von https://www.python.org/downloads/ installieren
+- Bei Installation "Add Python to PATH" aktivieren
+- Oder verwenden Sie die HTML-Version (wasserstoff_rechner.html)
+
+Problem: "tkinter nicht gefunden"
+Lösung:
+- Python neu installieren
+- Oder verwenden Sie die HTML-Version
+
+Problem: App startet, aber schließt sofort
+Lösung:
+- Terminal öffnen und manuell starten, um Fehlermeldungen zu sehen
+- Oder verwenden Sie die HTML-Version
+
+========================================
+EMPFOHLENE LÖSUNG
+========================================
+
+Für die einfachste Nutzung:
+→ Doppelklick auf wasserstoff_rechner.html
+→ Funktioniert in jedem Browser, keine Installation nötig!

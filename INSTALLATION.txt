@@ -1,0 +1,38 @@
+WASSERSTOFF-KOSTENRECHNER - INSTALLATION
+========================================
+
+ERFORDERLICHE BIBLIOTHEKEN:
+----------------------------
+
+1. Python 3.7 oder höher (bereits installiert)
+
+2. tkinter (meist bereits mit Python installiert)
+
+3. matplotlib (für Diagramme):
+   pip install matplotlib
+
+4. numpy (für Diagramme):
+   pip install numpy
+
+INSTALLATION:
+-------------
+Öffnen Sie eine Kommandozeile (CMD oder PowerShell) und führen Sie aus:
+
+pip install matplotlib numpy
+
+ODER falls Sie mehrere Python-Versionen haben:
+
+python -m pip install matplotlib numpy
+python3 -m pip install matplotlib numpy
+py -m pip install matplotlib numpy
+
+VERWENDUNG:
+-----------
+Nach der Installation einfach ausführen:
+
+python wasserstoff_komplett.py
+
+HINWEIS:
+--------
+Falls matplotlib/numpy nicht installiert sind, funktioniert die Anwendung
+trotzdem, aber die Diagramme werden nicht angezeigt.

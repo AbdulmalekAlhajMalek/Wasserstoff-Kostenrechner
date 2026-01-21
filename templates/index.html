@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasserstoff-Kostenrechner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 Wasserstoff-Kostenrechner</h1>
+            <p class="subtitle">Produktion: Paraguay → Verbrauch: Deutschland</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>Eingabeparameter</h2>
+                <form id="calculationForm">
+                    <div class="form-group">
+                        <label for="strompreis">Strompreis in Paraguay (EUR/kWh)</label>
+                        <input type="number" id="strompreis" name="strompreis" step="0.001" value="0.03" required>
+                        <small>Typisch: 0.03 EUR/kWh (günstig durch Wasserkraft)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="investition">Investition Anlage (EUR)</label>
+                        <input type="number" id="investition" name="investition" step="1000000" value="100000000" required>
+                        <small>Beispiel: 100.000.000 EUR für 100 MW Elektrolyseur</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kapazität">Jährliche Kapazität (kg/Jahr)</label>
+                        <input type="number" id="kapazität" name="kapazität" step="1000000" value="20000000" required>
+                        <small>Beispiel: 20.000.000 kg/Jahr</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="betrieb">Jährliche Betriebskosten (EUR)</label>
+                        <input type="number" id="betrieb" name="betrieb" step="100000" value="5000000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="infrastruktur">Jährliche Infrastrukturkosten (EUR)</label>
+                        <input type="number" id="infrastruktur" name="infrastruktur" step="100000" value="2000000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="menge">Menge Wasserstoff (kg)</label>
+                        <input type="number" id="menge" name="menge" step="1" value="1000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="marge">Gewinnmarge (%)</label>
+                        <input type="number" id="marge" name="marge" step="0.1" value="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="co2_abgabe">CO2-Abgabe (EUR/kg)</label>
+                        <input type="number" id="co2_abgabe" name="co2_abgabe" step="0.01" value="0" required>
+                        <small>0 für grünen Wasserstoff</small>
+                    </div>
+
+                    <button type="submit" class="btn-calculate">Berechnen</button>
+                </form>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h2>Kostenaufstellung</h2>
+                
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="label">Kosten pro kg H₂:</span>
+                        <span class="value" id="kostenProKg">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Gesamtkosten:</span>
+                        <span class="value highlight" id="gesamtkosten">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Menge:</span>
+                        <span class="value" id="mengeDisplay">-</span>
+                    </div>
+                </div>
+
+                <div class="cost-breakdown">
+                    <div class="cost-category">
+                        <h3>📊 Produktionskosten (Paraguay)</h3>
+                        <div class="cost-list">
+                            <div class="cost-item">
+                                <span>Stromkosten</span>
+                                <span id="stromkosten">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Anlagenkosten (Amortisation)</span>
+                                <span id="anlagenkosten">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Betriebskosten</span>
+                                <span id="betriebskosten">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Wasseraufbereitung</span>
+                                <span id="wasseraufbereitung">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Infrastruktur</span>
+                                <span id="infrastruktur">-</span>
+                            </div>
+                            <div class="cost-item total">
+                                <span>Gesamt Produktion</span>
+                                <span id="gesamtProduktion">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cost-category">
+                        <h3>🚢 Transportkosten (Paraguay → Deutschland)</h3>
+                        <div class="cost-list">
+                            <div class="cost-item">
+                                <span>Verflüssigung</span>
+                                <span id="verflüssigung">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Schiffstransport</span>
+                                <span id="schiffstransport">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Wiedererwärmung</span>
+                                <span id="wiedererwärmung">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Lagerung</span>
+                                <span id="lagerung">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Versicherung</span>
+                                <span id="versicherung">-</span>
+                            </div>
+                            <div class="cost-item total">
+                                <span>Gesamt Transport</span>
+                                <span id="gesamtTransport">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cost-category">
+                        <h3>➕ Zusatzkosten</h3>
+                        <div class="cost-list">
+                            <div class="cost-item">
+                                <span>Zertifizierung</span>
+                                <span id="zertifizierung">-</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>CO2-Abgabe</span>
+                                <span id="co2_abgabe_display">-</span>
+                            </div>
+                            <div class="cost-item" id="margeItem" style="display: none;">
+                                <span>Gewinnmarge</span>
+                                <span id="marge_display">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Berechne...</p>
+        </div>
+
+        <div class="error" id="error" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('calculationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = parseFloat(value);
+            });
+
+            // Loading anzeigen
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayResults(result.result);
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('Fehler bei der Berechnung: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function displayResults(result) {
+            // Zusammenfassung
+            document.getElementById('kostenProKg').textContent = 
+                formatCurrency(result.kosten_pro_kg) + ' /kg';
+            document.getElementById('gesamtkosten').textContent = 
+                formatCurrency(result.gesamtkosten_eur);
+            document.getElementById('mengeDisplay').textContent = 
+                formatNumber(result.menge_kg) + ' kg';
+
+            // Produktionskosten
+            document.getElementById('stromkosten').textContent = 
+                formatCurrency(result.produktionskosten.stromkosten) + ' /kg';
+            document.getElementById('anlagenkosten').textContent = 
+                formatCurrency(result.produktionskosten.anlagenkosten) + ' /kg';
+            document.getElementById('betriebskosten').textContent = 
+                formatCurrency(result.produktionskosten.betriebskosten) + ' /kg';
+            document.getElementById('wasseraufbereitung').textContent = 
+                formatCurrency(result.produktionskosten.wasseraufbereitung) + ' /kg';
+            document.getElementById('infrastruktur').textContent = 
+                formatCurrency(result.produktionskosten.infrastruktur) + ' /kg';
+            document.getElementById('gesamtProduktion').textContent = 
+                formatCurrency(result.produktionskosten.gesamt) + ' /kg';
+
+            // Transportkosten
+            document.getElementById('verflüssigung').textContent = 
+                formatCurrency(result.transportkosten.verflüssigung) + ' /kg';
+            document.getElementById('schiffstransport').textContent = 
+                formatCurrency(result.transportkosten.schiffstransport) + ' /kg';
+            document.getElementById('wiedererwärmung').textContent = 
+                formatCurrency(result.transportkosten.wiedererwärmung) + ' /kg';
+            document.getElementById('lagerung').textContent = 
+                formatCurrency(result.transportkosten.lagerung) + ' /kg';
+            document.getElementById('versicherung').textContent = 
+                formatCurrency(result.transportkosten.versicherung) + ' /kg';
+            document.getElementById('gesamtTransport').textContent = 
+                formatCurrency(result.transportkosten.gesamt) + ' /kg';
+
+            // Zusatzkosten
+            document.getElementById('zertifizierung').textContent = 
+                formatCurrency(result.zusatzkosten.zertifizierung) + ' /kg';
+            document.getElementById('co2_abgabe_display').textContent = 
+                formatCurrency(result.zusatzkosten.co2_abgabe) + ' /kg';
+            
+            if (result.zusatzkosten.margen > 0) {
+                document.getElementById('margeItem').style.display = 'flex';
+                document.getElementById('marge_display').textContent = 
+                    formatCurrency(result.zusatzkosten.margen) + ' /kg';
+            } else {
+                document.getElementById('margeItem').style.display = 'none';
+            }
+
+            // Ergebnisse anzeigen
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Scroll zu Ergebnissen
+            document.getElementById('resultsSection').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+            }).format(value);
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat('de-DE', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+    </script>
+</body>
+</html>

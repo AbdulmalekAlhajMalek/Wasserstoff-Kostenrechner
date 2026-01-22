@@ -1296,6 +1296,13 @@
                     </div>
                 </div>
 
+                <!-- Calculate Prediction Button -->
+                <div class="calculate-section" style="margin-top: 24px;">
+                    <button class="calculate-btn" onclick="calculatePrediction()" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+                        RUN 10-YEAR PRICE PREDICTION SIMULATION
+                    </button>
+                </div>
+
                 <div class="page-results" id="page9_results">
                     <div class="page-results-title">10-Year Price Prediction</div>
                     
@@ -1421,7 +1428,21 @@
                 case 6: calculateStorageCosts(); break;
                 case 7: calculateTransportCosts(); break;
                 case 8: calculateCrackingCosts(); break;
-                case 9: calculatePrediction(); break;
+                case 9: 
+                    // Don't auto-calculate, wait for button click
+                    // Just update current cost if available
+                    const currentCost = getInput('current_cost_per_kg');
+                    if (currentCost === 0) {
+                        const costElement = document.getElementById('result_cost_per_kg');
+                        if (costElement && costElement.textContent !== '-') {
+                            const costText = costElement.textContent.replace(' €/kg', '').trim();
+                            const cost = parseFloat(costText) || 0;
+                            if (cost > 0) {
+                                document.getElementById('current_cost_per_kg').value = cost.toFixed(4);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -1695,6 +1716,12 @@
             } else {
                 // Try to get from input field
                 currentCost = getInput('current_cost_per_kg');
+            }
+
+            // Check if current cost is valid
+            if (currentCost === 0 || isNaN(currentCost)) {
+                alert('Please calculate the total costs first (click "CALCULATE TOTAL COSTS" button) or enter a current cost value.');
+                return;
             }
 
             // Update current cost input
@@ -1975,12 +2002,7 @@
             // Update prediction page current cost
             document.getElementById('current_cost_per_kg').value = costPerKg.toFixed(4);
             
-            // Recalculate prediction if on prediction page
-            const pages = document.querySelectorAll('.page-section');
-            const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
-            if (currentPage === 9) {
-                calculatePrediction();
-            }
+            // Update prediction page current cost (don't auto-calculate, user should click button)
 
             // Cost breakdown
             const breakdown = [
@@ -2079,9 +2101,21 @@
             const scenarioSelect = document.getElementById('prediction_scenario');
             if (scenarioSelect) {
                 scenarioSelect.addEventListener('change', function() {
-                    calculatePrediction();
+                    // Don't auto-calculate, wait for button click
                 });
             }
+
+            // Add event listeners for prediction inputs
+            const predictionInputs = ['capex_reduction_rate', 'opex_reduction_rate', 'learning_rate', 
+                                     'inflation_rate', 'demand_growth', 'scale_efficiency'];
+            predictionInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        // Don't auto-calculate, wait for button click
+                    });
+                }
+            });
 
             // Calculate initial values
             calculatePageCosts(1);

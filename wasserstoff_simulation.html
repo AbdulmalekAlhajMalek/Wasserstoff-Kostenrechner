@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasserstoff-Kostenrechner Simulation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 18px 0;
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
+            z-index: 1000;
+            border-bottom: none;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-size: 0.85em;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        .nav-menu a.active {
+            background: rgba(255,255,255,0.25);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 70px;
+            display: flex;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .input-section {
+            flex: 1;
+            min-width: 600px;
+        }
+
+        .results-section {
+            flex: 1;
+            min-width: 500px;
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .results-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .results-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .results-section::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 4px;
+        }
+
+        .results-section::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.2);
+            border: none;
+        }
+
+        .page-header h2 {
+            font-size: 1.75em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header .page-number {
+            font-size: 0.9em;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Parameter Groups */
+        .parameter-group {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .parameter-group-title {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8e8e8;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .parameter-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 200px;
+            gap: 15px;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            background: #fafbfc;
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #3498db;
+            transition: all 0.2s ease;
+        }
+
+        .parameter-item:hover {
+            background: #ffffff;
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transform: translateX(2px);
+        }
+
+        .parameter-number {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .parameter-label {
+            font-weight: 500;
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+
+        .parameter-input {
+            padding: 12px 16px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            color: #2c3e50;
+        }
+
+        .parameter-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .parameter-input:read-only {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+        .parameter-unit {
+            color: #95a5a6;
+            font-size: 0.85em;
+            margin-left: 5px;
+        }
+
+        /* Calculate Button */
+        .calculate-section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Results */
+        .results-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        .results-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            margin-bottom: 12px;
+            background: #fafbfc;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.2s ease;
+        }
+
+        .result-item:hover {
+            background: #f5f7fa;
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.15em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-main {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.2);
+            border: none;
+        }
+
+        .result-main .result-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .result-main .result-value {
+            color: #ffffff;
+            font-size: 1.8em;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .cost-breakdown {
+            margin-top: 28px;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #3498db;
+            transition: all 0.2s ease;
+        }
+
+        .cost-item:hover {
+            background: #ffffff;
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transform: translateX(2px);
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            height: 300px;
+        }
+
+        /* Page Results */
+        .page-results {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-top: 28px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .page-results-title {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+            letter-spacing: -0.3px;
+        }
+
+        .page-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            background: #fafbfc;
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #3498db;
+            transition: all 0.2s ease;
+        }
+
+        .page-result-item:hover {
+            background: #ffffff;
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transform: translateX(2px);
+        }
+
+        .page-result-label {
+            font-weight: 500;
+            color: #212529;
+            font-size: 0.95em;
+        }
+
+        .page-result-value {
+            font-weight: 700;
+            color: #000000;
+            font-size: 1.15em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .page-result-main {
+            background: #ffffff;
+            color: #000000;
+            padding: 24px 28px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #e8e8e8;
+        }
+
+        .page-result-main .page-result-label {
+            color: #212529;
+            opacity: 1;
+        }
+
+        .page-result-main .page-result-value {
+            color: #000000;
+            font-size: 1.3em;
+        }
+
+        /* Navigation Buttons */
+        .page-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .nav-button {
+            padding: 12px 28px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(44, 62, 80, 0.15);
+        }
+
+        .nav-button:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.25);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .results-section {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .parameter-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">Wasserstoff-Kostenrechner Simulation</div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showPage(0); return false;" class="nav-link active" data-page="0">0. System</a></li>
+                <li><a href="#" onclick="showPage(1); return false;" class="nav-link" data-page="1">1. Wind</a></li>
+                <li><a href="#" onclick="showPage(2); return false;" class="nav-link" data-page="2">2. Elektrolyse</a></li>
+                <li><a href="#" onclick="showPage(3); return false;" class="nav-link" data-page="3">3. Wasser</a></li>
+                <li><a href="#" onclick="showPage(4); return false;" class="nav-link" data-page="4">4. Stickstoff</a></li>
+                <li><a href="#" onclick="showPage(5); return false;" class="nav-link" data-page="5">5. Ammoniak</a></li>
+                <li><a href="#" onclick="showPage(6); return false;" class="nav-link" data-page="6">6. Speicher</a></li>
+                <li><a href="#" onclick="showPage(7); return false;" class="nav-link" data-page="7">7. Transport</a></li>
+                <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">8. Cracking</a></li>
+                <li><a href="#" onclick="showPage(9); return false;" class="nav-link" data-page="9">9. Prediction</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Input Section -->
+        <div class="input-section">
+            <!-- Page 0: System Boundary and Target -->
+            <section class="page-section active" id="page0">
+                <div class="page-header">
+                    <div class="page-number">Page 0</div>
+                    <h2>System Boundary and Target</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">0.1 Target definition</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">0.1.1</div>
+                        <div class="parameter-label">Hydrogen import target <span class="parameter-unit">(t H₂/year)</span></div>
+                        <input type="number" class="parameter-input" id="h2_import_target" value="100000" step="1000">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">0.1.2</div>
+                        <div class="parameter-label">Steel plant demand <span class="parameter-unit">(kt H₂/year)</span></div>
+                        <input type="number" class="parameter-input" id="h2_steel_demand" value="110" step="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">0.1.3</div>
+                        <div class="parameter-label">Discount rate <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="discount_rate" value="5" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">0.1.4</div>
+                        <div class="parameter-label">Project lifetime <span class="parameter-unit">(years)</span></div>
+                        <input type="number" class="parameter-input" id="project_lifetime" value="25" step="1">
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" disabled>← Previous</button>
+                    <button class="nav-button" onclick="showPage(1)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 1: Renewable Electricity Generation -->
+            <section class="page-section" id="page1">
+                <div class="page-header">
+                    <div class="page-number">Page 1</div>
+                    <h2>Renewable Electricity Generation (Offshore Wind)</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">1.1 Resource and site parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.1.1</div>
+                        <div class="parameter-label">Capacity factor <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="wind_capacity_factor" value="51" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.1.2</div>
+                        <div class="parameter-label">Number of turbines</div>
+                        <input type="number" class="parameter-input" id="wind_num_turbines" value="260" step="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">1.3 Installed capacity and cost parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.3.1</div>
+                        <div class="parameter-label">Installed wind capacity <span class="parameter-unit">(GW)</span></div>
+                        <input type="number" class="parameter-input" id="wind_capacity" value="2.47" step="0.01">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.3.2</div>
+                        <div class="parameter-label">Wind farm CAPEX <span class="parameter-unit">(billion €)</span></div>
+                        <input type="number" class="parameter-input" id="wind_capex" value="5.32" step="0.01">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.3.3</div>
+                        <div class="parameter-label">Wind farm OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="wind_opex" value="114.46" step="0.01">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.3.4</div>
+                        <div class="parameter-label">Decommissioning (Depex) <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="wind_depex" value="53.24" step="0.01">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page1_results">
+                    <div class="page-results-title">Wind Farm Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Wind Cost</div>
+                            <div class="page-result-value" id="wind_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="wind_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="wind_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Depex (annualized)</div>
+                        <div class="page-result-value" id="wind_depex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Annual Electricity Output</div>
+                        <div class="page-result-value" id="wind_electricity_output">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Internal Electricity Price</div>
+                        <div class="page-result-value" id="wind_electricity_price">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(0)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(2)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 2: Electrolysis -->
+            <section class="page-section" id="page2">
+                <div class="page-header">
+                    <div class="page-number">Page 2</div>
+                    <h2>Electrolysis (Hydrogen Production)</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">2.1 Hydrogen production target</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.1.1</div>
+                        <div class="parameter-label">Hydrogen production <span class="parameter-unit">(kt H₂/year)</span></div>
+                        <input type="number" class="parameter-input" id="h2_production" value="110" step="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">2.2 Energy demand</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.2.1</div>
+                        <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/kg H₂)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="50" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">2.3 Operational parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.3.1</div>
+                        <div class="parameter-label">Electrolyser availability <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_availability" value="95" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.3.2</div>
+                        <div class="parameter-label">Operating hours <span class="parameter-unit">(h/year)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_operating_hours" value="8300" step="100">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">2.7 Cost parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.7.1</div>
+                        <div class="parameter-label">Electrolyser CAPEX <span class="parameter-unit">(€/kW)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_capex_per_kw" value="450" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">2.7.2</div>
+                        <div class="parameter-label">Electrolyser OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_opex" value="10.5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page2_results">
+                    <div class="page-results-title">Electrolysis Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Electrolysis Cost</div>
+                            <div class="page-result-value" id="electrolysis_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="electrolysis_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="electrolysis_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Electricity Cost</div>
+                        <div class="page-result-value" id="electrolysis_electricity_cost">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Required Power</div>
+                        <div class="page-result-value" id="electrolysis_power">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Electricity Demand</div>
+                        <div class="page-result-value" id="electrolysis_electricity_demand">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(1)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(3)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 3: Water Supply -->
+            <section class="page-section" id="page3">
+                <div class="page-header">
+                    <div class="page-number">Page 3</div>
+                    <h2>Water Supply and Desalination</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">3.1 Water demand</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.1.1</div>
+                        <div class="parameter-label">Seawater demand <span class="parameter-unit">(L/kg H₂)</span></div>
+                        <input type="number" class="parameter-input" id="seawater_demand" value="15" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.1.2</div>
+                        <div class="parameter-label">Deionised water demand <span class="parameter-unit">(L/kg H₂)</span></div>
+                        <input type="number" class="parameter-input" id="deionised_water_demand" value="10" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">3.2 Desalination system</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.2.4</div>
+                        <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/m³)</span></div>
+                        <input type="number" class="parameter-input" id="desalination_specific_energy" value="5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">3.3 Infrastructure</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.3.1</div>
+                        <div class="parameter-label">Desalination CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="desalination_capex" value="4" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.3.2</div>
+                        <div class="parameter-label">Desalination OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="desalination_opex" value="0.5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">3.4 Water Storage</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.4.1</div>
+                        <div class="parameter-label">Water storage CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="water_storage_capex" value="5" step="0.5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.4.2</div>
+                        <div class="parameter-label">Water storage capacity <span class="parameter-unit">(m³)</span></div>
+                        <input type="number" class="parameter-input" id="water_storage_capacity" value="2500" step="100">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page3_results">
+                    <div class="page-results-title">Desalination Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Desalination Cost</div>
+                            <div class="page-result-value" id="desalination_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="desalination_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="desalination_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Electricity Cost</div>
+                        <div class="page-result-value" id="desalination_electricity_cost">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Water Demand (annual)</div>
+                        <div class="page-result-value" id="desalination_water_demand">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(2)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(4)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 4: Nitrogen Supply -->
+            <section class="page-section" id="page4">
+                <div class="page-header">
+                    <div class="page-number">Page 4</div>
+                    <h2>Nitrogen Supply (ASU)</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">4. Nitrogen Supply Parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.1</div>
+                        <div class="parameter-label">Nitrogen demand <span class="parameter-unit">(t N₂/day)</span></div>
+                        <input type="number" class="parameter-input" id="nitrogen_demand" value="1550" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.2</div>
+                        <div class="parameter-label">ASU CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="asu_capex" value="200" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.3</div>
+                        <div class="parameter-label">ASU OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="asu_opex" value="10" step="0.5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.4</div>
+                        <div class="parameter-label">ASU electricity demand <span class="parameter-unit">(GWh/year)</span></div>
+                        <input type="number" class="parameter-input" id="asu_electricity" value="50" step="1">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page4_results">
+                    <div class="page-results-title">ASU Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual ASU Cost</div>
+                            <div class="page-result-value" id="asu_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="asu_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="asu_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Electricity Cost</div>
+                        <div class="page-result-value" id="asu_electricity_cost">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Nitrogen Demand (annual)</div>
+                        <div class="page-result-value" id="asu_nitrogen_demand">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(3)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(5)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 5: Ammonia Synthesis -->
+            <section class="page-section" id="page5">
+                <div class="page-header">
+                    <div class="page-number">Page 5</div>
+                    <h2>Ammonia Synthesis (Haber–Bosch)</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">5.2 Production rates</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">5.2.1</div>
+                        <div class="parameter-label">Ammonia production <span class="parameter-unit">(t NH₃/day)</span></div>
+                        <input type="number" class="parameter-input" id="ammonia_production" value="1995" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">5.2.2</div>
+                        <div class="parameter-label">Annual ammonia demand <span class="parameter-unit">(kt NH₃/year)</span></div>
+                        <input type="number" class="parameter-input" id="ammonia_annual_demand" value="687" step="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">5.3 Cost parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">5.3.1</div>
+                        <div class="parameter-label">Haber-Bosch CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="haber_bosch_capex" value="125" step="5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">5.3.2</div>
+                        <div class="parameter-label">Haber-Bosch OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="haber_bosch_opex" value="5" step="0.5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">5.3.3</div>
+                        <div class="parameter-label">Haber-Bosch electricity <span class="parameter-unit">(GWh/year)</span></div>
+                        <input type="number" class="parameter-input" id="haber_bosch_electricity" value="100" step="10">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page5_results">
+                    <div class="page-results-title">Haber-Bosch Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Haber-Bosch Cost</div>
+                            <div class="page-result-value" id="haber_bosch_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="haber_bosch_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="haber_bosch_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Electricity Cost</div>
+                        <div class="page-result-value" id="haber_bosch_electricity_cost">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Ammonia Production (annual)</div>
+                        <div class="page-result-value" id="haber_bosch_ammonia_production">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(4)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(6)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 6: Storage -->
+            <section class="page-section" id="page6">
+                <div class="page-header">
+                    <div class="page-number">Page 6</div>
+                    <h2>Storage</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">6. Storage Capacities</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.1</div>
+                        <div class="parameter-label">H₂ storage CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="storage_h2_capex" value="50" step="5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.2</div>
+                        <div class="parameter-label">NH₃ storage CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="storage_nh3_capex" value="100" step="5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.3</div>
+                        <div class="parameter-label">Storage OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="storage_opex" value="5" step="0.5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.4</div>
+                        <div class="parameter-label">Water storage CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="water_storage_capex_storage" value="5" step="0.5" readonly style="background-color: #e9ecef;">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.5</div>
+                        <div class="parameter-label">Water storage capacity <span class="parameter-unit">(m³)</span></div>
+                        <input type="number" class="parameter-input" id="water_storage_capacity_storage" value="2500" step="100" readonly style="background-color: #e9ecef;">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page6_results">
+                    <div class="page-results-title">Storage Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Storage Cost</div>
+                            <div class="page-result-value" id="storage_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="storage_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="storage_opex_annual">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(5)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(7)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 7: Transport -->
+            <section class="page-section" id="page7">
+                <div class="page-header">
+                    <div class="page-number">Page 7</div>
+                    <h2>Transport</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.1 Logistics</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.1.2</div>
+                        <div class="parameter-label">Sea transport distance <span class="parameter-unit">(km)</span></div>
+                        <input type="number" class="parameter-input" id="transport_distance" value="13000" step="100">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.1.3</div>
+                        <div class="parameter-label">One-way transport time <span class="parameter-unit">(days)</span></div>
+                        <input type="number" class="parameter-input" id="transport_time" value="26" step="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.2 Transport costs</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.1</div>
+                        <div class="parameter-label">Taxes and customs <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="taxes_customs" value="75.69" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.3 Vessel parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.2</div>
+                        <div class="parameter-label">Tank volume <span class="parameter-unit">(m³)</span></div>
+                        <input type="number" class="parameter-input" id="vessel_tank_volume" value="40000" step="1000">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.3</div>
+                        <div class="parameter-label">Investment cost per vessel <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="vessel_capex" value="61.5" step="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.4</div>
+                        <div class="parameter-label">Number of vessels</div>
+                        <input type="number" class="parameter-input" id="num_vessels" value="4" step="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.5</div>
+                        <div class="parameter-label">Vessel OPEX <span class="parameter-unit">(million €/year per vessel)</span></div>
+                        <input type="number" class="parameter-input" id="vessel_opex" value="5" step="0.5">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page7_results">
+                    <div class="page-results-title">Transport Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Transport Cost</div>
+                            <div class="page-result-value" id="transport_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Vessel CAPEX (annualized)</div>
+                        <div class="page-result-value" id="transport_vessel_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Vessel OPEX</div>
+                        <div class="page-result-value" id="transport_vessel_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Taxes & Customs</div>
+                        <div class="page-result-value" id="transport_taxes_customs">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(6)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(8)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 8: Ammonia Cracking -->
+            <section class="page-section" id="page8">
+                <div class="page-header">
+                    <div class="page-number">Page 8</div>
+                    <h2>Ammonia Cracking</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">8.1 Cracking process</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">8.1.1</div>
+                        <div class="parameter-label">Cracking efficiency <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="cracking_efficiency" value="95" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">8.3 Cost parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">8.3.1</div>
+                        <div class="parameter-label">Cracking CAPEX <span class="parameter-unit">(million €)</span></div>
+                        <input type="number" class="parameter-input" id="cracking_capex" value="500" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">8.3.2</div>
+                        <div class="parameter-label">Cracking OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <input type="number" class="parameter-input" id="cracking_opex" value="10" step="0.5">
+                    </div>
+                </div>
+
+                <div class="page-results" id="page8_results">
+                    <div class="page-results-title">Cracking Cost Calculation</div>
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Annual Cracking Cost</div>
+                            <div class="page-result-value" id="cracking_cost_annual">-</div>
+                        </div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-value" id="cracking_capex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">OPEX</div>
+                        <div class="page-result-value" id="cracking_opex_annual">-</div>
+                    </div>
+                    <div class="page-result-item">
+                        <div class="page-result-label">Cracking Efficiency</div>
+                        <div class="page-result-value" id="cracking_efficiency_display">-</div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(7)">← Previous</button>
+                    <button class="nav-button" onclick="showPage(9)">Next →</button>
+                </div>
+            </section>
+
+            <!-- Page 9: Price Prediction -->
+            <section class="page-section" id="page9">
+                <div class="page-header">
+                    <div class="page-number">Page 9</div>
+                    <h2>Price Prediction & Simulation (10 Years)</h2>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">9.1 Current Base Cost</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.1.1</div>
+                        <div class="parameter-label">Current cost per kg H₂ <span class="parameter-unit">(€/kg)</span></div>
+                        <input type="number" class="parameter-input" id="current_cost_per_kg" value="0" step="0.01" readonly>
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">9.2 Cost Reduction Scenarios</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.2.1</div>
+                        <div class="parameter-label">Annual CAPEX reduction <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="capex_reduction_rate" value="5" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.2.2</div>
+                        <div class="parameter-label">Annual OPEX reduction <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="opex_reduction_rate" value="2" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.2.3</div>
+                        <div class="parameter-label">Technology learning rate <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="learning_rate" value="10" step="0.5">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">9.3 Market Factors</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.3.1</div>
+                        <div class="parameter-label">Annual inflation rate <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="inflation_rate" value="2" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.3.2</div>
+                        <div class="parameter-label">Market demand growth <span class="parameter-unit">(%/year)</span></div>
+                        <input type="number" class="parameter-input" id="demand_growth" value="15" step="0.5">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.3.3</div>
+                        <div class="parameter-label">Scale-up efficiency gain <span class="parameter-unit">(%)</span></div>
+                        <input type="number" class="parameter-input" id="scale_efficiency" value="3" step="0.1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">9.4 Scenario Selection</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.4.1</div>
+                        <div class="parameter-label">Prediction scenario</div>
+                        <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
+                            <option value="optimistic">Optimistic (Fast cost reduction)</option>
+                            <option value="realistic" selected>Realistic (Moderate reduction)</option>
+                            <option value="pessimistic">Pessimistic (Slow reduction)</option>
+                            <option value="custom">Custom (Use input values)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="page-results" id="page9_results">
+                    <div class="page-results-title">10-Year Price Prediction</div>
+                    
+                    <div class="page-result-main">
+                        <div class="page-result-item" style="background: transparent; border: none; padding: 0; margin: 0;">
+                            <div class="page-result-label">Current Cost (Year 0)</div>
+                            <div class="page-result-value" id="prediction_current_cost" style="color: #000000;">-</div>
+                        </div>
+                    </div>
+
+                    <div class="page-result-item">
+                        <div class="page-result-label">Predicted Cost (Year 10)</div>
+                        <div class="page-result-value" id="prediction_year10_cost">-</div>
+                    </div>
+
+                    <div class="page-result-item">
+                        <div class="page-result-label">Total Cost Reduction</div>
+                        <div class="page-result-value" id="prediction_total_reduction">-</div>
+                    </div>
+
+                    <div class="page-result-item">
+                        <div class="page-result-label">Average Annual Reduction</div>
+                        <div class="page-result-value" id="prediction_avg_reduction">-</div>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <canvas id="predictionChart" style="max-height: 400px;"></canvas>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #e8e8e8;">
+                                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">Year</th>
+                                    <th style="padding: 12px; text-align: right; color: #2c3e50; font-weight: 600;">Cost (€/kg)</th>
+                                    <th style="padding: 12px; text-align: right; color: #2c3e50; font-weight: 600;">Reduction (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prediction_table_body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <button class="nav-button" onclick="showPage(8)">← Previous</button>
+                    <button class="nav-button" disabled>Next →</button>
+                </div>
+            </section>
+
+            <!-- Calculate Button -->
+            <div class="calculate-section">
+                <button class="calculate-btn" onclick="calculateCosts()">CALCULATE TOTAL COSTS</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-card">
+                <div class="results-title">Cost Results</div>
+                
+                <div class="result-main">
+                    <div class="result-item" style="background: transparent; border: none; padding: 0; margin: 0;">
+                        <div class="result-label">Cost per kg H₂ delivered</div>
+                        <div class="result-value" id="result_cost_per_kg" style="color: #ffffff;">-</div>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">Total annual cost</div>
+                    <div class="result-value" id="result_total_annual">-</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">Annual H₂ delivered</div>
+                    <div class="result-value" id="result_h2_delivered">-</div>
+                </div>
+
+                <div class="cost-breakdown">
+                    <div class="results-title" style="margin-top: 20px;">Cost Breakdown</div>
+                    <div id="cost_breakdown_list"></div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let costChart = null;
+
+        // Page Navigation
+        function showPage(pageIndex) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+            pages[pageIndex].classList.add('active');
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach((link, index) => {
+                if (index === pageIndex) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Calculate costs for the current page
+            calculatePageCosts(pageIndex);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Calculate costs for specific page
+        function calculatePageCosts(pageIndex) {
+            switch(pageIndex) {
+                case 1: calculateWindCosts(); break;
+                case 2: calculateElectrolysisCosts(); break;
+                case 3: calculateDesalinationCosts(); break;
+                case 4: calculateASUCosts(); break;
+                case 5: calculateHaberBoschCosts(); break;
+                case 6: calculateStorageCosts(); break;
+                case 7: calculateTransportCosts(); break;
+                case 8: calculateCrackingCosts(); break;
+                case 9: calculatePrediction(); break;
+            }
+        }
+
+        // Capital Recovery Factor
+        function CRF(i, n) {
+            if (i === 0) return 1 / n;
+            return (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+        }
+
+        // Annualize CAPEX
+        function annualizeCAPEX(capex, discountRate, lifetime) {
+            const crf = CRF(discountRate / 100, lifetime);
+            return capex * crf;
+        }
+
+        // Get input value
+        function getInput(id) {
+            const element = document.getElementById(id);
+            return element ? parseFloat(element.value) || 0 : 0;
+        }
+
+        // Get common parameters
+        function getCommonParams() {
+            return {
+                discountRate: getInput('discount_rate'),
+                lifetime: getInput('project_lifetime')
+            };
+        }
+
+        // Calculate Wind Costs (Page 1)
+        function calculateWindCosts() {
+            const params = getCommonParams();
+            const windCapacity = getInput('wind_capacity') * 1000; // GW to MW
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000; // billion to €
+            const windOPEX = getInput('wind_opex') * 1000000; // million to €
+            const windDepex = getInput('wind_depex') * 1000000; // million to €
+
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor; // MWh
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
+
+            document.getElementById('wind_cost_annual').textContent = (windCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('wind_capex_annual').textContent = (windCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('wind_opex_annual').textContent = (windOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('wind_depex_annual').textContent = (windDepexAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('wind_electricity_output').textContent = (windElectricityAnnual / 1000).toFixed(2) + ' GWh/year';
+            document.getElementById('wind_electricity_price').textContent = (internalElectricityPrice * 1000).toFixed(4) + ' €/MWh';
+        }
+
+        // Calculate Electrolysis Costs (Page 2)
+        function calculateElectrolysisCosts() {
+            const params = getCommonParams();
+            const h2Production = getInput('h2_production') * 1000000; // kt to kg
+            const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
+            const electrolysisOperatingHours = getInput('electrolysis_operating_hours');
+            const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
+            const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
+
+            // Get internal electricity price from wind calculation
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+
+            const electrolysisElectricityDemand = h2Production * electrolysisSpecificEnergy; // kWh
+            const electrolysisPower = electrolysisElectricityDemand / electrolysisOperatingHours; // kW
+            const electrolysisCAPEX = electrolysisPower * electrolysisCAPEXperkW;
+            const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, params.discountRate, params.lifetime);
+            const electrolysisElectricityCost = internalElectricityPrice * electrolysisElectricityDemand;
+            const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEX + electrolysisElectricityCost;
+
+            document.getElementById('electrolysis_cost_annual').textContent = (electrolysisCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('electrolysis_capex_annual').textContent = (electrolysisCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('electrolysis_opex_annual').textContent = (electrolysisOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('electrolysis_electricity_cost').textContent = (electrolysisElectricityCost / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('electrolysis_power').textContent = (electrolysisPower / 1000).toFixed(2) + ' MW';
+            document.getElementById('electrolysis_electricity_demand').textContent = (electrolysisElectricityDemand / 1000000).toFixed(2) + ' GWh/year';
+        }
+
+        // Calculate Desalination Costs (Page 3)
+        function calculateDesalinationCosts() {
+            const params = getCommonParams();
+            const h2Production = getInput('h2_production') * 1000000; // kt to kg
+            const deionisedWaterDemand = getInput('deionised_water_demand'); // L/kg
+            const desalinationSpecificEnergy = getInput('desalination_specific_energy'); // kWh/m³
+            const desalinationCAPEX = getInput('desalination_capex') * 1000000; // million to €
+            const desalinationOPEX = getInput('desalination_opex') * 1000000; // million to €
+
+            // Get internal electricity price
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+
+            const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³
+            const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+            const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, params.discountRate, params.lifetime);
+            const desalinationElectricityCost = internalElectricityPrice * desalinationElectricityDemand;
+            const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + desalinationElectricityCost;
+
+            document.getElementById('desalination_cost_annual').textContent = (desalinationCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('desalination_capex_annual').textContent = (desalinationCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('desalination_opex_annual').textContent = (desalinationOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('desalination_electricity_cost').textContent = (desalinationElectricityCost / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('desalination_water_demand').textContent = (waterDemandAnnual / 1000).toFixed(2) + ' thousand m³/year';
+
+            // Sync water storage values to Page 6
+            const waterStorageCAPEXValue = getInput('water_storage_capex');
+            const waterStorageCapacityValue = getInput('water_storage_capacity');
+            const waterStorageCAPEXStorage = document.getElementById('water_storage_capex_storage');
+            const waterStorageCapacityStorage = document.getElementById('water_storage_capacity_storage');
+            if (waterStorageCAPEXStorage) waterStorageCAPEXStorage.value = waterStorageCAPEXValue;
+            if (waterStorageCapacityStorage) waterStorageCapacityStorage.value = waterStorageCapacityValue;
+            
+            // Recalculate storage costs if on storage page
+            const pages = document.querySelectorAll('.page-section');
+            const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
+            if (currentPage === 5) { // Page 6 (index 5)
+                calculateStorageCosts();
+            }
+        }
+
+        // Calculate ASU Costs (Page 4)
+        function calculateASUCosts() {
+            const params = getCommonParams();
+            const nitrogenDemand = getInput('nitrogen_demand'); // t/day
+            const asuCAPEX = getInput('asu_capex') * 1000000; // million to €
+            const asuOPEX = getInput('asu_opex') * 1000000; // million to €
+            const asuElectricity = getInput('asu_electricity') * 1000000; // GWh to kWh
+
+            // Get internal electricity price
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+
+            const asuCAPEXannual = annualizeCAPEX(asuCAPEX, params.discountRate, params.lifetime);
+            const asuElectricityCost = internalElectricityPrice * asuElectricity;
+            const asuCostAnnual = asuCAPEXannual + asuOPEX + asuElectricityCost;
+            const nitrogenDemandAnnual = nitrogenDemand * 365; // t/year
+
+            document.getElementById('asu_cost_annual').textContent = (asuCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('asu_capex_annual').textContent = (asuCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('asu_opex_annual').textContent = (asuOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('asu_electricity_cost').textContent = (asuElectricityCost / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('asu_nitrogen_demand').textContent = nitrogenDemandAnnual.toFixed(0) + ' t/year';
+        }
+
+        // Calculate Haber-Bosch Costs (Page 5)
+        function calculateHaberBoschCosts() {
+            const params = getCommonParams();
+            const ammoniaProduction = getInput('ammonia_production'); // t/day
+            const haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
+            const haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
+            const haberBoschElectricity = getInput('haber_bosch_electricity') * 1000000; // GWh to kWh
+
+            // Get internal electricity price
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+
+            const haberBoschCAPEXannual = annualizeCAPEX(haberBoschCAPEX, params.discountRate, params.lifetime);
+            const haberBoschElectricityCost = internalElectricityPrice * haberBoschElectricity;
+            const haberBoschCostAnnual = haberBoschCAPEXannual + haberBoschOPEX + haberBoschElectricityCost;
+            const ammoniaProductionAnnual = ammoniaProduction * 365; // t/year
+
+            document.getElementById('haber_bosch_cost_annual').textContent = (haberBoschCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('haber_bosch_capex_annual').textContent = (haberBoschCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('haber_bosch_opex_annual').textContent = (haberBoschOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('haber_bosch_electricity_cost').textContent = (haberBoschElectricityCost / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('haber_bosch_ammonia_production').textContent = (ammoniaProductionAnnual / 1000).toFixed(2) + ' kt/year';
+        }
+
+        // Calculate Storage Costs (Page 6)
+        function calculateStorageCosts() {
+            const params = getCommonParams();
+            const storageH2CAPEX = getInput('storage_h2_capex') * 1000000; // million to €
+            const storageNH3CAPEX = getInput('storage_nh3_capex') * 1000000; // million to €
+            const storageOPEX = getInput('storage_opex') * 1000000; // million to €
+            const waterStorageCAPEX = getInput('water_storage_capex') * 1000000; // million to €
+
+            // Sync water storage values from Page 3
+            const waterStorageCAPEXValue = getInput('water_storage_capex');
+            const waterStorageCapacityValue = getInput('water_storage_capacity');
+            document.getElementById('water_storage_capex_storage').value = waterStorageCAPEXValue;
+            document.getElementById('water_storage_capacity_storage').value = waterStorageCapacityValue;
+
+            const storageTotalCAPEX = storageH2CAPEX + storageNH3CAPEX + waterStorageCAPEX;
+            const storageCAPEXannual = annualizeCAPEX(storageTotalCAPEX, params.discountRate, params.lifetime);
+            const storageCostAnnual = storageCAPEXannual + storageOPEX;
+
+            document.getElementById('storage_cost_annual').textContent = (storageCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('storage_capex_annual').textContent = (storageCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('storage_opex_annual').textContent = (storageOPEX / 1000000).toFixed(2) + ' M€/year';
+        }
+
+        // Calculate Transport Costs (Page 7)
+        function calculateTransportCosts() {
+            const params = getCommonParams();
+            const taxesCustoms = getInput('taxes_customs') * 1000000; // million to €
+            const vesselCAPEX = getInput('vessel_capex') * 1000000; // million to €
+            const numVessels = getInput('num_vessels');
+            const vesselOPEX = getInput('vessel_opex') * 1000000; // million to € per vessel
+
+            const vesselTotalCAPEX = vesselCAPEX * numVessels;
+            const vesselCAPEXannual = annualizeCAPEX(vesselTotalCAPEX, params.discountRate, params.lifetime);
+            const vesselOPEXtotal = vesselOPEX * numVessels;
+            const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + taxesCustoms;
+
+            document.getElementById('transport_cost_annual').textContent = (transportCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('transport_vessel_capex_annual').textContent = (vesselCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('transport_vessel_opex_annual').textContent = (vesselOPEXtotal / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('transport_taxes_customs').textContent = (taxesCustoms / 1000000).toFixed(2) + ' M€/year';
+        }
+
+        // Calculate Cracking Costs (Page 8)
+        function calculateCrackingCosts() {
+            const params = getCommonParams();
+            const crackingEfficiency = getInput('cracking_efficiency');
+            const crackingCAPEX = getInput('cracking_capex') * 1000000; // million to €
+            const crackingOPEX = getInput('cracking_opex') * 1000000; // million to €
+
+            const crackingCAPEXannual = annualizeCAPEX(crackingCAPEX, params.discountRate, params.lifetime);
+            const crackingCostAnnual = crackingCAPEXannual + crackingOPEX;
+
+            document.getElementById('cracking_cost_annual').textContent = (crackingCostAnnual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('cracking_capex_annual').textContent = (crackingCAPEXannual / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('cracking_opex_annual').textContent = (crackingOPEX / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('cracking_efficiency_display').textContent = crackingEfficiency.toFixed(1) + ' %';
+        }
+
+        // Calculate Price Prediction (Page 9)
+        let predictionChart = null;
+
+        function calculatePrediction() {
+            // Get current cost from main calculation
+            const currentCostElement = document.getElementById('result_cost_per_kg');
+            let currentCost = 0;
+            
+            if (currentCostElement && currentCostElement.textContent !== '-') {
+                const costText = currentCostElement.textContent.replace(' €/kg', '').trim();
+                currentCost = parseFloat(costText) || 0;
+            } else {
+                // Try to get from input field
+                currentCost = getInput('current_cost_per_kg');
+            }
+
+            // Update current cost input
+            document.getElementById('current_cost_per_kg').value = currentCost.toFixed(4);
+
+            // Get scenario
+            const scenario = document.getElementById('prediction_scenario').value;
+            
+            // Get input values
+            let capexReduction = getInput('capex_reduction_rate');
+            let opexReduction = getInput('opex_reduction_rate');
+            let learningRate = getInput('learning_rate');
+            const inflationRate = getInput('inflation_rate');
+            const demandGrowth = getInput('demand_growth');
+            const scaleEfficiency = getInput('scale_efficiency');
+
+            // Apply scenario presets
+            if (scenario === 'optimistic') {
+                capexReduction = 8;
+                opexReduction = 4;
+                learningRate = 15;
+            } else if (scenario === 'realistic') {
+                capexReduction = 5;
+                opexReduction = 2;
+                learningRate = 10;
+            } else if (scenario === 'pessimistic') {
+                capexReduction = 3;
+                opexReduction = 1;
+                learningRate = 5;
+            }
+            // 'custom' uses input values
+
+            // Calculate 10-year prediction
+            const years = [];
+            const costs = [];
+            const reductions = [];
+            
+            let yearCost = currentCost;
+            const baseCost = currentCost;
+
+            for (let year = 0; year <= 10; year++) {
+                years.push(year);
+                
+                if (year === 0) {
+                    costs.push(yearCost);
+                    reductions.push(0);
+                } else {
+                    // Calculate cost reduction factors
+                    const capexFactor = Math.pow(1 - capexReduction / 100, year);
+                    const opexFactor = Math.pow(1 - opexReduction / 100, year);
+                    const learningFactor = Math.pow(1 - learningRate / 100, year);
+                    const scaleFactor = Math.pow(1 - scaleEfficiency / 100, year);
+                    const inflationFactor = Math.pow(1 + inflationRate / 100, year);
+                    const demandFactor = Math.pow(1 - demandGrowth / 100, year); // Higher demand = lower cost per unit
+
+                    // Apply reductions (assuming 60% CAPEX, 30% OPEX, 10% other factors)
+                    const costReduction = 0.6 * (1 - capexFactor) + 0.3 * (1 - opexFactor) + 0.1 * (1 - learningFactor * scaleFactor);
+                    const netReduction = costReduction * (1 / demandFactor);
+                    
+                    yearCost = baseCost * (1 - netReduction) * inflationFactor;
+                    costs.push(yearCost);
+                    reductions.push(((baseCost - yearCost) / baseCost * 100));
+                }
+            }
+
+            // Display results
+            document.getElementById('prediction_current_cost').textContent = currentCost.toFixed(4) + ' €/kg';
+            document.getElementById('prediction_year10_cost').textContent = costs[10].toFixed(4) + ' €/kg';
+            
+            const totalReduction = ((currentCost - costs[10]) / currentCost * 100);
+            document.getElementById('prediction_total_reduction').textContent = totalReduction.toFixed(2) + ' %';
+            document.getElementById('prediction_avg_reduction').textContent = (totalReduction / 10).toFixed(2) + ' %/year';
+
+            // Update table
+            let tableHTML = '';
+            for (let i = 0; i <= 10; i++) {
+                tableHTML += `
+                    <tr style="border-bottom: 1px solid #e8e8e8;">
+                        <td style="padding: 10px; color: #2c3e50;">Year ${i}</td>
+                        <td style="padding: 10px; text-align: right; color: #000000; font-weight: 600; font-family: 'Courier New', monospace;">${costs[i].toFixed(4)}</td>
+                        <td style="padding: 10px; text-align: right; color: #2c3e50;">${reductions[i].toFixed(2)}%</td>
+                    </tr>
+                `;
+            }
+            document.getElementById('prediction_table_body').innerHTML = tableHTML;
+
+            // Update chart
+            if (predictionChart) {
+                predictionChart.destroy();
+            }
+
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            predictionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years.map(y => `Year ${y}`),
+                    datasets: [{
+                        label: 'Cost per kg H₂ (€/kg)',
+                        data: costs,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3498db',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: '10-Year Hydrogen Cost Prediction',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Cost (€/kg H₂)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + ' €';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Main calculation function
+        function calculateCosts() {
+            // Get all inputs
+            const h2ImportTarget = getInput('h2_import_target') * 1000; // t to kg
+            const h2SteelDemand = getInput('h2_steel_demand') * 1000000; // kt to kg
+            const discountRate = getInput('discount_rate');
+            const lifetime = getInput('project_lifetime');
+
+            // Wind parameters
+            const windCapacity = getInput('wind_capacity') * 1000; // GW to MW
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000; // billion to €
+            const windOPEX = getInput('wind_opex') * 1000000; // million to €
+            const windDepex = getInput('wind_depex') * 1000000; // million to €
+
+            // Electrolysis parameters
+            const h2Production = getInput('h2_production') * 1000000; // kt to kg
+            const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
+            const electrolysisAvailability = getInput('electrolysis_availability') / 100;
+            const electrolysisOperatingHours = getInput('electrolysis_operating_hours');
+            const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
+            const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
+
+            // Water parameters
+            const seawaterDemand = getInput('seawater_demand'); // L/kg
+            const deionisedWaterDemand = getInput('deionised_water_demand'); // L/kg
+            const desalinationSpecificEnergy = getInput('desalination_specific_energy'); // kWh/m³
+            const desalinationCAPEX = getInput('desalination_capex') * 1000000; // million to €
+            const desalinationOPEX = getInput('desalination_opex') * 1000000; // million to €
+
+            // ASU parameters
+            const nitrogenDemand = getInput('nitrogen_demand'); // t/day
+            const asuCAPEX = getInput('asu_capex') * 1000000; // million to €
+            const asuOPEX = getInput('asu_opex') * 1000000; // million to €
+            const asuElectricity = getInput('asu_electricity') * 1000000; // GWh to kWh
+
+            // Haber-Bosch parameters
+            const ammoniaProduction = getInput('ammonia_production'); // t/day
+            const ammoniaAnnualDemand = getInput('ammonia_annual_demand') * 1000000; // kt to kg
+            const haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
+            const haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
+            const haberBoschElectricity = getInput('haber_bosch_electricity') * 1000000; // GWh to kWh
+
+            // Storage parameters
+            const storageH2CAPEX = getInput('storage_h2_capex') * 1000000; // million to €
+            const storageNH3CAPEX = getInput('storage_nh3_capex') * 1000000; // million to €
+            const storageOPEX = getInput('storage_opex') * 1000000; // million to €
+            const waterStorageCAPEX = getInput('water_storage_capex') * 1000000; // million to €
+
+            // Transport parameters
+            const transportDistance = getInput('transport_distance');
+            const transportTime = getInput('transport_time');
+            const taxesCustoms = getInput('taxes_customs') * 1000000; // million to €
+            const vesselTankVolume = getInput('vessel_tank_volume');
+            const vesselCAPEX = getInput('vessel_capex') * 1000000; // million to €
+            const numVessels = getInput('num_vessels');
+            const vesselOPEX = getInput('vessel_opex') * 1000000; // million to € per vessel
+
+            // Cracking parameters
+            const crackingEfficiency = getInput('cracking_efficiency') / 100;
+            const crackingCAPEX = getInput('cracking_capex') * 1000000; // million to €
+            const crackingOPEX = getInput('cracking_opex') * 1000000; // million to €
+
+            // ========== CALCULATIONS ==========
+
+            // 1. Wind electricity generation
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor; // MWh
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, discountRate, lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+
+            // Internal electricity price
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
+
+            // 2. Electrolysis
+            const electrolysisElectricityDemand = h2Production * electrolysisSpecificEnergy; // kWh
+            const electrolysisPower = electrolysisElectricityDemand / electrolysisOperatingHours; // kW
+            const electrolysisCAPEX = electrolysisPower * electrolysisCAPEXperkW;
+            const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
+            const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEX + (internalElectricityPrice * electrolysisElectricityDemand);
+
+            // 3. Water desalination
+            const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³ (L to m³)
+            const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+            const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, discountRate, lifetime);
+            const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + (internalElectricityPrice * desalinationElectricityDemand);
+
+            // 4. ASU
+            const asuCAPEXannual = annualizeCAPEX(asuCAPEX, discountRate, lifetime);
+            const asuCostAnnual = asuCAPEXannual + asuOPEX + (internalElectricityPrice * asuElectricity);
+
+            // 5. Haber-Bosch
+            const haberBoschCAPEXannual = annualizeCAPEX(haberBoschCAPEX, discountRate, lifetime);
+            const haberBoschCostAnnual = haberBoschCAPEXannual + haberBoschOPEX + (internalElectricityPrice * haberBoschElectricity);
+
+            // 6. Storage
+            const storageTotalCAPEX = storageH2CAPEX + storageNH3CAPEX + waterStorageCAPEX;
+            const storageCAPEXannual = annualizeCAPEX(storageTotalCAPEX, discountRate, lifetime);
+            const storageCostAnnual = storageCAPEXannual + storageOPEX;
+
+            // 7. Transport
+            const vesselTotalCAPEX = vesselCAPEX * numVessels;
+            const vesselCAPEXannual = annualizeCAPEX(vesselTotalCAPEX, discountRate, lifetime);
+            const vesselOPEXtotal = vesselOPEX * numVessels;
+            const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + taxesCustoms;
+
+            // 8. Cracking
+            const crackingCAPEXannual = annualizeCAPEX(crackingCAPEX, discountRate, lifetime);
+            const crackingCostAnnual = crackingCAPEXannual + crackingOPEX;
+
+            // Total annual cost
+            const totalAnnualCost = windCostAnnual + electrolysisCostAnnual + desalinationCostAnnual + 
+                                   asuCostAnnual + haberBoschCostAnnual + storageCostAnnual + 
+                                   transportCostAnnual + crackingCostAnnual;
+
+            // Delivered hydrogen (accounting for cracking efficiency)
+            const h2DeliveredAnnual = h2SteelDemand * crackingEfficiency; // kg
+
+            // Cost per kg H₂
+            const costPerKg = totalAnnualCost / h2DeliveredAnnual;
+
+            // ========== DISPLAY RESULTS ==========
+            document.getElementById('result_cost_per_kg').textContent = costPerKg.toFixed(4) + ' €/kg';
+            document.getElementById('result_total_annual').textContent = (totalAnnualCost / 1000000).toFixed(2) + ' M€/year';
+            document.getElementById('result_h2_delivered').textContent = (h2DeliveredAnnual / 1000000).toFixed(2) + ' t/year';
+
+            // Update prediction page current cost
+            document.getElementById('current_cost_per_kg').value = costPerKg.toFixed(4);
+            
+            // Recalculate prediction if on prediction page
+            const pages = document.querySelectorAll('.page-section');
+            const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
+            if (currentPage === 9) {
+                calculatePrediction();
+            }
+
+            // Cost breakdown
+            const breakdown = [
+                { name: 'Wind Farm', value: windCostAnnual },
+                { name: 'Electrolysis', value: electrolysisCostAnnual },
+                { name: 'Desalination', value: desalinationCostAnnual },
+                { name: 'ASU (Nitrogen)', value: asuCostAnnual },
+                { name: 'Haber-Bosch', value: haberBoschCostAnnual },
+                { name: 'Storage', value: storageCostAnnual },
+                { name: 'Transport', value: transportCostAnnual },
+                { name: 'Cracking', value: crackingCostAnnual }
+            ];
+
+            let breakdownHTML = '';
+            breakdown.forEach(item => {
+                const percentage = (item.value / totalAnnualCost * 100).toFixed(1);
+                breakdownHTML += `
+                    <div class="cost-item">
+                        <span>${item.name}</span>
+                        <span style="font-weight: 700; color: #2c3e50; font-family: 'Courier New', monospace;">
+                            ${(item.value / 1000000).toFixed(2)} M€ <span style="color: #6c757d; font-weight: 500;">(${percentage}%)</span>
+                        </span>
+                    </div>
+                `;
+            });
+            document.getElementById('cost_breakdown_list').innerHTML = breakdownHTML;
+
+            // Update chart
+            if (costChart) {
+                costChart.destroy();
+            }
+
+            const ctx = document.getElementById('costChart').getContext('2d');
+            costChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: breakdown.map(item => item.name),
+                    datasets: [{
+                        label: 'Annual Cost (M€)',
+                        data: breakdown.map(item => item.value / 1000000),
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#e74c3c',
+                            '#f39c12',
+                            '#9b59b6',
+                            '#1abc9c',
+                            '#e67e22',
+                            '#34495e'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Cost Breakdown by Component'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Annual Cost (M€)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+            // Add event listeners to all inputs for auto-calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            const allInputs = document.querySelectorAll('.parameter-input');
+            allInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const pages = document.querySelectorAll('.page-section');
+                    const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
+                    if (currentPage >= 0) {
+                        calculatePageCosts(currentPage);
+                        // Also recalculate total if needed
+                        if (currentPage > 0 && currentPage !== 9) {
+                            calculateCosts();
+                        }
+                    }
+                });
+            });
+
+            // Add event listener for scenario selection
+            const scenarioSelect = document.getElementById('prediction_scenario');
+            if (scenarioSelect) {
+                scenarioSelect.addEventListener('change', function() {
+                    calculatePrediction();
+                });
+            }
+
+            // Calculate initial values
+            calculatePageCosts(1);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const pages = document.querySelectorAll('.page-section');
+            const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
+            
+            if (e.key === 'ArrowRight' && currentPage < pages.length - 1) {
+                showPage(currentPage + 1);
+            } else if (e.key === 'ArrowLeft' && currentPage > 0) {
+                showPage(currentPage - 1);
+            }
+        });
+    </script>
+</body>
+</html>

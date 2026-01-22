@@ -1,0 +1,11 @@
+{
+  "name": "wasserstoff-kostenrechner",
+  "version": "1.0.0",
+  "description": "Hydrogen Cost Calculator Simulation",
+  "scripts": {
+    "build": "echo 'No build step required for static site'"
+  },
+  "keywords": ["hydrogen", "cost", "calculator", "simulation"],
+  "author": "",
+  "license": "MIT"
+}

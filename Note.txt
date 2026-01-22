@@ -1,0 +1,202 @@
+Im Folgenden steht **eine vollständige, strukturierte Parameterliste** für **jeden Prozessschritt** von der **Stromerzeugung bis zum Stahlwerk**.
+Die Liste ist so aufgebaut, dass du **jeden Parameter direkt in einen Code oder ein Rechenmodell übernehmen kannst**.
+Es gibt **keinen Code**, nur Parameter.
+Alle Zahlen stammen **ausschließlich aus deiner Excel-Datei** oder sind **direkte Ableitungen daraus** (z. B. Jahreswerte).
+
+---
+
+## 1. Stromerzeugung – Offshore-Windpark
+
+**Technische Parameter**
+
+* Anzahl Windenergieanlagen: **260**
+* Turbinentyp: **MHI Vestas V174**
+* Nennleistung pro Anlage: **9,5 MW**
+* Installierte Gesamtleistung: **2470 MW**
+* Simulationsfaktor: **0,985**
+* Zeitauflösung: **1 h**
+* Simulationsdauer: **8760 h/a**
+
+**Energieparameter**
+
+* Jahresstromerzeugung: **9858,624845 GWh/a**
+* Referenz-Windgeschwindigkeit: **8,88**
+
+---
+
+## 2. Elektrische Energie – Systembilanz
+
+* Jährlicher Stromverbrauch (Zielsystem): **8500 GWh/a**
+* Stromüberschuss/Reserve: aus Windzeitreihe berechnet
+* Netzanschluss: **ja**
+
+---
+
+## 3. Elektrolyse – Wasserstofferzeugung (AEL)
+
+**Produktionsparameter**
+
+* Jahresproduktion Wasserstoff: **110 000 000 kg/a**
+* Tagesproduktion Wasserstoff: **301 369,863 kg/d**
+* Stundenproduktion Wasserstoff: **12 557,078 kg/h**
+
+**Energieparameter**
+
+* Spezifischer Strombedarf Elektrolyse: **48 kWh/kg H₂**
+* Jahresstrombedarf Elektrolyse: **5 280 GWh/a**
+* Gesamtstrombedarf inkl. Nebenverbrauch: **5 456 GWh/a**
+
+**Wasserbedarf**
+
+* Wasserbedarf: **1 100 000 m³/a**
+* Spezifischer Wasserbedarf: **10 l/kg H₂**
+* Energiebedarf Entsalzung: **5 500 000 kWh/a**
+* Spezifischer Entsalzungsbedarf: **5 kWh/m³**
+
+**Kostenparameter**
+
+* Investitionskosten Elektrolyse: **319 445 783 €**
+* Zusätzliche Investitionen (Verdichter + Entsalzung): **33 180 722,89 €**
+* Betriebskosten Elektrolyse: **10 547 945,21 €/a**
+* Lebensdauer: **15 Jahre**
+
+---
+
+## 4. Stickstoffbereitstellung (ASU / N₂-Aufbereitung)
+
+**Stoffparameter**
+
+* Stickstoffbedarf: **1 406 393 kg/d**
+
+**Energieparameter**
+
+* Spezifischer Strombedarf: **0,33 kWh/kg N₂**
+
+**Kostenparameter**
+
+* Investitionskosten: **1700–1989 (Einheit wie im Sheet)**
+* Betriebskostenanteil: **3 % vom CAPEX**
+
+---
+
+## 5. Haber-Bosch-Synthese (Ammoniak)
+
+**Stoffströme**
+
+* Wasserstoff-Einsatz: **301 370 kg/d**
+* Stickstoff-Einsatz: **1 406 393 kg/d**
+* Ammoniak-Produktion: **1 707 763 kg/d**
+* Jahresproduktion Ammoniak: **680 287 t/a**
+
+**Energieparameter**
+
+* Energiebedarf Haber-Bosch: **0,65 MWh/t NH₃**
+* Energiebedarf ASU: **0,255 MWh/t NH₃**
+* Gesamtenergiebedarf Prozess: **53 699,91 (wie im Sheet angegeben)**
+
+**Kostenparameter**
+
+* CAPEX Haber-Bosch + ASU: **31 145 948,58 €**
+* OPEX-Anteil: **2 %**
+* NH₃-Speicherkosten: **243 €/t NH₃**
+* Lebensdauer: **15 Jahre**
+
+---
+
+## 6. Speicherung (NH₃ / H₂)
+
+* Speicherform: **Ammoniak**
+* Speicherverluste: **in Transport-/Speichertabellen enthalten**
+* Speichergröße: aus NH₃-Jahresmenge ableitbar
+
+---
+
+## 7. Transport – Produktionsstandort → Europa → Stahlwerk
+
+**Mengen**
+
+* Nutzbarer Wasserstoff: **110 000 t/a**
+* Verluste (Recovery): **5 500 t/a**
+* Transportierter Wasserstoff: **115 500 t/a**
+* Wasserstoff in Ammoniak gebunden: **656 250 t/a**
+* Gesamtbedarf Ammoniak: **≈ 682 000 t/a**
+
+**Distanzen**
+
+* Produktionsland → Deutschland (See): **13 000 km**
+* Rotterdam → Köln: **350 km**
+* Duisburg → Köln: **73 km**
+
+**Transportparameter**
+
+* Dauer One-Way: **26 Tage**
+* Fahrten Hochsee: **12–14 / a**
+* Fahrten Binnen: **264 / a**
+
+**Kostenparameter**
+
+* Transportkosten Basis: **40 €/t**
+* Ammoniakpreis (2025): **461,77 €/t**
+* Zoll: **5,5 %**
+* Einfuhrumsatzsteuer: **19 %**
+* Investitionskosten NH₃-Tanker: **736 €/m³**
+* Pipelinekosten: **2 750 000 €/km**
+
+---
+
+## 8. Ammoniak-Cracking (am Zielort)
+
+**Kapazitätsparameter**
+
+* Cracking-Kapazität: **500 000 000 (wie im Sheet angegeben)**
+
+**Kostenparameter**
+
+* Investitionskosten: **500 000 000 €**
+* Jährliche Kapitalkosten: **33 333 333,33 €/a**
+* Betriebskosten: **12 500 000 €/a**
+* Lebensdauer: **15 Jahre**
+
+---
+
+## 9. ORC-Anlage (Abwärmenutzung)
+
+* Investitionskosten: **10 000 000 €**
+* Jährliche Kapitalkosten: **666 666,67 €/a**
+* Betriebskosten: **250 000 €/a**
+
+---
+
+## 10. Infrastruktur & Anbindung
+
+### Option A: Onshore-Elektrolyse
+
+* Unterseekabel: **60 km**
+* Kosten Unterseekabel: **3 500 000 €/km**
+* Freileitung: **15 km**
+* Kosten Freileitung: **597 841 €/km**
+* NH₃-Pipeline: **220 km**
+* Kosten NH₃-Pipeline: **1 000 000 €/km**
+* Gesamt-CAPEX Infrastruktur: **438 967 615 €**
+
+### Option B: Offshore-H₂-Produktion
+
+* Unterseepipeline: **60 km**
+* Kosten Unterseepipeline: **5 000 000 €/km**
+* Gesamt-CAPEX Infrastruktur: **528 967 615 €**
+
+---
+
+## 11. Stahlwerk (Input-Parameter)
+
+* Wasserstoffbedarf Stahlwerk: **110 000 t/a**
+* Wasserstoffform am Werkstor: **H₂ (nach Cracking)**
+* Versorgungspfad: **NH₃ → Cracking → H₂**
+
+---
+
+### Wenn du möchtest, kann ich als nächsten Schritt:
+
+* die **Parameter exakt zu Modell-Eingaben gruppieren** (Energie, Kosten, Stoffströme),
+* oder die **Liste direkt auf typische Python-/PyPSA-/Excel-Modelle abbilden**,
+* oder die **Parameterreduktion erklären (welche sind zwingend, welche optional)**.

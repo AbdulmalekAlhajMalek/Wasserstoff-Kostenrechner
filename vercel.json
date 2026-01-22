@@ -4,12 +4,20 @@
     {
       "source": "/",
       "destination": "/wasserstoff_simulation.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/(.*\\.html)",
       "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        },
         {
           "key": "Cache-Control",
           "value": "public, max-age=3600"

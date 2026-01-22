@@ -15,8 +15,11 @@ wasserstoff_app.py
 wasserstoff_kostenrechner.py
 wasserstoff_komplett.py
 app.py
+requirements.txt
 templates/
 static/
 wasserstoff_rechner.html
 wasserstoff_rechner_erweitert.html
 wasserstoff_parameter_website.html
+README_DEPLOYMENT.md
+.gitignore

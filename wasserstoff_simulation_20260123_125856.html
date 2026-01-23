@@ -569,13 +569,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.1</div>
                         <div class="parameter-label">Wasserstoff-Importziel <span class="parameter-unit">(t H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_import_target" value="120800" step="1000">
+                        <input type="number" class="parameter-input" id="h2_import_target" value="100000" step="1000">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.2</div>
                         <div class="parameter-label">Stahlwerksbedarf <span class="parameter-unit">(kt H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_steel_demand" value="120.8" step="0.1">
+                        <input type="number" class="parameter-input" id="h2_steel_demand" value="110" step="1">
                     </div>
 
                     <div class="parameter-item">
@@ -587,7 +587,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.4</div>
                         <div class="parameter-label">Projektlebensdauer <span class="parameter-unit">(Jahre)</span></div>
-                        <input type="number" class="parameter-input" id="project_lifetime" value="20" step="1">
+                        <input type="number" class="parameter-input" id="project_lifetime" value="25" step="1">
                     </div>
 
                     <div class="parameter-item">
@@ -641,13 +641,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">2.2.2</div>
                         <div class="parameter-label">Windpark CAPEX <span class="parameter-unit">(Mrd. €)</span></div>
-                        <input type="number" class="parameter-input" id="wind_capex" value="4.94" step="0.01">
+                        <input type="number" class="parameter-input" id="wind_capex" value="5.32" step="0.01">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">2.2.3</div>
                         <div class="parameter-label">Windpark OPEX <span class="parameter-unit">(Mio. €/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="wind_opex" value="148.2" step="0.01">
+                        <input type="number" class="parameter-input" id="wind_opex" value="114.46" step="0.01">
                     </div>
 
                     <div class="parameter-item">
@@ -743,7 +743,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.1.2</div>
                         <div class="parameter-label">Wasserstoffproduktion <span class="parameter-unit">(kt H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_production" value="120.8" step="0.1">
+                        <input type="number" class="parameter-input" id="h2_production" value="110" step="1">
                     </div>
                 </div>
 
@@ -753,7 +753,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.2.1</div>
                         <div class="parameter-label">Spezifischer Strombedarf <span class="parameter-unit">(kWh/kg H₂)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="48" step="0.1">
+                        <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="50" step="0.1">
                     </div>
                 </div>
 
@@ -781,7 +781,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.4</div>
                         <div class="parameter-label">Mindestlastanteil <span class="parameter-unit">(-)</span></div>
-                        <input type="number" class="parameter-input" id="min_load_fraction" value="0.20" step="0.05" min="0" max="1">
+                        <input type="number" class="parameter-input" id="min_load_fraction" value="0.1" step="0.05" min="0" max="1">
                     </div>
 
                     <div class="parameter-item">
@@ -803,13 +803,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.4.1</div>
                         <div class="parameter-label">Elektrolyseur CAPEX <span class="parameter-unit">(€/kW)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_capex_per_kw" value="464" step="10">
+                        <input type="number" class="parameter-input" id="electrolysis_capex_per_kw" value="450" step="10">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.4.2</div>
                         <div class="parameter-label">Elektrolyseur OPEX <span class="parameter-unit">(Mio. €/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_opex" value="0" step="0.1">
+                        <input type="number" class="parameter-input" id="electrolysis_opex" value="10.5" step="0.1">
                     </div>
                 </div>
 
@@ -878,7 +878,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">4.2.1</div>
                         <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/m³)</span></div>
-                        <input type="number" class="parameter-input" id="desalination_specific_energy" value="4" step="0.1">
+                        <input type="number" class="parameter-input" id="desalination_specific_energy" value="5" step="0.1">
                     </div>
 
                     <div class="parameter-item">
@@ -890,7 +890,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">4.2.3</div>
                         <div class="parameter-label">RO OPEX fraction per year <span class="parameter-unit">(-)</span></div>
-                        <input type="number" class="parameter-input" id="ro_opex_fraction_per_year" value="0" step="0.01" min="0" max="1">
+                        <input type="number" class="parameter-input" id="ro_opex_fraction_per_year" value="0.05" step="0.01" min="0" max="1">
                     </div>
 
                     <div class="parameter-item">
@@ -1013,7 +1013,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.4</div>
                         <div class="parameter-label">ASU electricity demand <span class="parameter-unit">(GWh/year)</span></div>
-                        <input type="number" class="parameter-input" id="asu_electricity" value="186.7" step="0.1">
+                        <input type="number" class="parameter-input" id="asu_electricity" value="50" step="1">
                     </div>
 
                     <div class="parameter-item">
@@ -1025,13 +1025,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.6</div>
                         <div class="parameter-label">ASU CAPEX per unit capacity <span class="parameter-unit">(€/t N₂/day)</span></div>
-                        <input type="number" class="parameter-input" id="asu_capex_per_unit" value="1700" step="100">
+                        <input type="number" class="parameter-input" id="asu_capex_per_unit" value="0" step="1000">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.7</div>
                         <div class="parameter-label">ASU OPEX share <span class="parameter-unit">(-, fraction of CAPEX)</span></div>
-                        <input type="number" class="parameter-input" id="asu_opex_share" value="0.03" step="0.01" min="0" max="1">
+                        <input type="number" class="parameter-input" id="asu_opex_share" value="0" step="0.01" min="0" max="1">
                     </div>
                 </div>
 
@@ -1086,7 +1086,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">6.1.2</div>
                         <div class="parameter-label">Annual ammonia demand <span class="parameter-unit">(kt NH₃/year)</span></div>
-                        <input type="number" class="parameter-input" id="ammonia_annual_demand" value="684.5" step="0.1">
+                        <input type="number" class="parameter-input" id="ammonia_annual_demand" value="687" step="1">
                     </div>
                 </div>
 
@@ -1102,13 +1102,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">6.2.2</div>
                         <div class="parameter-label">Haber-Bosch OPEX <span class="parameter-unit">(million €/year)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_opex" value="16.8" step="0.1">
+                        <input type="number" class="parameter-input" id="haber_bosch_opex" value="5" step="0.5">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">6.2.3</div>
                         <div class="parameter-label">Haber-Bosch electricity <span class="parameter-unit">(GWh/year)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_electricity" value="376.5" step="0.1">
+                        <input type="number" class="parameter-input" id="haber_bosch_electricity" value="100" step="10">
                     </div>
 
                     <div class="parameter-item">
@@ -1120,7 +1120,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">6.2.5</div>
                         <div class="parameter-label">Haber-Bosch CAPEX per unit <span class="parameter-unit">(€/t NH₃/day)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_capex_per_unit" value="491.4" step="10">
+                        <input type="number" class="parameter-input" id="haber_bosch_capex_per_unit" value="0" step="1000">
                     </div>
 
                     <div class="parameter-item">
@@ -1193,13 +1193,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">7.1.1</div>
                         <div class="parameter-label">H₂ storage CAPEX <span class="parameter-unit">(million €)</span></div>
-                        <input type="number" class="parameter-input" id="storage_h2_capex" value="21.85" step="0.1">
+                        <input type="number" class="parameter-input" id="storage_h2_capex" value="50" step="5">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">7.1.2</div>
                         <div class="parameter-label">NH₃ storage CAPEX <span class="parameter-unit">(million €)</span></div>
-                        <input type="number" class="parameter-input" id="storage_nh3_capex" value="55.5" step="0.1">
+                        <input type="number" class="parameter-input" id="storage_nh3_capex" value="100" step="5">
                     </div>
 
                     <div class="parameter-item">
@@ -1235,13 +1235,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">7.1.8</div>
                         <div class="parameter-label">NH₃ storage CAPEX per t <span class="parameter-unit">(€/t NH₃)</span></div>
-                        <input type="number" class="parameter-input" id="capex_per_t_nh3_storage" value="810" step="10">
+                        <input type="number" class="parameter-input" id="capex_per_t_nh3_storage" value="0" step="10">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">7.1.9</div>
                         <div class="parameter-label">Storage OPEX share <span class="parameter-unit">(-, fraction of CAPEX)</span></div>
-                        <input type="number" class="parameter-input" id="storage_opex_share" value="0.03" step="0.01" min="0" max="1">
+                        <input type="number" class="parameter-input" id="storage_opex_share" value="0" step="0.01" min="0" max="1">
                     </div>
 
                     <div class="parameter-item">
@@ -2586,10 +2586,10 @@
 
                 // ========== CALCULATIONS ==========
 
-                // Wind costs are ALWAYS calculated (from Code_Final.py logic)
-                // The includeWindInTotal flag only determines if they are added separately to total costs
-                // or only included via electricity price (which is already done above)
-                const windCostAnnualTotal = includeWindInTotal ? (windCAPEXannual + windOPEX + windDepexAnnual) : 0;
+                let windCostAnnualTotal = 0;
+                if (includeWindInTotal) {
+                    windCostAnnualTotal = windCAPEXannual + windOPEX + windDepexAnnual;
+                }
 
                 // Electrolysis calculation with theoretical minimum check
                 // Theoretical minimum: 39.4 kWh/kg H₂ (based on enthalpy: 285.83 kJ/mol H₂O)
@@ -2917,11 +2917,11 @@
             // Calculate costs per kg H₂
             const costPerKgFactor = 1 / h2DeliveredAnnual;
             
-                const breakdown = [
+            const breakdown = [
                 { 
                     name: 'Wind Farm', 
-                    capex: (windCAPEXannual + windDepexAnnual) * costPerKgFactor,
-                    opex: windOPEX * costPerKgFactor,
+                    capex: (includeWindInTotal ? (windCAPEXannual + windDepexAnnual) : 0) * costPerKgFactor,
+                    opex: (includeWindInTotal ? windOPEX : 0) * costPerKgFactor,
                     variable: 0
                 },
                 { 

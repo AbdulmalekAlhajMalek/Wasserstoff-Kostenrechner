@@ -1554,25 +1554,25 @@
                     <div class="parameter-item">
                         <div class="parameter-number">8.3.3</div>
                         <div class="parameter-label">Number of vessels <span class="parameter-unit">(calculated)</span></div>
-                        <input type="number" class="parameter-input" id="num_vessels" value="4" step="1" readonly style="background-color: #e9ecef;">
+                        <input type="number" class="parameter-input" id="num_vessels" value="4" step="1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">8.3.4</div>
                         <div class="parameter-label">Cycle time <span class="parameter-unit">(days, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="cycle_time_days" value="0" step="0.1" readonly style="background-color: #e9ecef;">
+                        <input type="number" class="parameter-input" id="cycle_time_days" value="0" step="0.1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">8.3.5</div>
                         <div class="parameter-label">Trips per ship per year <span class="parameter-unit">(calculated)</span></div>
-                        <input type="number" class="parameter-input" id="trips_per_ship_a" value="0" step="0.1" readonly style="background-color: #e9ecef;">
+                        <input type="number" class="parameter-input" id="trips_per_ship_a" value="0" step="0.1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">8.3.6</div>
                         <div class="parameter-label">Ship payload NH₃ <span class="parameter-unit">(t, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="ship_payload_nh3" value="0" step="1" readonly style="background-color: #e9ecef;">
+                        <input type="number" class="parameter-input" id="ship_payload_nh3" value="0" step="1">
                     </div>
 
                     <div class="parameter-item">
@@ -2416,23 +2416,50 @@
             const transportDistance = getInput('transport_distance'); // km
             const onewayTime = getInput('transport_time'); // days
             const portTime = getInput('port_time'); // days
-            const cycleTime = 2 * onewayTime + portTime; // days
-            const tripsPerShip = 365 / cycleTime;
+            
+            // Manual overrides (if user entered values > 0)
+            const cycleTimeManual = getInput('cycle_time_days');
+            const tripsPerShipManual = getInput('trips_per_ship_a');
+            const shipPayloadManual = getInput('ship_payload_nh3');
+            const numVesselsManual = getInput('num_vessels');
+            
+            // Cycle time / trips per ship
+            let cycleTime = cycleTimeManual;
+            let tripsPerShip = tripsPerShipManual;
+            if (!(tripsPerShip > 0 && isFinite(tripsPerShip))) {
+                if (!(cycleTime > 0 && isFinite(cycleTime))) {
+                    cycleTime = 2 * onewayTime + portTime; // days
+                    if (cycleTime > 0 && isFinite(cycleTime)) {
+                        document.getElementById('cycle_time_days').value = cycleTime.toFixed(1);
+                    }
+                }
+                tripsPerShip = (cycleTime > 0 && isFinite(cycleTime)) ? (365 / cycleTime) : 0;
+                if (tripsPerShip > 0 && isFinite(tripsPerShip)) {
+                    document.getElementById('trips_per_ship_a').value = tripsPerShip.toFixed(1);
+                }
+            }
             
             // Ship capacity
             const vesselTankVolume = getInput('vessel_tank_volume'); // m³
             const nh3Density = getInput('nh3_density'); // t/m³
             const fillFactor = getInput('fill_factor');
-            const shipPayload = vesselTankVolume * nh3Density * fillFactor; // t
+            
+            let shipPayload = shipPayloadManual;
+            if (!(shipPayload > 0 && isFinite(shipPayload))) {
+                shipPayload = vesselTankVolume * nh3Density * fillFactor; // t
+                if (shipPayload > 0 && isFinite(shipPayload)) {
+                    document.getElementById('ship_payload_nh3').value = shipPayload.toFixed(0);
+                }
+            }
             
             // Calculate required number of vessels
-            const numVessels = Math.ceil(nh3TransportRequired / (shipPayload * tripsPerShip));
-            
-            // Update calculated fields
-            document.getElementById('num_vessels').value = numVessels;
-            document.getElementById('cycle_time_days').value = cycleTime.toFixed(1);
-            document.getElementById('trips_per_ship_a').value = tripsPerShip.toFixed(1);
-            document.getElementById('ship_payload_nh3').value = shipPayload.toFixed(0);
+            let numVessels = Math.ceil(numVesselsManual);
+            if (!(numVessels > 0 && isFinite(numVessels))) {
+                numVessels = Math.ceil(nh3TransportRequired / (shipPayload * tripsPerShip));
+                if (numVessels > 0 && isFinite(numVessels)) {
+                    document.getElementById('num_vessels').value = numVessels;
+                }
+            }
             
             // Transport costs
             const vesselCAPEX = getInput('vessel_capex') * 1000000; // million to €
@@ -2984,8 +3011,21 @@
                     return;
                 }
                 
-                const cycleTimeMain = 2 * onewayTimeMain + portTimeMain;
-                const tripsPerShipMain = 365 / cycleTimeMain;
+                // Manual overrides (if user entered values > 0)
+                const cycleTimeManualMain = getInput('cycle_time_days');
+                const tripsPerShipManualMain = getInput('trips_per_ship_a');
+                const shipPayloadManualMain = getInput('ship_payload_nh3');
+                const numVesselsManualMain = getInput('num_vessels');
+                
+                // Cycle time / trips per ship
+                let cycleTimeMain = cycleTimeManualMain;
+                let tripsPerShipMain = tripsPerShipManualMain;
+                if (!(tripsPerShipMain > 0 && isFinite(tripsPerShipMain))) {
+                    if (!(cycleTimeMain > 0 && isFinite(cycleTimeMain))) {
+                        cycleTimeMain = 2 * onewayTimeMain + portTimeMain;
+                    }
+                    tripsPerShipMain = (cycleTimeMain > 0 && isFinite(cycleTimeMain)) ? (365 / cycleTimeMain) : 0;
+                }
                 
                 const vesselTankVolumeMain = getInput('vessel_tank_volume');
                 const nh3DensityMain = getInput('nh3_density');
@@ -2997,14 +3037,20 @@
                     return;
                 }
                 
-                const shipPayloadMain = vesselTankVolumeMain * nh3DensityMain * fillFactorMain;
+                let shipPayloadMain = shipPayloadManualMain;
+                if (!(shipPayloadMain > 0 && isFinite(shipPayloadMain))) {
+                    shipPayloadMain = vesselTankVolumeMain * nh3DensityMain * fillFactorMain;
+                }
                 
                 if (!isFinite(tripsPerShipMain) || tripsPerShipMain <= 0 || !isFinite(shipPayloadMain) || shipPayloadMain <= 0) {
                     alert('Ungültige Transport-Berechnung. Bitte Transport-Parameter prüfen.');
                     return;
                 }
                 
-                const numVesselsMain = Math.ceil(nh3TransportRequiredMain / (shipPayloadMain * tripsPerShipMain));
+                let numVesselsMain = Math.ceil(numVesselsManualMain);
+                if (!(numVesselsMain > 0 && isFinite(numVesselsMain))) {
+                    numVesselsMain = Math.ceil(nh3TransportRequiredMain / (shipPayloadMain * tripsPerShipMain));
+                }
                 
                 const vesselCAPEXMain = getInput('vessel_capex') * 1000000;
                 const vesselOPEXMain = getInput('vessel_opex') * 1000000;

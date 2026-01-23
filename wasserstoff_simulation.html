@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wasserstoff-Kostenrechner Simulation</title>
+    <title>Wasserstoff-Kostenrechner Simulation "Gruppe 7"</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -27,7 +27,7 @@
             right: 0;
             background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
             color: #1a1a1a;
-            padding: 18px 0;
+            padding: 18px 0 20px 0;
             box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
             z-index: 1000;
             border-bottom: none;
@@ -37,9 +37,10 @@
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             padding: 0 20px;
+            gap: 15px;
         }
 
         .nav-logo {
@@ -50,6 +51,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
         
         .nav-logo .h2-symbol {
@@ -64,6 +66,9 @@
             list-style: none;
             gap: 15px;
             flex-wrap: wrap;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-menu a {
@@ -72,8 +77,8 @@
             padding: 8px 15px;
             border-radius: 5px;
             transition: background 0.3s;
-            font-size: 0.85em;
-            font-weight: 500;
+            font-size: 1.1em;
+            font-weight: 700;
         }
 
         .nav-menu a:hover {
@@ -88,9 +93,19 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
+        .nav-prognose {
+            color: #DC143C !important;
+            font-weight: 700 !important;
+        }
+
+        .prognose-title {
+            color: #DC143C !important;
+            font-weight: 700 !important;
+        }
+
         /* Main Content */
         .main-content {
-            margin-top: 70px;
+            margin-top: 130px;
             display: flex;
             max-width: 1400px;
             margin-left: auto;
@@ -112,6 +127,33 @@
             height: fit-content;
             max-height: calc(100vh - 100px);
             overflow-y: auto;
+            z-index: 1;
+        }
+
+        /* Optimization results should be above results-section */
+        #optimization_results {
+            position: relative;
+            z-index: 200;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Ensure page-section content is above results-section */
+        .page-section {
+            position: relative;
+            z-index: 50;
+        }
+
+        /* When optimization results are shown, reduce z-index of results-section */
+        .page-section.active #optimization_results {
+            z-index: 200;
+        }
+
+        .page-section.active ~ .results-section {
+            z-index: 1;
         }
 
         .results-section::-webkit-scrollbar {
@@ -535,7 +577,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <span class="h2-symbol">H₂</span>
-                <span>Wasserstoff-Kostenrechner Simulation</span>
+                <span>Wasserstoff-Kostenrechner Simulation "Gruppe 7"</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="#" onclick="showPage(0); return false;" class="nav-link active" data-page="0">1. System</a></li>
@@ -547,7 +589,7 @@
                 <li><a href="#" onclick="showPage(6); return false;" class="nav-link" data-page="6">7. Speicher</a></li>
                 <li><a href="#" onclick="showPage(7); return false;" class="nav-link" data-page="7">8. Transport</a></li>
                 <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">9. Cracking</a></li>
-                <li><a href="#" onclick="showPage(9); return false;" class="nav-link" data-page="9">10. Prognose</a></li>
+                <li><a href="#" onclick="showPage(9); return false;" class="nav-link nav-prognose" data-page="9">Prognose</a></li>
             </ul>
         </div>
     </nav>
@@ -1644,69 +1686,68 @@
             <!-- Page 9: Price Prediction -->
             <section class="page-section" id="page9">
                 <div class="page-header">
-                    <div class="page-number">Page 10</div>
-                    <h2>10. Price Prediction & Simulation (10 Years)</h2>
+                    <h2 class="prognose-title">Prognose</h2>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.1 Current Base Cost</div>
+                    <div class="parameter-group-title">Current Base Cost</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.1.1</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Current cost per kg H₂ <span class="parameter-unit">(€/kg)</span></div>
                         <input type="number" class="parameter-input" id="current_cost_per_kg" value="0" step="0.01" readonly>
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.2 Cost Reduction Scenarios</div>
+                    <div class="parameter-group-title">Cost Reduction Scenarios</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.1</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Annual CAPEX reduction <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="capex_reduction_rate" value="5" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.2</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Annual OPEX reduction <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="opex_reduction_rate" value="2" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.3</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Technology learning rate <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="learning_rate" value="10" step="0.5">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.3 Market Factors</div>
+                    <div class="parameter-group-title">Market Factors</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.1</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Annual inflation rate <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="inflation_rate" value="2" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.2</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Market demand growth <span class="parameter-unit">(%/year)</span></div>
                         <input type="number" class="parameter-input" id="demand_growth" value="15" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.3</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Scale-up efficiency gain <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="scale_efficiency" value="3" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.4 Scenario Selection</div>
+                    <div class="parameter-group-title">Scenario Selection</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.4.1</div>
+                        <div class="parameter-number"></div>
                         <div class="parameter-label">Prediction scenario</div>
                         <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
                             <option value="optimistic">Optimistic (Fast cost reduction)</option>
@@ -1714,6 +1755,179 @@
                             <option value="pessimistic">Pessimistic (Slow reduction)</option>
                             <option value="custom">Custom (Use input values)</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Optimization Section -->
+                <div class="parameter-group" style="margin-top: 32px; border-top: 2px solid #e0e0e0; padding-top: 24px;">
+                    <div class="parameter-group-title" style="color: #DC143C; font-weight: 700; font-size: 1.2em;">Optimierung</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number"></div>
+                        <div class="parameter-label">Optimierungsbereich Elektrolyseur-Leistung <span class="parameter-unit">(MW)</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <input type="number" class="parameter-input" id="opt_pel_min" value="1000" step="50">
+                            <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
+                            <input type="number" class="parameter-input" id="opt_pel_max" value="1200" step="50">
+                            <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
+                            <input type="number" class="parameter-input" id="opt_pel_step" value="50" step="10">
+                        </div>
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number"></div>
+                        <div class="parameter-label">Optimierungsbereich H₂-Speicher <span class="parameter-unit">(Tage)</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <input type="number" class="parameter-input" id="opt_h2_days_min" value="1" step="0.5">
+                            <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
+                            <input type="number" class="parameter-input" id="opt_h2_days_max" value="2" step="0.5">
+                            <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
+                            <input type="number" class="parameter-input" id="opt_h2_days_step" value="1" step="0.5">
+                        </div>
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number"></div>
+                        <div class="parameter-label">Optimierungsbereich NH₃-Speicher <span class="parameter-unit">(Schiffe)</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_min" value="1" step="0.25">
+                            <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_max" value="1.5" step="0.25">
+                            <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_step" value="0.25" step="0.25">
+                        </div>
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number"></div>
+                        <div class="parameter-label">Optimierungsbereich Water Tank <span class="parameter-unit">(m³)</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <input type="number" class="parameter-input" id="opt_water_tank_min" value="500" step="500">
+                            <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
+                            <input type="number" class="parameter-input" id="opt_water_tank_max" value="4500" step="500">
+                            <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
+                            <input type="number" class="parameter-input" id="opt_water_tank_step" value="2000" step="500">
+                        </div>
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number"></div>
+                        <div class="parameter-label">Optimierungsbereich Wind-Skalierung <span class="parameter-unit">(s)</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <input type="number" class="parameter-input" id="opt_s_min" value="0.95" step="0.01" min="0.9" max="1.0">
+                            <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
+                            <input type="number" class="parameter-input" id="opt_s_max" value="1.00" step="0.01" min="0.9" max="1.0">
+                            <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
+                            <input type="number" class="parameter-input" id="opt_s_step" value="0.01" step="0.01" min="0.01" max="0.1">
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                            <strong>Hinweis:</strong> s skaliert die Windkapazität (1.0 = 100%, 0.95 = 95%)
+                        </div>
+                    </div>
+
+                    <div class="calculate-section" style="margin-top: 20px;">
+                        <button class="calculate-btn" onclick="runOptimization()" style="background: linear-gradient(135deg, #DC143C 0%, #FF6347 100%);">
+                            OPTIMIERUNG DURCHFÜHREN
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Optimization Results -->
+                <div class="page-results" id="optimization_results" style="display: none; margin-top: 32px; position: relative; z-index: 200; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                    <div class="page-results-title" style="color: #DC143C;">Optimierungsergebnisse</div>
+                    
+                    <!-- Progress Bar -->
+                    <div id="optimization_progress" style="display: none; margin-top: 20px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #DC143C; font-weight: 600;">Fortschritt:</span>
+                            <span id="optimization_progress_text" style="color: #DC143C; font-weight: 600;">0%</span>
+                        </div>
+                        <div style="width: 100%; height: 24px; background: #e0e0e0; border-radius: 12px; overflow: hidden;">
+                            <div id="optimization_progress_bar" style="height: 100%; background: linear-gradient(90deg, #DC143C 0%, #FF6347 100%); width: 0%; transition: width 0.3s ease;"></div>
+                        </div>
+                        <div id="optimization_status" style="margin-top: 8px; color: #666; font-size: 0.9em;">Berechne...</div>
+                    </div>
+                    
+                    <div class="page-result-main">
+                        <div class="page-result-item">
+                            <div class="page-result-label">Optimale Wind-Skalierung (s)</div>
+                            <div class="page-result-value" id="opt_result_s">-</div>
+                        </div>
+                        <div class="page-result-item">
+                            <div class="page-result-label">Optimale Elektrolyseur-Leistung</div>
+                            <div class="page-result-value" id="opt_result_pel">-</div>
+                        </div>
+                        <div class="page-result-item">
+                            <div class="page-result-label">Optimaler H₂-Speicher</div>
+                            <div class="page-result-value" id="opt_result_h2_storage">-</div>
+                        </div>
+                        <div class="page-result-item">
+                            <div class="page-result-label">Optimaler NH₃-Speicher</div>
+                            <div class="page-result-value" id="opt_result_nh3_storage">-</div>
+                        </div>
+                        <div class="page-result-item">
+                            <div class="page-result-label">Optimaler Water Tank</div>
+                            <div class="page-result-value" id="opt_result_water_tank">-</div>
+                        </div>
+                        <div class="page-result-item" style="background: #f0f8ff; border-left: 4px solid #DC143C;">
+                            <div class="page-result-label" style="font-weight: 700;">Optimale Kosten</div>
+                            <div class="page-result-value" id="opt_result_cost" style="color: #DC143C; font-weight: 700;">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Section -->
+                    <div style="margin-top: 32px; padding: 20px; background: #f8f9fa; border-radius: 12px;">
+                        <h3 style="color: #DC143C; margin-bottom: 20px; font-size: 1.2em;">Vergleich: Aktuell vs. Optimiert</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="padding: 15px; background: white; border-radius: 8px; border: 2px solid #4A90E2;">
+                                <div style="font-weight: 600; color: #4A90E2; margin-bottom: 10px;">Aktuelle Konfiguration</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_current_cost" style="font-weight: 600;">-</span></div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">P_el: <span id="comparison_current_pel">-</span> MW</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">H₂ Storage: <span id="comparison_current_h2">-</span></div>
+                                <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_current_nh3">-</span></div>
+                            </div>
+                            <div style="padding: 15px; background: white; border-radius: 8px; border: 2px solid #DC143C;">
+                                <div style="font-weight: 600; color: #DC143C; margin-bottom: 10px;">Optimierte Konfiguration</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_opt_cost" style="font-weight: 600; color: #DC143C;">-</span></div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">P_el: <span id="comparison_opt_pel">-</span> MW</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">H₂ Storage: <span id="comparison_opt_h2">-</span></div>
+                                <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_opt_nh3">-</span></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                            <div style="font-weight: 600; color: #2E7D32; margin-bottom: 5px;">Kosteneinsparung</div>
+                            <div style="font-size: 1.1em; color: #2E7D32; font-weight: 700;" id="comparison_savings">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Optimization Chart -->
+                    <div style="margin-top: 32px;">
+                        <h3 style="color: #DC143C; margin-bottom: 20px; font-size: 1.2em;">Optimierungsergebnisse (Top 10 Konfigurationen)</h3>
+                        <canvas id="optimizationChart" style="max-height: 400px;"></canvas>
+                    </div>
+
+                    <!-- Top 10 Configuration Details Table -->
+                    <div style="margin-top: 32px;">
+                        <h3 style="color: #DC143C; margin-bottom: 20px; font-size: 1.2em;">Detaillierte Konfigurationen</h3>
+                        <div style="overflow-x: auto;">
+                            <table id="optimizationTable" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                                <thead>
+                                    <tr style="background: #DC143C; color: white;">
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Rang</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Wind (s)</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">P_el (MW)</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">H₂-Speicher</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">NH₃-Speicher</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Water (m³)</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Kosten (€/kg)</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Δ zu Rang 1</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="optimizationTableBody">
+                                    <!-- Will be filled by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -3289,6 +3503,608 @@
                 showPage(currentPage - 1);
             }
         });
+        // Optimization Function
+        let optimizationChart = null;
+
+        function runOptimization() {
+            // Show loading message
+            const resultsDiv = document.getElementById('optimization_results');
+            resultsDiv.style.display = 'block';
+            
+            // Show loading in results
+            document.getElementById('opt_result_s').textContent = 'Berechne...';
+            document.getElementById('opt_result_pel').textContent = 'Berechne...';
+            document.getElementById('opt_result_h2_storage').textContent = 'Berechne...';
+            document.getElementById('opt_result_nh3_storage').textContent = 'Berechne...';
+            document.getElementById('opt_result_water_tank').textContent = 'Berechne...';
+            document.getElementById('opt_result_cost').textContent = 'Berechne...';
+
+            // Get optimization ranges (from Python Code_Final.py lines 887-892)
+            const sMin = parseFloat(getInput('opt_s_min')) || 0.95;
+            const sMax = parseFloat(getInput('opt_s_max')) || 1.0;
+            const sStep = parseFloat(getInput('opt_s_step')) || 0.01;
+            const pelMin = getInput('opt_pel_min') || 1000;
+            const pelMax = getInput('opt_pel_max') || 1200;
+            const pelStep = getInput('opt_pel_step') || 50;
+            const h2DaysMin = getInput('opt_h2_days_min') || 1;
+            const h2DaysMax = getInput('opt_h2_days_max') || 2;
+            const h2DaysStep = getInput('opt_h2_days_step') || 1;
+            const nh3ShipsMin = getInput('opt_nh3_ships_min') || 1;
+            const nh3ShipsMax = getInput('opt_nh3_ships_max') || 1.5;
+            const nh3ShipsStep = getInput('opt_nh3_ships_step') || 0.25;
+            const waterTankMin = getInput('opt_water_tank_min') || 500;
+            const waterTankMax = getInput('opt_water_tank_max') || 4500;
+            const waterTankStep = getInput('opt_water_tank_step') || 2000;
+
+            // Get current values for comparison
+            // Try to get from DOM first, but calculate if not available
+            let currentCostPerKg = 0;
+            const costElement = document.getElementById('result_cost_per_kg');
+            if (costElement && costElement.textContent && costElement.textContent !== '-') {
+                const costText = costElement.textContent.replace(' €/kg', '').trim();
+                currentCostPerKg = parseFloat(costText);
+                if (isNaN(currentCostPerKg) || currentCostPerKg <= 0) {
+                    // If not available, calculate it using current parameters
+                    currentCostPerKg = 0; // Will be calculated below if needed
+                }
+            }
+            
+            // If currentCostPerKg is still 0, we need to calculate it
+            // But for optimization, we can skip comparison if not available
+            const currentPel = getInput('wind_capacity') || 2470; // MW
+            const currentH2Storage = getInput('h2_storage_capacity') || 0; // t
+            const currentNH3Storage = getInput('nh3_storage_capacity') || 0; // t
+
+            // Store original values
+            const originalPel = getInput('wind_capacity');
+            const originalH2Storage = getInput('h2_storage_capacity');
+            const originalNH3Storage = getInput('nh3_storage_capacity');
+            const originalWaterTank = getInput('water_storage_capacity_storage') || getInput('water_storage_capacity');
+
+            // Generate parameter combinations
+            const results = [];
+            let iteration = 0;
+            const totalIterations = Math.ceil((sMax - sMin) / sStep) * 
+                                   Math.ceil((pelMax - pelMin) / pelStep) * 
+                                   Math.ceil((h2DaysMax - h2DaysMin) / h2DaysStep) * 
+                                   Math.ceil((nh3ShipsMax - nh3ShipsMin) / nh3ShipsStep) * 
+                                   Math.ceil((waterTankMax - waterTankMin) / waterTankStep);
+
+            // Show progress bar
+            const progressDiv = document.getElementById('optimization_progress');
+            const progressBar = document.getElementById('optimization_progress_bar');
+            const progressText = document.getElementById('optimization_progress_text');
+            const statusText = document.getElementById('optimization_status');
+            progressDiv.style.display = 'block';
+
+            // Generate all combinations first (including s parameter)
+            const combinations = [];
+            for (let s = sMin; s <= sMax + 0.0001; s += sStep) { // Add small epsilon for float comparison
+                const sRounded = Math.round(s * 100) / 100; // Round to 2 decimals
+                for (let pel = pelMin; pel <= pelMax; pel += pelStep) {
+                    for (let h2Days = h2DaysMin; h2Days <= h2DaysMax; h2Days += h2DaysStep) {
+                        for (let nh3Ships = nh3ShipsMin; nh3Ships <= nh3ShipsMax; nh3Ships += nh3ShipsStep) {
+                            for (let waterTank = waterTankMin; waterTank <= waterTankMax; waterTank += waterTankStep) {
+                                combinations.push({ s: sRounded, pel, h2Days, nh3Ships, waterTank });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Process combinations asynchronously
+            let currentIndex = 0;
+            const batchSize = 10; // Process 10 combinations per batch
+
+            function processBatch() {
+                const batchEnd = Math.min(currentIndex + batchSize, combinations.length);
+                
+                for (let i = currentIndex; i < batchEnd; i++) {
+                    const combo = combinations[i];
+                    iteration++;
+                                
+                                // Calculate H2 storage capacity from days (from Python Code_Final.py line 900)
+                                // Note: h2_production is in kt/a, but Python uses t/a, so we need to convert
+                                const annualH2ProdKt = getInput('h2_production') || 120.8; // kt/a (default from Python)
+                                if (!annualH2ProdKt || annualH2ProdKt <= 0) {
+                                    console.warn('Invalid annualH2ProdKt:', annualH2ProdKt);
+                                    continue; // Skip this combination
+                                }
+                                const annualH2ProdT = annualH2ProdKt * 1000; // Convert kt/a to t/a (120.8 kt/a = 120800 t/a)
+                                const h2StorageCapacity = (annualH2ProdT / 365.0) * combo.h2Days; // t (same as Python: annual_h2_prod_t / 365.0 * h2_days)
+
+                                // Calculate costs for this configuration
+                                // Using cost_components_proxy logic from Python Code_Final.py (lines 757-880)
+                                const params = getCommonParams();
+                                const discountRate = (params.discountRate || 7) / 100; // Default 7%
+                                const lifetime = params.lifetime || 20; // Default 20 years
+                                const usdToEur = 0.92; // From Python code
+                                
+                                // Validate parameters
+                                if (!isFinite(discountRate) || discountRate <= 0 || discountRate >= 1) {
+                                    console.warn('Invalid discountRate:', discountRate);
+                                    continue;
+                                }
+                                if (!isFinite(lifetime) || lifetime <= 0) {
+                                    console.warn('Invalid lifetime:', lifetime);
+                                    continue;
+                                }
+
+                                // Wind costs (fixed) - from Python Code_Final.py lines 769-780
+                                const windCapacityMW = getInput('wind_capacity'); // MW (fixed: 2470 MW from Python)
+                                const windCapacityKW = windCapacityMW * 1000;
+                                const windCAPEXperMW = 2000000; // €/MW from Python cost_params
+                                const windOPEXperKWperYear = 60; // €/kW/a from Python cost_params
+                                const windCAPEX = windCAPEXperMW * windCapacityMW;
+                                const windOPEX = windOPEXperKWperYear * windCapacityKW * lifetime; // Total OPEX over lifetime
+                                const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+                                const windOPEXannual = windOPEX / lifetime; // Annual OPEX
+                                const windCostAnnual = windCAPEXannual + windOPEXannual;
+
+                                // Electrolysis costs - from Python Code_Final.py lines 785-789
+                                const electrolyzerTech = getInput('electrolyzer_technology') || 'AEL';
+                                const elParams = electrolyzerTech === 'AEL' ? 
+                                    { capex: 464, opex: 40.6, spec_kwh: 48.0 } : // AEL from Python
+                                    { capex: 580, opex: 24.36, spec_kwh: 48.0 }; // PEM from Python
+                                
+                                const electrolysisPowerMW = combo.pel;
+                                const electrolysisPowerKW = electrolysisPowerMW * 1000;
+                                const electrolysisCAPEX = elParams.capex * electrolysisPowerKW * usdToEur; // USD to EUR
+                                const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
+                                const electrolysisOPEX = elParams.opex * electrolysisPowerKW * lifetime * usdToEur; // Total OPEX over lifetime
+                                const electrolysisOPEXannual = electrolysisOPEX / lifetime; // Annual OPEX
+                                
+                                // Electricity cost is included in wind costs (LCOE approach)
+                                const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEXannual;
+
+                                // H2 Storage costs - from Python Code_Final.py lines 792-796
+                                const h2StorageCAPEXperT = 33000 * usdToEur; // $/t to €/t
+                                const h2StorageCAPEX = h2StorageCapacity * h2StorageCAPEXperT;
+                                const h2StorageCAPEXannual = annualizeCAPEX(h2StorageCAPEX, discountRate, lifetime);
+                                const h2StorageOPEX = h2StorageCAPEX * 0.03 * lifetime; // 3% per year over lifetime
+                                const h2StorageOPEXannual = h2StorageOPEX / lifetime;
+
+                                // NH3 Storage costs - from Python Code_Final.py lines 799-803
+                                // NH3 storage is calculated from ships, need to get actual capacity from simulation
+                                // For optimization, use approximate: ships * target_per_ship
+                                const nh3TargetPerShipT = (annualH2ProdT * 17/3) / 12; // Annual NH3 / ships_per_year
+                                const nh3StorageCapacity = combo.nh3Ships * nh3TargetPerShipT;
+                                const nh3StorageCAPEXperT = 810 * usdToEur; // $/t to €/t
+                                const nh3StorageCAPEX = nh3StorageCapacity * nh3StorageCAPEXperT;
+                                const nh3StorageCAPEXannual = annualizeCAPEX(nh3StorageCAPEX, discountRate, lifetime);
+                                const nh3StorageOPEX = nh3StorageCAPEX * 0.02 * lifetime; // 2% per year over lifetime
+                                const nh3StorageOPEXannual = nh3StorageOPEX / lifetime;
+
+                                // Water Tank costs - from Python Code_Final.py lines 848-854
+                                const waterTankCAPEXperM3 = 50 * usdToEur; // $/m³ to €/m³ (from Python line 850)
+                                const waterTankCAPEX = combo.waterTank * waterTankCAPEXperM3;
+                                const waterTankCAPEXannual = annualizeCAPEX(waterTankCAPEX, discountRate, lifetime);
+                                const waterTankOPEX = waterTankCAPEX * 0.02 * lifetime; // 2% per year over lifetime
+                                const waterTankOPEXannual = waterTankOPEX / lifetime;
+
+                                const storageCostAnnual = h2StorageCAPEXannual + h2StorageOPEXannual + 
+                                                         nh3StorageCAPEXannual + nh3StorageOPEXannual + 
+                                                         waterTankCAPEXannual + waterTankOPEXannual;
+
+                                // RO costs - from Python Code_Final.py lines 825-844
+                                const roWaterKgPerKgH2 = 10.0; // From Python line 828
+                                const roCAPEXperM3perDay = 1200 * usdToEur; // From Python line 829
+                                const roOPEXfrac = 0.05; // From Python line 830
+                                const roOPEXperM3 = 0; // From Python line 831
+                                
+                                const specKwhPerKgH2 = elParams.spec_kwh;
+                                const h2KgPerHDesign = (electrolysisPowerMW * 1000) / specKwhPerKgH2;
+                                const roM3PerHDesign = (h2KgPerHDesign * roWaterKgPerKgH2) / 1000.0;
+                                const roM3PerDayDesign = roM3PerHDesign * 24.0;
+                                
+                                const roCAPEX = roCAPEXperM3perDay * roM3PerDayDesign;
+                                const roCAPEXannual = annualizeCAPEX(roCAPEX, discountRate, lifetime);
+                                const roOPEX = roCAPEX * roOPEXfrac * lifetime;
+                                const annualWaterM3 = (annualH2ProdT * 1000 * roWaterKgPerKgH2) / 1000;
+                                const roOPEXvar = roOPEXperM3 * annualWaterM3 * lifetime;
+                                const roOPEXannual = (roOPEX + roOPEXvar) / lifetime;
+                                const roCostAnnual = roCAPEXannual + roOPEXannual;
+
+                                // Haber-Bosch costs - from Python Code_Final.py lines 806-811
+                                const hbCapacityTNH3perDay = (annualH2ProdT * 17/3) / 365; // Approximate
+                                const hbCapacityTNH3perYear = hbCapacityTNH3perDay * 365;
+                                const hbCAPEXperTNH3perYear = 491.4 * usdToEur; // From Python (calculated)
+                                const hbCAPEX = hbCAPEXperTNH3perYear * hbCapacityTNH3perYear;
+                                const hbCAPEXannual = annualizeCAPEX(hbCAPEX, discountRate, lifetime);
+                                const annualNH3ProdT = annualH2ProdT * 17/3;
+                                const hbOPEXperTNH3 = 16.8 * 1000000 / annualNH3ProdT; // From Python
+                                const hbOPEX = hbOPEXperTNH3 * annualNH3ProdT * lifetime;
+                                const hbOPEXannual = hbOPEX / lifetime;
+                                const hbCostAnnual = hbCAPEXannual + hbOPEXannual;
+
+                                // N2 (ASU) costs - from Python Code_Final.py lines 813-822
+                                const n2KgPerKgNH3 = 28.0 / 34.0;
+                                const hbCapacityTNH3perH = hbCapacityTNH3perDay / 24.0;
+                                const n2CapacityKgPerH = hbCapacityTNH3perH * 1000.0 * n2KgPerKgNH3;
+                                const n2CAPEXperKgN2perH = 1700 * usdToEur; // From Python cost_params
+                                const n2CAPEX = n2CAPEXperKgN2perH * n2CapacityKgPerH;
+                                const n2CAPEXannual = annualizeCAPEX(n2CAPEX, discountRate, lifetime);
+                                const n2OPEXfrac = 0.03; // From Python
+                                const n2OPEX = n2CAPEX * n2OPEXfrac * lifetime;
+                                const n2OPEXannual = n2OPEX / lifetime;
+                                const n2CostAnnual = n2CAPEXannual + n2OPEXannual;
+
+                                // Transport and Cracking costs (use current values as they don't depend on optimization params)
+                                // Try to get from DOM, but use fallback calculation if not available
+                                let transportCostAnnual = 0;
+                                const transportCostElement = document.getElementById('transport_cost_annual');
+                                if (transportCostElement && transportCostElement.textContent) {
+                                    const transportCostText = transportCostElement.textContent.replace(' M€/year', '').replace(' M€/a', '').trim();
+                                    transportCostAnnual = parseFloat(transportCostText) * 1000000;
+                                    if (isNaN(transportCostAnnual)) transportCostAnnual = 0;
+                                }
+                                
+                                let crackingCostAnnual = 0;
+                                const crackingCostElement = document.getElementById('cracking_cost_annual');
+                                if (crackingCostElement && crackingCostElement.textContent) {
+                                    const crackingCostText = crackingCostElement.textContent.replace(' M€/year', '').replace(' M€/a', '').trim();
+                                    crackingCostAnnual = parseFloat(crackingCostText) * 1000000;
+                                    if (isNaN(crackingCostAnnual)) crackingCostAnnual = 0;
+                                }
+                                
+                                // If both are 0, they might not be calculated yet - use 0 for now
+                                // (These costs don't depend on optimization parameters anyway)
+
+                                const totalAnnualCost = windCostAnnual + electrolysisCostAnnual + roCostAnnual + 
+                                                       n2CostAnnual + hbCostAnnual + storageCostAnnual + 
+                                                       transportCostAnnual + crackingCostAnnual;
+                                
+                                // Debug: Log cost components for first combination
+                                if (iteration === 1) {
+                                    console.log('=== COST COMPONENTS (First Combination) ===');
+                                    console.log('Wind:', windCostAnnual / 1000000, 'M€/a');
+                                    console.log('Electrolysis:', electrolysisCostAnnual / 1000000, 'M€/a');
+                                    console.log('RO:', roCostAnnual / 1000000, 'M€/a');
+                                    console.log('N2:', n2CostAnnual / 1000000, 'M€/a');
+                                    console.log('HB:', hbCostAnnual / 1000000, 'M€/a');
+                                    console.log('Storage:', storageCostAnnual / 1000000, 'M€/a');
+                                    console.log('Transport:', transportCostAnnual / 1000000, 'M€/a');
+                                    console.log('Cracking:', crackingCostAnnual / 1000000, 'M€/a');
+                                    console.log('Total:', totalAnnualCost / 1000000, 'M€/a');
+                                }
+
+                                // Calculate delivered H2 (with chain efficiency)
+                                // Use annualH2ProdT directly - this is the production target
+                                // annualH2ProdT is now in t/a (after conversion from kt/a), convert to kg/a: t → kg = * 1000
+                                const h2ReferenceKg = annualH2ProdT * 1000; // t to kg (t → kg = * 1000)
+                                
+                                // Get chain efficiency parameters with safe defaults
+                                // These should match the values from the input forms
+                                let haberBoschLoss = parseFloat(getInput('haber_bosch_loss'));
+                                if (isNaN(haberBoschLoss)) haberBoschLoss = 0;
+                                
+                                let storageLossRate = parseFloat(getInput('storage_loss_rate'));
+                                if (isNaN(storageLossRate)) storageLossRate = 0;
+                                
+                                let nh3ShippingLoss = parseFloat(getInput('nh3_shipping_loss'));
+                                if (isNaN(nh3ShippingLoss)) nh3ShippingLoss = 0;
+                                
+                                let crackingEfficiency = parseFloat(getInput('cracking_efficiency'));
+                                if (isNaN(crackingEfficiency) || crackingEfficiency <= 0) crackingEfficiency = 100;
+                                
+                                // Calculate chain efficiency
+                                const chainEfficiency = (1 - haberBoschLoss / 100) * 
+                                                       (1 - storageLossRate / 100) * 
+                                                       (1 - nh3ShippingLoss / 100) * 
+                                                       (crackingEfficiency / 100);
+                                
+                                // Validate chain efficiency - must be positive and reasonable
+                                if (!isFinite(chainEfficiency) || chainEfficiency <= 0 || chainEfficiency > 1) {
+                                    console.warn('Invalid chainEfficiency:', chainEfficiency, 
+                                               'haberBoschLoss:', haberBoschLoss,
+                                               'storageLossRate:', storageLossRate,
+                                               'nh3ShippingLoss:', nh3ShippingLoss,
+                                               'crackingEfficiency:', crackingEfficiency,
+                                               'for combo:', combo);
+                                    continue; // Skip this combination
+                                }
+                                
+                                const h2DeliveredAnnual = h2ReferenceKg * chainEfficiency;
+                                
+                                // Validate delivered H2 - must be positive
+                                if (!isFinite(h2DeliveredAnnual) || h2DeliveredAnnual <= 0) {
+                                    console.warn('Invalid h2DeliveredAnnual:', h2DeliveredAnnual, 
+                                               'h2ReferenceKg:', h2ReferenceKg,
+                                               'chainEfficiency:', chainEfficiency,
+                                               'for combo:', combo);
+                                    continue; // Skip this combination
+                                }
+                                
+                                // Validate total cost - must be positive and finite
+                                if (!isFinite(totalAnnualCost) || totalAnnualCost <= 0) {
+                                    console.warn('Invalid totalAnnualCost:', totalAnnualCost, 'for combo:', combo);
+                                    continue; // Skip this combination
+                                }
+                                
+                                const costPerKg = totalAnnualCost / h2DeliveredAnnual;
+                                
+                                // Debug for first few combinations
+                                if (iteration <= 3) {
+                                    console.log(`=== Combination ${iteration} ===`);
+                                    console.log('P_el:', combo.pel, 'MW');
+                                    console.log('H2 Days:', combo.h2Days);
+                                    console.log('NH3 Ships:', combo.nh3Ships);
+                                    console.log('Water Tank:', combo.waterTank, 'm³');
+                                    console.log('H2 Reference:', h2ReferenceKg, 'kg/a');
+                                    console.log('Chain Efficiency:', chainEfficiency);
+                                    console.log('H2 Delivered:', h2DeliveredAnnual, 'kg/a');
+                                    console.log('Total Annual Cost:', totalAnnualCost / 1000000, 'M€/a');
+                                    console.log('Cost per kg:', costPerKg, '€/kg');
+                                    console.log('Is Valid:', isFinite(costPerKg) && costPerKg > 0 && costPerKg < 1000);
+                                }
+                                
+                                // Validate cost per kg - must be reasonable (0-1000 €/kg)
+                                if (isFinite(costPerKg) && costPerKg > 0 && costPerKg < 1000) {
+                                    results.push({
+                                        s: combo.s,
+                                        pel: combo.pel,
+                                        h2Days: combo.h2Days,
+                                        h2Storage: h2StorageCapacity,
+                                        nh3Ships: combo.nh3Ships,
+                                        nh3Storage: nh3StorageCapacity,
+                                        waterTank: combo.waterTank,
+                                        windCapacity: windCapacityMW,
+                                        costPerKg: costPerKg,
+                                        totalAnnualCost: totalAnnualCost,
+                                        h2Delivered: h2DeliveredAnnual,
+                                        chainEfficiency: chainEfficiency
+                                    });
+                                } else {
+                                    if (iteration <= 3) {
+                                        console.warn('REJECTED - Invalid costPerKg:', costPerKg, 
+                                                   'totalAnnualCost:', totalAnnualCost,
+                                                   'h2DeliveredAnnual:', h2DeliveredAnnual);
+                                    }
+                                }
+                }
+
+                // Update progress
+                const progress = (iteration / combinations.length) * 100;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+                statusText.textContent = 'Berechne... ' + iteration + ' / ' + combinations.length + ' Konfigurationen';
+
+                currentIndex = batchEnd;
+
+                // Continue with next batch or finish
+                if (currentIndex < combinations.length) {
+                    setTimeout(processBatch, 10); // Small delay to allow UI update
+                } else {
+                    // All combinations processed, now display results
+                    finishOptimization();
+                }
+            }
+
+            function finishOptimization() {
+                statusText.textContent = 'Sortiere Ergebnisse...';
+                
+                console.log('=== OPTIMIERUNG ABGESCHLOSSEN ===');
+                console.log('Total results found:', results.length);
+                console.log('Total combinations processed:', iteration);
+                
+                if (results.length === 0) {
+                    console.error('=== FEHLER: KEINE GÜLTIGEN ERGEBNISSE ===');
+                    console.error('Bitte prüfen Sie:');
+                    console.error('1. H₂-Produktion (h2_production):', getInput('h2_production'));
+                    console.error('2. Haber-Bosch Verlust:', getInput('haber_bosch_loss'));
+                    console.error('3. Storage Verlust:', getInput('storage_loss_rate'));
+                    console.error('4. NH₃ Shipping Verlust:', getInput('nh3_shipping_loss'));
+                    console.error('5. Cracking Effizienz:', getInput('cracking_efficiency'));
+                    console.error('6. Discount Rate:', getInput('discount_rate'));
+                    console.error('7. Lifetime:', getInput('project_lifetime'));
+                    
+                    // Try to calculate what went wrong
+                    const testH2Prod = getInput('h2_production') || 120.8;
+                    const testChainEff = (1 - (getInput('haber_bosch_loss') || 0) / 100) * 
+                                        (1 - (getInput('storage_loss_rate') || 0) / 100) * 
+                                        (1 - (getInput('nh3_shipping_loss') || 0) / 100) * 
+                                        ((getInput('cracking_efficiency') || 100) / 100);
+                    console.error('Test H₂ Production:', testH2Prod, 'kt/a');
+                    console.error('Test Chain Efficiency:', testChainEff);
+                    console.error('Test H₂ Delivered:', testH2Prod * 1000000 * testChainEff, 'kg/a'); // kt → kg = * 1000000
+                    
+                    alert('Keine gültigen Ergebnisse gefunden.\n\n' +
+                          'Mögliche Ursachen:\n' +
+                          '1. Ketteneffizienz ist 0 oder ungültig\n' +
+                          '2. H₂-Produktion ist 0\n' +
+                          '3. Kostenberechnung fehlgeschlagen\n\n' +
+                          'Bitte Browser-Konsole (F12) öffnen für Details.\n' +
+                          'Dort finden Sie alle Parameter-Werte.');
+                    progressDiv.style.display = 'none';
+                    return;
+                }
+                
+                // Sort by cost
+                results.sort((a, b) => a.costPerKg - b.costPerKg);
+                
+                console.log('Best result:', results[0]);
+                console.log('Top 5 results:', results.slice(0, 5).map(r => ({
+                    pel: r.pel,
+                    cost: r.costPerKg.toFixed(4),
+                    chainEff: r.chainEfficiency?.toFixed(4)
+                })));
+                
+                const best = results[0];
+                const top10 = results.slice(0, 10);
+
+                statusText.textContent = 'Ergebnisse werden angezeigt...';
+
+                // Display results
+                document.getElementById('opt_result_s').textContent = best.s.toFixed(2) + ' (' + (best.s * 100).toFixed(0) + '% Windkapazität)';
+                document.getElementById('opt_result_pel').textContent = best.pel.toFixed(0) + ' MW';
+                document.getElementById('opt_result_h2_storage').textContent = best.h2Days.toFixed(1) + ' Tage (' + best.h2Storage.toFixed(0) + ' t)';
+                document.getElementById('opt_result_nh3_storage').textContent = best.nh3Ships.toFixed(2) + ' Schiffe (' + best.nh3Storage.toFixed(0) + ' t)';
+                document.getElementById('opt_result_water_tank').textContent = best.waterTank.toFixed(0) + ' m³';
+                document.getElementById('opt_result_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
+
+                // Hide progress bar
+                progressDiv.style.display = 'none';
+                statusText.textContent = 'Optimierung abgeschlossen!';
+
+                // Comparison
+                // Only show comparison if currentCostPerKg is valid
+                if (currentCostPerKg > 0 && isFinite(currentCostPerKg)) {
+                    document.getElementById('comparison_current_cost').textContent = currentCostPerKg.toFixed(4) + ' €/kg';
+                    document.getElementById('comparison_current_pel').textContent = currentPel.toFixed(0);
+                    document.getElementById('comparison_current_h2').textContent = currentH2Storage.toFixed(0) + ' t';
+                    document.getElementById('comparison_current_nh3').textContent = currentNH3Storage.toFixed(0) + ' t';
+
+                    document.getElementById('comparison_opt_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
+                    document.getElementById('comparison_opt_pel').textContent = best.pel.toFixed(0);
+                    document.getElementById('comparison_opt_h2').textContent = best.h2Storage.toFixed(0) + ' t';
+                    document.getElementById('comparison_opt_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
+
+                    const savings = currentCostPerKg - best.costPerKg;
+                    const savingsPercent = currentCostPerKg > 0 ? (savings / currentCostPerKg) * 100 : 0;
+                    
+                    if (isFinite(savings) && isFinite(savingsPercent)) {
+                        document.getElementById('comparison_savings').textContent = 
+                            savings.toFixed(4) + ' €/kg (' + savingsPercent.toFixed(2) + '% Einsparung)';
+                    } else {
+                        document.getElementById('comparison_savings').textContent = 
+                            'Vergleich nicht verfügbar (Bitte zuerst Hauptberechnung durchführen)';
+                    }
+                } else {
+                    // Show optimized values but indicate comparison not available
+                    document.getElementById('comparison_current_cost').textContent = 'Nicht verfügbar';
+                    document.getElementById('comparison_current_pel').textContent = currentPel.toFixed(0);
+                    document.getElementById('comparison_current_h2').textContent = currentH2Storage.toFixed(0) + ' t';
+                    document.getElementById('comparison_current_nh3').textContent = currentNH3Storage.toFixed(0) + ' t';
+
+                    document.getElementById('comparison_opt_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
+                    document.getElementById('comparison_opt_pel').textContent = best.pel.toFixed(0);
+                    document.getElementById('comparison_opt_h2').textContent = best.h2Storage.toFixed(0) + ' t';
+                    document.getElementById('comparison_opt_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
+
+                    document.getElementById('comparison_savings').textContent = 
+                        'Vergleich nicht verfügbar (Bitte zuerst "CALCULATE TOTAL COSTS" ausführen)';
+                }
+
+                // Populate table
+                const tableBody = document.getElementById('optimizationTableBody');
+                if (tableBody) {
+                    tableBody.innerHTML = '';
+                    const bestCost = top10[0].costPerKg;
+                    
+                    top10.forEach((config, index) => {
+                        const row = document.createElement('tr');
+                        const deltaPercent = ((config.costPerKg - bestCost) / bestCost * 100).toFixed(3);
+                        const deltaAbs = (config.costPerKg - bestCost).toFixed(6);
+                        
+                        // Calculate actual storage sizes
+                        const h2StorageT = config.h2Storage.toFixed(0);
+                        const nh3StorageT = config.nh3Storage.toFixed(0);
+                        
+                        row.style.background = index === 0 ? '#ffebee' : (index % 2 === 0 ? '#f9f9f9' : 'white');
+                        row.innerHTML = `
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: ${index === 0 ? '700' : '400'};">${index + 1}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${config.s.toFixed(2)} (${(config.s * 100).toFixed(0)}%)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${config.pel.toFixed(0)} MW</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${config.h2Days.toFixed(1)} Tage (${h2StorageT} t)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${config.nh3Ships.toFixed(2)} Schiffe (${nh3StorageT} t)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${config.waterTank.toFixed(0)} m³</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: ${index === 0 ? '700' : '400'}; color: ${index === 0 ? '#DC143C' : 'inherit'};">${config.costPerKg.toFixed(4)} €/kg</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${index === 0 ? '-' : '+' + deltaAbs + ' (+' + deltaPercent + '%)'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+
+                // Create chart
+                if (optimizationChart) {
+                    optimizationChart.destroy();
+                }
+
+                const ctx = document.getElementById('optimizationChart').getContext('2d');
+                optimizationChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: top10.map((r, i) => 'Konfig. ' + (i + 1)),
+                        datasets: [{
+                            label: 'Kosten (€/kg H₂)',
+                            data: top10.map(r => r.costPerKg),
+                            backgroundColor: top10.map((r, i) => i === 0 ? '#DC143C' : '#FF6347'),
+                            borderColor: top10.map((r, i) => i === 0 ? '#8B0000' : '#DC143C'),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Top 10 Optimierungsergebnisse',
+                                color: '#DC143C',
+                                font: {
+                                    size: 16,
+                                    weight: '700'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Kosten: ' + context.parsed.y.toFixed(4) + ' €/kg';
+                                    },
+                                    afterLabel: function(context) {
+                                        const idx = context.dataIndex;
+                                        const r = top10[idx];
+                                        return [
+                                            's (Wind): ' + r.s.toFixed(2) + ' (' + (r.s * 100).toFixed(0) + '%)',
+                                            'P_el: ' + r.pel.toFixed(0) + ' MW',
+                                            'H₂ Storage: ' + r.h2Days.toFixed(1) + ' Tage',
+                                            'NH₃ Storage: ' + r.nh3Ships.toFixed(2) + ' Schiffe',
+                                            'Water Tank: ' + r.waterTank.toFixed(0) + ' m³'
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Kosten (€/kg H₂)',
+                                    color: '#DC143C',
+                                    font: {
+                                        size: 13,
+                                        weight: '600'
+                                    }
+                                },
+                                ticks: {
+                                    color: '#DC143C',
+                                    precision: 4,
+                                    callback: function(value, index, ticks) {
+                                        // Use the actual value, not a fixed one
+                                        if (value === 0) return '0 €/kg';
+                                        return value.toFixed(4) + ' €/kg';
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#DC143C'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Results are already displayed above
+            }
+
+            // Start optimization
+            processBatch();
+        }
     </script>
 </body>
 </html>

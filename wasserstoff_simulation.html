@@ -2693,8 +2693,22 @@
                 
                 const h2StorageEnergyTotal = h2LiquefactionEnergy + h2RegasificationEnergy + h2ReliquefactionEnergy;
                 const h2StorageEnergyCost = electricityPrice * h2StorageEnergyTotal;
+
+                // Transport - logistics (MUST BE CALCULATED BEFORE NH3 STORAGE ENERGY COSTS)
+                // Haber-Bosch stoichiometry: 3 H₂ + N₂ → 2 NH₃
+                // Mass ratio: 3×2 g H₂ + 28 g N₂ → 2×17 g NH₃
+                // Therefore: 6 g H₂ → 34 g NH₃, so 1 kg H₂ → (34/6) = 5.667 kg NH₃
+                // Or: 1 t H₂ → 5.667 t NH₃ (but typically ~5.67 t NH₃ per t H₂)
+                const nh3PerH2RatioTransport = 17 / 3; // t NH₃ / t H₂ (correct stoichiometric ratio: 34/6 = 17/3)
+                const nh3ShippingLossTransport = getInput('nh3_shipping_loss') / 100;
                 
-                // NH3 Storage Energy Costs (NEW)
+                const h2ForNH3Transport = h2Reference / 1000; // kg to t
+                // Account for Haber-Bosch conversion efficiency (typically 90-95%)
+                const haberBoschConversionEfficiency = 1 - haberBoschLoss; // e.g., 0.95 if 5% loss
+                const nh3NeededTransport = h2ForNH3Transport * nh3PerH2RatioTransport / haberBoschConversionEfficiency;
+                const nh3TransportRequiredMain = nh3NeededTransport / (1 - nh3ShippingLossTransport); // t/a
+                
+                // NH3 Storage Energy Costs (NEW) - NOW CAN USE nh3TransportRequiredMain
                 const nh3SpecKwhPerTIn = getInput('nh3_spec_kwh_per_t_in') || 1.0;
                 const nh3SpecKwhPerTOut = getInput('nh3_spec_kwh_per_t_out') || 1.0;
                 const nh3CoolingKwhPerTPerDay = getInput('nh3_cooling_kwh_per_t_per_day') || 40.0;
@@ -2712,20 +2726,6 @@
                 
                 // Update storage costs with energy costs (waterReplacementCost already calculated in desalination section)
                 const storageCostAnnual = storageCAPEXannual + storageOPEX + h2StorageEnergyCost + nh3StorageEnergyCost;
-
-                // Transport - logistics
-                // Haber-Bosch stoichiometry: 3 H₂ + N₂ → 2 NH₃
-                // Mass ratio: 3×2 g H₂ + 28 g N₂ → 2×17 g NH₃
-                // Therefore: 6 g H₂ → 34 g NH₃, so 1 kg H₂ → (34/6) = 5.667 kg NH₃
-                // Or: 1 t H₂ → 5.667 t NH₃ (but typically ~5.67 t NH₃ per t H₂)
-                const nh3PerH2RatioTransport = 17 / 3; // t NH₃ / t H₂ (correct stoichiometric ratio: 34/6 = 17/3)
-                const nh3ShippingLossTransport = getInput('nh3_shipping_loss') / 100;
-                
-                const h2ForNH3Transport = h2Reference / 1000; // kg to t
-                // Account for Haber-Bosch conversion efficiency (typically 90-95%)
-                const haberBoschConversionEfficiency = 1 - haberBoschLoss; // e.g., 0.95 if 5% loss
-                const nh3NeededTransport = h2ForNH3Transport * nh3PerH2RatioTransport / haberBoschConversionEfficiency;
-                const nh3TransportRequiredMain = nh3NeededTransport / (1 - nh3ShippingLossTransport); // t/a
                 
                 const transportDistanceMain = getInput('transport_distance');
                 const onewayTimeMain = getInput('transport_time');

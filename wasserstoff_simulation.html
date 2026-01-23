@@ -601,8 +601,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" disabled>← Previous</button>
-                    <button class="nav-button" onclick="showPage(1)">Next →</button>
+                    <button class="nav-button" disabled>← Zurück</button>
+                    <button class="nav-button" onclick="showPage(1)">Weiter →</button>
                 </div>
             </section>
 
@@ -716,8 +716,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(0)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(2)">Next →</button>
+                    <button class="nav-button" onclick="showPage(0)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(2)">Weiter →</button>
                 </div>
             </section>
 
@@ -749,65 +749,65 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.3 Operational parameters</div>
+                    <div class="parameter-group-title">3.3 Betriebsparameter</div>
                     
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.1</div>
-                        <div class="parameter-label">Electrolyser availability <span class="parameter-unit">(%)</span></div>
+                        <div class="parameter-label">Elektrolyseur-Verfügbarkeit <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_availability" value="95" step="0.1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.2</div>
-                        <div class="parameter-label">Operating hours <span class="parameter-unit">(h/year)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_operating_hours" value="8300" step="100" readonly style="background-color: #e9ecef;">
+                        <div class="parameter-label">Betriebsstunden <span class="parameter-unit">(h/Jahr)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_operating_hours" value="8300" step="100">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.3</div>
-                        <div class="parameter-label">Effective operating hours <span class="parameter-unit">(h/year, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_effective_hours" value="0" step="1" readonly style="background-color: #e9ecef;">
+                        <div class="parameter-label">Effektive Betriebsstunden <span class="parameter-unit">(h/Jahr)</span></div>
+                        <input type="number" class="parameter-input" id="electrolysis_effective_hours" value="8322" step="1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.4</div>
-                        <div class="parameter-label">Minimum load fraction <span class="parameter-unit">(-)</span></div>
+                        <div class="parameter-label">Mindestlastanteil <span class="parameter-unit">(-)</span></div>
                         <input type="number" class="parameter-input" id="min_load_fraction" value="0.1" step="0.05" min="0" max="1">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.3.5</div>
-                        <div class="parameter-label">Full load hours equivalent <span class="parameter-unit">(h/a)</span></div>
+                        <div class="parameter-label">Vollaststunden-Äquivalent <span class="parameter-unit">(h/a)</span></div>
                         <input type="number" class="parameter-input" id="full_load_hours_equivalent" value="5094" step="100">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.4 Cost parameters</div>
+                    <div class="parameter-group-title">3.4 Kostenparameter</div>
                     
                     <div class="parameter-item">
                         <div class="parameter-number">3.4.1</div>
-                        <div class="parameter-label">Electrolyser CAPEX <span class="parameter-unit">(€/kW)</span></div>
+                        <div class="parameter-label">Elektrolyseur CAPEX <span class="parameter-unit">(€/kW)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_capex_per_kw" value="450" step="10">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">3.4.2</div>
-                        <div class="parameter-label">Electrolyser OPEX <span class="parameter-unit">(million €/year)</span></div>
+                        <div class="parameter-label">Elektrolyseur OPEX <span class="parameter-unit">(Mio. €/Jahr)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_opex" value="10.5" step="0.1">
                     </div>
                 </div>
 
                 <div class="page-results" id="page2_results">
-                    <div class="page-results-title">Electrolysis Cost Calculation</div>
+                    <div class="page-results-title">Elektrolyse-Kostenberechnung</div>
                     <div class="page-result-main">
                         <div class="page-result-item">
-                            <div class="page-result-label">Annual Electrolysis Cost</div>
+                            <div class="page-result-label">Jährliche Elektrolysekosten</div>
                             <div class="page-result-value" id="electrolysis_cost_annual">-</div>
                         </div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">CAPEX (annualized)</div>
+                        <div class="page-result-label">CAPEX (annualisiert)</div>
                         <div class="page-result-value" id="electrolysis_capex_annual">-</div>
                     </div>
                     <div class="page-result-item">
@@ -815,22 +815,22 @@
                         <div class="page-result-value" id="electrolysis_opex_annual">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Electricity Cost</div>
+                        <div class="page-result-label">Stromkosten</div>
                         <div class="page-result-value" id="electrolysis_electricity_cost">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Required Power</div>
+                        <div class="page-result-label">Benötigte Leistung</div>
                         <div class="page-result-value" id="electrolysis_power">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Electricity Demand</div>
+                        <div class="page-result-label">Strombedarf</div>
                         <div class="page-result-value" id="electrolysis_electricity_demand">-</div>
                     </div>
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(1)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(3)">Next →</button>
+                    <button class="nav-button" onclick="showPage(1)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(3)">Weiter →</button>
                 </div>
             </section>
 
@@ -926,8 +926,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(2)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(4)">Next →</button>
+                    <button class="nav-button" onclick="showPage(2)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(4)">Weiter →</button>
                 </div>
             </section>
 
@@ -1011,8 +1011,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(3)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(5)">Next →</button>
+                    <button class="nav-button" onclick="showPage(3)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(5)">Weiter →</button>
                 </div>
             </section>
 
@@ -1112,8 +1112,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(4)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(6)">Next →</button>
+                    <button class="nav-button" onclick="showPage(4)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(6)">Weiter →</button>
                 </div>
             </section>
 
@@ -1207,8 +1207,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(5)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(7)">Next →</button>
+                    <button class="nav-button" onclick="showPage(5)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(7)">Weiter →</button>
                 </div>
             </section>
 
@@ -1386,8 +1386,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(6)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(8)">Next →</button>
+                    <button class="nav-button" onclick="showPage(6)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(8)">Weiter →</button>
                 </div>
             </section>
 
@@ -1459,8 +1459,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(7)">← Previous</button>
-                    <button class="nav-button" onclick="showPage(9)">Next →</button>
+                    <button class="nav-button" onclick="showPage(7)">← Zurück</button>
+                    <button class="nav-button" onclick="showPage(9)">Weiter →</button>
                 </div>
             </section>
 
@@ -1592,8 +1592,8 @@
                 </div>
 
                 <div class="page-navigation">
-                    <button class="nav-button" onclick="showPage(8)">← Previous</button>
-                    <button class="nav-button" disabled>Next →</button>
+                    <button class="nav-button" onclick="showPage(8)">← Zurück</button>
+                    <button class="nav-button" disabled>Weiter →</button>
                 </div>
             </section>
 
@@ -1774,8 +1774,11 @@
             const h2Production = getInput('h2_production') * 1000000; // kt to kg
             const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
             const electrolysisAvailability = getInput('electrolysis_availability') / 100;
-            // effektive Stunden aus Verfügbarkeit
-            const hOpEffectiveLocal = 8760 * electrolysisAvailability;
+            // Effektive Stunden: Wenn Input vorhanden, verwende diesen, sonst berechne aus Verfügbarkeit
+            let hOpEffectiveLocal = getInput('electrolysis_effective_hours');
+            if (hOpEffectiveLocal <= 0) {
+                hOpEffectiveLocal = 8760 * electrolysisAvailability;
+            }
             const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
             const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
 
@@ -2313,7 +2316,11 @@
                 // Electrolysis parameters
                 const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
                 const electrolysisAvailability = getInput('electrolysis_availability') / 100;
-                const hOpEffective = 8760 * electrolysisAvailability; // effective hours
+                // Effektive Stunden: Wenn Input vorhanden, verwende diesen, sonst berechne aus Verfügbarkeit
+                let hOpEffective = getInput('electrolysis_effective_hours');
+                if (hOpEffective <= 0) {
+                    hOpEffective = 8760 * electrolysisAvailability;
+                }
                 const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
                 const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
 

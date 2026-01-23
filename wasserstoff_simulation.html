@@ -2513,6 +2513,20 @@
                     }
                 }
                 
+                // Calculate OPEX from capacity if not provided (like in Code_Final.py)
+                if (electrolysisOPEX === 0) {
+                    let opexPerKwPerYear = 0;
+                    if (electrolyzerTechnology === 'PEM') {
+                        opexPerKwPerYear = 24.36; // $/kW/year from Code_Final.py
+                    } else {
+                        opexPerKwPerYear = 40.6; // $/kW/year for AEL from Code_Final.py
+                    }
+                    // Calculate power first (will be calculated later, but we need it here)
+                    const electrolysisElectricityDemandTemp = h2Production * electrolysisSpecificEnergy; // kWh
+                    const electrolysisPowerTemp = electrolysisElectricityDemandTemp / hOpEffective; // kW
+                    electrolysisOPEX = opexPerKwPerYear * electrolysisPowerTemp; // €/year (assuming 1:1 USD:EUR)
+                }
+                
                 // Min load fraction based on technology
                 const minLoadFraction = getInput('min_load_fraction');
                 const elRampFracPerH = getInput('el_ramp_frac_per_h') || 0.80;

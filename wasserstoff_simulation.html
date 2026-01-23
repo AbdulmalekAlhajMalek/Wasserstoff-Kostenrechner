@@ -12,11 +12,51 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-page: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --border-color: #e0e0e0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            background: #f8f9fa;
-            color: #212529;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark theme */
+        body.dark-theme {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-page: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+        }
+
+        /* Black theme */
+        body.black-theme {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-page: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #333333;
+        }
+
+        /* Light gray theme */
+        body.light-gray-theme {
+            --bg-primary: #e9ecef;
+            --bg-secondary: #f8f9fa;
+            --bg-page: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --border-color: #dee2e6;
         }
 
         /* Navigation Bar */
@@ -41,6 +81,38 @@
             align-items: flex-start;
             padding: 0 20px;
             gap: 15px;
+        }
+
+        .theme-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+        }
+
+        .theme-selector label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .theme-selector select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .theme-selector select:hover {
+            background: rgba(255, 255, 255, 1);
         }
 
         .nav-logo {
@@ -188,12 +260,77 @@
         /* Page Sections */
         .page-section {
             display: none;
-            background: #ffffff;
+            background: var(--bg-page);
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .page-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Background images for each page */
+        #page0::before {
+            background-image: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&q=80');
+        }
+
+        #page1::before {
+            background-image: url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80');
+        }
+
+        #page2::before {
+            background-image: url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&q=80');
+        }
+
+        #page3::before {
+            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80');
+        }
+
+        #page4::before {
+            background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80');
+        }
+
+        #page5::before {
+            background-image: url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=1920&q=80');
+        }
+
+        #page6::before {
+            background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1920&q=80');
+        }
+
+        #page7::before {
+            background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&q=80');
+        }
+
+        #page8::before {
+            background-image: url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=1920&q=80');
+        }
+
+        #page9::before {
+            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80');
         }
 
         .page-section.active {
@@ -208,6 +345,31 @@
             margin-bottom: 28px;
             box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
             border: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 0;
+            font-size: 1.75em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .h2-symbol {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .page-header h2 {
@@ -227,16 +389,18 @@
 
         /* Parameter Groups */
         .parameter-group {
-            background: #ffffff;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         .parameter-group-title {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #4A90E2;
             margin-bottom: 20px;
             padding-bottom: 12px;
@@ -252,41 +416,41 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 12px;
-            background: #fafbfc;
+            background: var(--bg-primary);
             border-radius: 10px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             border-left: 4px solid #4A90E2;
             transition: all 0.2s ease;
         }
 
         .parameter-item:hover {
-            background: #ffffff;
-            border-color: #d0d0d0;
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transform: translateX(2px);
         }
 
         .parameter-number {
             font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.9em;
+            color: #000000;
+            font-size: 1.0em;
             font-family: 'Courier New', monospace;
         }
 
         .parameter-label {
             font-weight: 500;
-            color: #6c757d;
-            font-size: 0.95em;
+            color: #000000;
+            font-size: 1.1em;
         }
 
         .parameter-input {
             padding: 12px 16px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.95em;
+            font-size: 1.1em;
             transition: all 0.2s ease;
-            background: #ffffff;
-            color: #2c3e50;
+            background: var(--bg-page);
+            color: #000000;
         }
 
         .parameter-input:focus {
@@ -296,9 +460,9 @@
         }
 
         .parameter-input:read-only {
-            background-color: #f8f9fa;
+            background-color: var(--bg-primary);
             cursor: not-allowed;
-            border-color: #e0e0e0;
+            border-color: var(--border-color);
         }
 
         .parameter-unit {
@@ -309,13 +473,14 @@
 
         /* Calculate Button */
         .calculate-section {
-            background: #ffffff;
+            background: var(--bg-secondary);
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
             text-align: center;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .calculate-btn {
@@ -374,21 +539,22 @@
             align-items: center;
             padding: 20px 24px;
             margin-bottom: 12px;
-            background: #fafbfc;
+            background: var(--bg-secondary);
             border-radius: 12px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             transition: all 0.2s ease;
+            color: var(--text-primary);
         }
 
         .result-item:hover {
-            background: #f5f7fa;
-            border-color: #d0d0d0;
+            background: var(--bg-primary);
+            border-color: var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .result-label {
             font-weight: 500;
-            color: #6c757d;
+            color: var(--text-primary);
             font-size: 0.95em;
         }
 
@@ -432,16 +598,17 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 10px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             border-left: 4px solid #4A90E2;
             transition: all 0.2s ease;
+            color: var(--text-primary);
         }
 
         .cost-item:hover {
-            background: #ffffff;
-            border-color: #d0d0d0;
+            background: var(--bg-primary);
+            border-color: var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transform: translateX(2px);
         }
@@ -453,11 +620,13 @@
 
         /* Page Results */
         .page-results {
-            background: #ffffff;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 28px;
             margin-top: 28px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
@@ -477,16 +646,18 @@
             align-items: center;
             padding: 16px 20px;
             margin-bottom: 12px;
-            background: #fafbfc;
+            background: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid var(--border-color);
             border-left: 4px solid #4A90E2;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             transition: all 0.2s ease;
         }
 
         .page-result-item:hover {
-            background: #ffffff;
-            border-color: #d0d0d0;
+            background: var(--bg-primary);
+            border-color: var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transform: translateX(2px);
         }
@@ -505,13 +676,14 @@
         }
 
         .page-result-main {
-            background: #ffffff;
-            color: #000000;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 24px 28px;
             border-radius: 12px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 2px solid #e8e8e8;
+            border: 2px solid var(--border-color);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         .page-result-main .page-result-label {
@@ -590,18 +762,29 @@
                 <span class="h2-symbol">H₂</span>
                 <span>Wasserstoff-Kostenrechner Simulation "Gruppe 7"</span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#" onclick="showPage(0); return false;" class="nav-link active" data-page="0">1. System</a></li>
-                <li><a href="#" onclick="showPage(1); return false;" class="nav-link" data-page="1">2. Wind</a></li>
-                <li><a href="#" onclick="showPage(2); return false;" class="nav-link" data-page="2">3. Elektrolyse</a></li>
-                <li><a href="#" onclick="showPage(3); return false;" class="nav-link" data-page="3">4. Wasser</a></li>
-                <li><a href="#" onclick="showPage(4); return false;" class="nav-link" data-page="4">5. Stickstoff</a></li>
-                <li><a href="#" onclick="showPage(5); return false;" class="nav-link" data-page="5">6. Ammoniak</a></li>
-                <li><a href="#" onclick="showPage(6); return false;" class="nav-link" data-page="6">7. Speicher</a></li>
-                <li><a href="#" onclick="showPage(7); return false;" class="nav-link" data-page="7">8. Transport</a></li>
-                <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">9. Cracking</a></li>
-                <li><a href="#" onclick="showPage(9); return false;" class="nav-link nav-prognose" data-page="9">Prognose</a></li>
-            </ul>
+            <div style="display: flex; width: 100%; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                <ul class="nav-menu">
+                    <li><a href="#" onclick="showPage(0); return false;" class="nav-link active" data-page="0">1. System</a></li>
+                    <li><a href="#" onclick="showPage(1); return false;" class="nav-link" data-page="1">2. Wind</a></li>
+                    <li><a href="#" onclick="showPage(2); return false;" class="nav-link" data-page="2">3. Elektrolyse</a></li>
+                    <li><a href="#" onclick="showPage(3); return false;" class="nav-link" data-page="3">4. Wasser</a></li>
+                    <li><a href="#" onclick="showPage(4); return false;" class="nav-link" data-page="4">5. Stickstoff</a></li>
+                    <li><a href="#" onclick="showPage(5); return false;" class="nav-link" data-page="5">6. Ammoniak</a></li>
+                    <li><a href="#" onclick="showPage(6); return false;" class="nav-link" data-page="6">7. Speicher</a></li>
+                    <li><a href="#" onclick="showPage(7); return false;" class="nav-link" data-page="7">8. Transport</a></li>
+                    <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">9. Cracking</a></li>
+                    <li><a href="#" onclick="showPage(9); return false;" class="nav-link nav-prognose" data-page="9">Prognose</a></li>
+                </ul>
+                <div class="theme-selector">
+                    <label for="theme-select">🎨 Hintergrund:</label>
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="light">Weiß (Hell)</option>
+                        <option value="light-gray">Hellgrau</option>
+                        <option value="dark">Dunkel</option>
+                        <option value="black">Schwarz</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -613,7 +796,7 @@
             <section class="page-section active" id="page0">
                 <div class="page-header">
                     <div class="page-number">Page 1</div>
-                    <h2>1. Systemgrenze und Ziel</h2>
+                    <h2><span class="h2-symbol">H₂</span>1. Systemgrenze und Ziel</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -663,7 +846,7 @@
             <section class="page-section" id="page1">
                 <div class="page-header">
                     <div class="page-number">Page 2</div>
-                    <h2>2. Erneuerbare Stromerzeugung (Offshore-Wind)</h2>
+                    <h2><span class="h2-symbol">H₂</span>2. Erneuerbare Stromerzeugung (Offshore-Wind)</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -778,7 +961,7 @@
             <section class="page-section" id="page2">
                 <div class="page-header">
                     <div class="page-number">Page 3</div>
-                    <h2>3. Elektrolyse (Wasserstoffproduktion)</h2>
+                    <h2><span class="h2-symbol">H₂</span>3. Elektrolyse (Wasserstoffproduktion)</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -906,7 +1089,7 @@
             <section class="page-section" id="page3">
                 <div class="page-header">
                     <div class="page-number">Page 4</div>
-                    <h2>4. Water Supply and Desalination</h2>
+                    <h2><span class="h2-symbol">H₂</span>4. Water Supply and Desalination</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1039,7 +1222,7 @@
             <section class="page-section" id="page4">
                 <div class="page-header">
                     <div class="page-number">Page 5</div>
-                    <h2>5. Nitrogen Supply (ASU)</h2>
+                    <h2><span class="h2-symbol">H₂</span>5. Nitrogen Supply (ASU)</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1124,7 +1307,7 @@
             <section class="page-section" id="page5">
                 <div class="page-header">
                     <div class="page-number">Page 6</div>
-                    <h2>6. Ammonia Synthesis (Haber–Bosch)</h2>
+                    <h2><span class="h2-symbol">H₂</span>6. Ammonia Synthesis (Haber–Bosch)</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1237,7 +1420,7 @@
             <section class="page-section" id="page6">
                 <div class="page-header">
                     <div class="page-number">Page 7</div>
-                    <h2>7. Storage</h2>
+                    <h2><span class="h2-symbol">H₂</span>7. Storage</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1446,7 +1629,7 @@
             <section class="page-section" id="page7">
                 <div class="page-header">
                     <div class="page-number">Page 8</div>
-                    <h2>8. Transport</h2>
+                    <h2><span class="h2-symbol">H₂</span>8. Transport</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1625,7 +1808,7 @@
             <section class="page-section" id="page8">
                 <div class="page-header">
                     <div class="page-number">Page 9</div>
-                    <h2>9. Ammonia Cracking</h2>
+                    <h2><span class="h2-symbol">H₂</span>9. Ammonia Cracking</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -1697,7 +1880,7 @@
             <!-- Page 9: Price Prediction -->
             <section class="page-section" id="page9">
                 <div class="page-header">
-                    <h2 class="prognose-title">Prognose</h2>
+                    <h2 class="prognose-title"><span class="h2-symbol">H₂</span>Prognose</h2>
                 </div>
 
                 <div class="parameter-group">
@@ -2046,6 +2229,38 @@
 
     <script>
         // Page Navigation - Define early to ensure it's available
+        // Theme management
+        function changeTheme(theme) {
+            const body = document.body;
+            // Remove all theme classes
+            body.classList.remove('light-theme', 'dark-theme', 'black-theme', 'light-gray-theme');
+            
+            // Add selected theme class
+            if (theme === 'dark') {
+                body.classList.add('dark-theme');
+            } else if (theme === 'black') {
+                body.classList.add('black-theme');
+            } else if (theme === 'light-gray') {
+                body.classList.add('light-gray-theme');
+            }
+            // 'light' is the default, no class needed
+            
+            // Save to localStorage
+            localStorage.setItem('selectedTheme', theme);
+            
+            // Update select dropdown
+            const themeSelect = document.getElementById('theme-select');
+            if (themeSelect) {
+                themeSelect.value = theme;
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('selectedTheme') || 'light';
+            changeTheme(savedTheme);
+        }
+
         function showPage(pageIndex) {
             try {
                 const pages = document.querySelectorAll('.page-section');
@@ -3614,6 +3829,9 @@
 
             // Add event listeners to all inputs for auto-calculation
         document.addEventListener('DOMContentLoaded', function() {
+            // Load saved theme
+            loadTheme();
+            
             const allInputs = document.querySelectorAll('.parameter-input');
             allInputs.forEach(input => {
                 input.addEventListener('input', function() {

@@ -2597,9 +2597,47 @@
                 // Input value should be close to 9-10 L/kg H₂
                 const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³ (L to m³ conversion)
                 const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+                
+                // RO detailed costs (NEW)
+                const roCapexPerM3PerDay = getInput('ro_capex_per_m3_per_day') || 1500;
+                const roOpexFractionPerYear = getInput('ro_opex_fraction_per_year') || 0.05;
+                const roOpexPerM3 = getInput('ro_opex_per_m3') || 0.3825;
+                
+                // Calculate RO CAPEX from capacity if not provided
+                const roCapacityM3PerDay = waterDemandAnnual / 365; // m³/day
+                let roCapexCalculated = desalinationCAPEX;
+                if (roCapexPerM3PerDay > 0 && desalinationCAPEX === 0) {
+                    roCapexCalculated = roCapacityM3PerDay * roCapexPerM3PerDay;
+                }
+                
+                // RO OPEX from fraction and volume
+                const roOpexFromFraction = roCapexCalculated * roOpexFractionPerYear;
+                const roOpexFromVolume = waterDemandAnnual * roOpexPerM3;
+                const roOpexTotal = roOpexFromFraction + roOpexFromVolume;
+                
+                // Water Tank CAPEX/OPEX (NEW)
+                const waterTankCapacity = getInput('water_storage_capacity_storage') || getInput('water_storage_capacity') || 2500;
+                const waterTankCapexPerM3 = getInput('water_tank_capex_per_m3') || 200;
+                const waterTankOpexFractionPerYear = getInput('water_tank_opex_fraction_per_year') || 0.02;
+                const waterTankLossFracPerHour = getInput('water_tank_loss_frac_per_hour') || 0.001;
+                
+                const waterTankCapexCalculated = waterTankCapacity * waterTankCapexPerM3;
+                const waterTankOpexFromFraction = waterTankCapexCalculated * waterTankOpexFractionPerYear;
+                
+                // Water tank losses (replacement cost)
+                const waterTankLossAnnual = waterTankCapacity * waterTankLossFracPerHour * 8760; // m³/year
+                const waterReplacementCost = waterTankLossAnnual * desalinationSpecificEnergy * electricityPrice; // €/year
+                
+                // Update water storage CAPEX if calculated
+                if (waterStorageCAPEX === 0) {
+                    waterStorageCAPEX = waterTankCapexCalculated;
+                }
+                
                 // Typical desalination energy: 3-5 kWh/m³ for reverse osmosis
-                const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, discountRate, lifetime);
-                const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + (electricityPrice * desalinationElectricityDemand);
+                const desalinationCAPEXannual = annualizeCAPEX(roCapexCalculated, discountRate, lifetime);
+                const waterTankCAPEXannual = annualizeCAPEX(waterTankCapexCalculated, discountRate, lifetime);
+                const desalinationCostAnnual = desalinationCAPEXannual + roOpexTotal + (electricityPrice * desalinationElectricityDemand) + 
+                                            waterTankCAPEXannual + waterTankOpexFromFraction + waterReplacementCost;
 
                 const asuCAPEXannual = annualizeCAPEX(asuCAPEX, discountRate, lifetime);
                 const asuCostAnnual = asuCAPEXannual + asuOPEX + (electricityPrice * asuElectricity);
@@ -2613,8 +2651,51 @@
                 // Storage: H₂ (cryogenic: 0.5-2% boil-off/day), NH₃ (refrigerated: ~0.1%/year)
                 const storageTotalCAPEX = storageH2CAPEX + storageNH3CAPEX + waterStorageCAPEX;
                 const storageCAPEXannual = annualizeCAPEX(storageTotalCAPEX, discountRate, lifetime);
-                // Storage loss compensation cost could be added here
-                const storageCostAnnual = storageCAPEXannual + storageOPEX;
+                
+                // H2 Storage Energy Costs (NEW)
+                const h2StorageEtaIn = getInput('h2_storage_eta_in') || 0.995;
+                const h2StorageEtaOut = getInput('h2_storage_eta_out') || 0.995;
+                const h2SpecKwhPerKgIn = getInput('h2_spec_kwh_per_kg_in') || 11.0; // Liquefaction
+                const h2SpecKwhPerKgOut = getInput('h2_spec_kwh_per_kg_out') || 0.06; // Regasification
+                const h2BoilOffLossFracPerHour = getInput('h2_boil_off_loss_frac_per_hour') || 0.0000208;
+                const h2ReliqKwhPerKgBog = getInput('h2_reliq_kwh_per_kg_bog') || 11.0;
+                const h2ReliqFrac = getInput('h2_reliq_frac') || 1.0;
+                
+                // H2 storage energy: Liquefaction when storing
+                const h2StoredAnnual = h2Production * h2StorageEtaIn; // kg (accounting for storage efficiency)
+                const h2LiquefactionEnergy = h2StoredAnnual * h2SpecKwhPerKgIn; // kWh
+                
+                // H2 storage energy: Regasification when withdrawing (for HB process)
+                // Estimate: ~50% of production goes to HB, rest stored
+                const h2WithdrawnForHB = h2Production * 0.5; // kg (rough estimate)
+                const h2RegasificationEnergy = h2WithdrawnForHB * h2SpecKwhPerKgOut; // kWh
+                
+                // H2 Boil-off and Re-liquefaction
+                const h2BoilOffAnnual = h2StorageCapacity * 1000 * h2BoilOffLossFracPerHour * 8760; // kg/year
+                const h2BogReliquefied = h2BoilOffAnnual * h2ReliqFrac; // kg
+                const h2ReliquefactionEnergy = h2BogReliquefied * h2ReliqKwhPerKgBog; // kWh
+                
+                const h2StorageEnergyTotal = h2LiquefactionEnergy + h2RegasificationEnergy + h2ReliquefactionEnergy;
+                const h2StorageEnergyCost = electricityPrice * h2StorageEnergyTotal;
+                
+                // NH3 Storage Energy Costs (NEW)
+                const nh3SpecKwhPerTIn = getInput('nh3_spec_kwh_per_t_in') || 1.0;
+                const nh3SpecKwhPerTOut = getInput('nh3_spec_kwh_per_t_out') || 1.0;
+                const nh3CoolingKwhPerTPerDay = getInput('nh3_cooling_kwh_per_t_per_day') || 40.0;
+                
+                // NH3 storage energy: In/out operations
+                const nh3StoredAnnual = ammoniaProduction * 365; // t/year (rough estimate)
+                const nh3StorageInEnergy = nh3StoredAnnual * nh3SpecKwhPerTIn; // kWh
+                const nh3StorageOutEnergy = nh3TransportRequiredMain * nh3SpecKwhPerTOut; // kWh
+                
+                // NH3 cooling energy (continuous)
+                const nh3CoolingEnergy = nh3StorageCapacity * nh3CoolingKwhPerTPerDay * 365 / 24; // kWh/year
+                
+                const nh3StorageEnergyTotal = nh3StorageInEnergy + nh3StorageOutEnergy + nh3CoolingEnergy;
+                const nh3StorageEnergyCost = electricityPrice * nh3StorageEnergyTotal;
+                
+                // Update storage costs with energy costs (waterReplacementCost already calculated in desalination section)
+                const storageCostAnnual = storageCAPEXannual + storageOPEX + h2StorageEnergyCost + nh3StorageEnergyCost;
 
                 // Transport - logistics
                 // Haber-Bosch stoichiometry: 3 H₂ + N₂ → 2 NH₃

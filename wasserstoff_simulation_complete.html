@@ -25,10 +25,10 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
-            color: #1a1a1a;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
             padding: 18px 0;
-            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
             z-index: 1000;
             border-bottom: none;
         }
@@ -46,17 +46,7 @@
             font-size: 1.4em;
             font-weight: 600;
             letter-spacing: 0.5px;
-            color: #1a1a1a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .nav-logo .h2-symbol {
-            font-size: 1.6em;
-            font-weight: 700;
-            color: #1a1a1a;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
         }
 
         .nav-menu {
@@ -67,23 +57,21 @@
         }
 
         .nav-menu a {
-            color: #1a1a1a;
+            color: white;
             text-decoration: none;
             padding: 8px 15px;
             border-radius: 5px;
             transition: background 0.3s;
             font-size: 0.85em;
-            font-weight: 500;
         }
 
         .nav-menu a:hover {
-            background: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.15);
             transform: translateY(-1px);
         }
 
         .nav-menu a.active {
-            background: rgba(255,255,255,0.6);
-            font-weight: 600;
+            background: rgba(255,255,255,0.25);
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
@@ -533,10 +521,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <span class="h2-symbol">H₂</span>
-                <span>Wasserstoff-Kostenrechner Simulation</span>
-            </div>
+            <div class="nav-logo">H₂ Wasserstoff-Kostenrechner Simulation</div>
             <ul class="nav-menu">
                 <li><a href="#" onclick="showPage(0); return false;" class="nav-link active" data-page="0">1. System</a></li>
                 <li><a href="#" onclick="showPage(1); return false;" class="nav-link" data-page="1">2. Wind</a></li>
@@ -547,7 +532,7 @@
                 <li><a href="#" onclick="showPage(6); return false;" class="nav-link" data-page="6">7. Speicher</a></li>
                 <li><a href="#" onclick="showPage(7); return false;" class="nav-link" data-page="7">8. Transport</a></li>
                 <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">9. Cracking</a></li>
-                <li><a href="#" onclick="showPage(9); return false;" class="nav-link" data-page="9">10. Prognose</a></li>
+                <li><a href="#" onclick="showPage(9); return false;" class="nav-link" data-page="9">10. Prediction</a></li>
             </ul>
         </div>
     </nav>
@@ -560,43 +545,34 @@
             <section class="page-section active" id="page0">
                 <div class="page-header">
                     <div class="page-number">Page 1</div>
-                    <h2>1. Systemgrenze und Ziel</h2>
+                    <h2>1. System Boundary and Target</h2>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">1.1 Zieldefinition</div>
+                    <div class="parameter-group-title">0.1 Target definition</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">1.1.1</div>
-                        <div class="parameter-label">Wasserstoff-Importziel <span class="parameter-unit">(t H₂/Jahr)</span></div>
+                        <div class="parameter-number">0.1.1</div>
+                        <div class="parameter-label">Hydrogen import target <span class="parameter-unit">(t H₂/year)</span></div>
                         <input type="number" class="parameter-input" id="h2_import_target" value="100000" step="1000">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">1.1.2</div>
-                        <div class="parameter-label">Stahlwerksbedarf <span class="parameter-unit">(kt H₂/Jahr)</span></div>
+                        <div class="parameter-number">0.1.2</div>
+                        <div class="parameter-label">Steel plant demand <span class="parameter-unit">(kt H₂/year)</span></div>
                         <input type="number" class="parameter-input" id="h2_steel_demand" value="110" step="1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">1.1.3</div>
-                        <div class="parameter-label">Diskontrate <span class="parameter-unit">(%)</span></div>
+                        <div class="parameter-number">0.1.3</div>
+                        <div class="parameter-label">Discount rate <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="discount_rate" value="5" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">1.1.4</div>
-                        <div class="parameter-label">Projektlebensdauer <span class="parameter-unit">(Jahre)</span></div>
+                        <div class="parameter-number">0.1.4</div>
+                        <div class="parameter-label">Project lifetime <span class="parameter-unit">(years)</span></div>
                         <input type="number" class="parameter-input" id="project_lifetime" value="25" step="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">1.1.5</div>
-                        <div class="parameter-label">Referenz H₂-Menge <span class="parameter-unit">(für Berechnungen verwenden)</span></div>
-                        <select class="parameter-input" id="h2_reference_choice" style="padding: 12px 16px;">
-                            <option value="import">Importziel</option>
-                            <option value="steel" selected>Stahlwerksbedarf</option>
-                        </select>
                     </div>
                 </div>
 
@@ -610,91 +586,63 @@
             <section class="page-section" id="page1">
                 <div class="page-header">
                     <div class="page-number">Page 2</div>
-                    <h2>2. Erneuerbare Stromerzeugung (Offshore-Wind)</h2>
+                    <h2>2. Renewable Electricity Generation (Offshore Wind)</h2>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">2.1 Ressourcen- und Standortparameter</div>
+                    <div class="parameter-group-title">1.1 Resource and site parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">2.1.1</div>
-                        <div class="parameter-label">Kapazitätsfaktor <span class="parameter-unit">(%)</span></div>
+                        <div class="parameter-number">1.1.1</div>
+                        <div class="parameter-label">Capacity factor <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="wind_capacity_factor" value="51" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">2.1.2</div>
-                        <div class="parameter-label">Anzahl Windkraftanlagen</div>
+                        <div class="parameter-number">1.1.2</div>
+                        <div class="parameter-label">Number of turbines</div>
                         <input type="number" class="parameter-input" id="wind_num_turbines" value="260" step="1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">2.2 Installierte Kapazität und Kostenparameter</div>
+                    <div class="parameter-group-title">1.3 Installed capacity and cost parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">2.2.1</div>
-                        <div class="parameter-label">Installierte Windkapazität <span class="parameter-unit">(GW)</span></div>
+                        <div class="parameter-number">1.3.1</div>
+                        <div class="parameter-label">Installed wind capacity <span class="parameter-unit">(GW)</span></div>
                         <input type="number" class="parameter-input" id="wind_capacity" value="2.47" step="0.01">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">2.2.2</div>
-                        <div class="parameter-label">Windpark CAPEX <span class="parameter-unit">(Mrd. €)</span></div>
+                        <div class="parameter-number">1.3.2</div>
+                        <div class="parameter-label">Wind farm CAPEX <span class="parameter-unit">(billion €)</span></div>
                         <input type="number" class="parameter-input" id="wind_capex" value="5.32" step="0.01">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">2.2.3</div>
-                        <div class="parameter-label">Windpark OPEX <span class="parameter-unit">(Mio. €/Jahr)</span></div>
+                        <div class="parameter-number">1.3.3</div>
+                        <div class="parameter-label">Wind farm OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="wind_opex" value="114.46" step="0.01">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">2.2.4</div>
-                        <div class="parameter-label">Rückbau (Depex) <span class="parameter-unit">(Mio. €)</span></div>
+                        <div class="parameter-number">1.3.4</div>
+                        <div class="parameter-label">Decommissioning (Depex) <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="wind_depex" value="53.24" step="0.01">
                     </div>
                 </div>
 
-                <div class="parameter-group">
-                    <div class="parameter-group-title">2.3 Stromkosten-Methode</div>
-                    
-                    <div class="parameter-item">
-                        <div class="parameter-number">2.3.1</div>
-                        <div class="parameter-label">Stromkosten-Methode</div>
-                        <select class="parameter-input" id="electricity_cost_method" style="padding: 12px 16px;">
-                            <option value="internal_LCOE" selected>Interner LCOE (vom Windpark)</option>
-                            <option value="external_price">Externer Preis</option>
-                        </select>
-                    </div>
-
-                    <div class="parameter-item" id="external_price_input" style="display: none;">
-                        <div class="parameter-number">2.3.2</div>
-                        <div class="parameter-label">Externer Strompreis <span class="parameter-unit">(€/MWh)</span></div>
-                        <input type="number" class="parameter-input" id="external_electricity_price" value="50" step="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">2.3.3</div>
-                        <div class="parameter-label">Windkosten in Gesamtkosten einbeziehen</div>
-                        <select class="parameter-input" id="include_wind_cost_in_total" style="padding: 12px 16px;">
-                            <option value="false" selected>Nein (Windkosten nur über Strompreis)</option>
-                            <option value="true">Ja (Windkosten separat addieren)</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="page-results" id="page1_results">
-                    <div class="page-results-title">Windpark-Kostenberechnung</div>
+                    <div class="page-results-title">Wind Farm Cost Calculation</div>
                     <div class="page-result-main">
                         <div class="page-result-item">
-                            <div class="page-result-label">Jährliche Windkosten</div>
+                            <div class="page-result-label">Annual Wind Cost</div>
                             <div class="page-result-value" id="wind_cost_annual">-</div>
                         </div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">CAPEX (annualisiert)</div>
+                        <div class="page-result-label">CAPEX (annualized)</div>
                         <div class="page-result-value" id="wind_capex_annual">-</div>
                     </div>
                     <div class="page-result-item">
@@ -702,15 +650,15 @@
                         <div class="page-result-value" id="wind_opex_annual">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Depex (annualisiert)</div>
+                        <div class="page-result-label">Depex (annualized)</div>
                         <div class="page-result-value" id="wind_depex_annual">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Jährliche Stromerzeugung</div>
+                        <div class="page-result-label">Annual Electricity Output</div>
                         <div class="page-result-value" id="wind_electricity_output">-</div>
                     </div>
                     <div class="page-result-item">
-                        <div class="page-result-label">Interner Strompreis</div>
+                        <div class="page-result-label">Internal Electricity Price</div>
                         <div class="page-result-value" id="wind_electricity_price">-</div>
                     </div>
                 </div>
@@ -725,74 +673,56 @@
             <section class="page-section" id="page2">
                 <div class="page-header">
                     <div class="page-number">Page 3</div>
-                    <h2>3. Elektrolyse (Wasserstoffproduktion)</h2>
+                    <h2>3. Electrolysis (Hydrogen Production)</h2>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.1 Wasserstoffproduktionsziel</div>
+                    <div class="parameter-group-title">2.1 Hydrogen production target</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">3.1.1</div>
-                        <div class="parameter-label">Wasserstoffproduktion <span class="parameter-unit">(kt H₂/Jahr)</span></div>
+                        <div class="parameter-number">2.1.1</div>
+                        <div class="parameter-label">Hydrogen production <span class="parameter-unit">(kt H₂/year)</span></div>
                         <input type="number" class="parameter-input" id="h2_production" value="110" step="1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.2 Energiebedarf</div>
+                    <div class="parameter-group-title">2.2 Energy demand</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">3.2.1</div>
-                        <div class="parameter-label">Spezifischer Strombedarf <span class="parameter-unit">(kWh/kg H₂)</span></div>
+                        <div class="parameter-number">2.2.1</div>
+                        <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/kg H₂)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="50" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.3 Operational parameters</div>
+                    <div class="parameter-group-title">2.3 Operational parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">3.3.1</div>
+                        <div class="parameter-number">2.3.1</div>
                         <div class="parameter-label">Electrolyser availability <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_availability" value="95" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">3.3.2</div>
+                        <div class="parameter-number">2.3.2</div>
                         <div class="parameter-label">Operating hours <span class="parameter-unit">(h/year)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_operating_hours" value="8300" step="100" readonly style="background-color: #e9ecef;">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">3.3.3</div>
-                        <div class="parameter-label">Effective operating hours <span class="parameter-unit">(h/year, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_effective_hours" value="0" step="1" readonly style="background-color: #e9ecef;">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">3.3.4</div>
-                        <div class="parameter-label">Minimum load fraction <span class="parameter-unit">(-)</span></div>
-                        <input type="number" class="parameter-input" id="min_load_fraction" value="0.1" step="0.05" min="0" max="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">3.3.5</div>
-                        <div class="parameter-label">Full load hours equivalent <span class="parameter-unit">(h/a)</span></div>
-                        <input type="number" class="parameter-input" id="full_load_hours_equivalent" value="5094" step="100">
+                        <input type="number" class="parameter-input" id="electrolysis_operating_hours" value="8300" step="100">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">3.4 Cost parameters</div>
+                    <div class="parameter-group-title">2.7 Cost parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">3.4.1</div>
+                        <div class="parameter-number">2.7.1</div>
                         <div class="parameter-label">Electrolyser CAPEX <span class="parameter-unit">(€/kW)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_capex_per_kw" value="450" step="10">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">3.4.2</div>
+                        <div class="parameter-number">2.7.2</div>
                         <div class="parameter-label">Electrolyser OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="electrolysis_opex" value="10.5" step="0.1">
                     </div>
@@ -842,58 +772,58 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">4.1 Water demand</div>
+                    <div class="parameter-group-title">3.1 Water demand</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">4.1.1</div>
+                        <div class="parameter-number">3.1.1</div>
                         <div class="parameter-label">Seawater demand <span class="parameter-unit">(L/kg H₂)</span></div>
                         <input type="number" class="parameter-input" id="seawater_demand" value="15" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">4.1.2</div>
+                        <div class="parameter-number">3.1.2</div>
                         <div class="parameter-label">Deionised water demand <span class="parameter-unit">(L/kg H₂)</span></div>
                         <input type="number" class="parameter-input" id="deionised_water_demand" value="10" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">4.2 Desalination system</div>
+                    <div class="parameter-group-title">3.2 Desalination system</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">4.2.1</div>
+                        <div class="parameter-number">3.2.4</div>
                         <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/m³)</span></div>
                         <input type="number" class="parameter-input" id="desalination_specific_energy" value="5" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">4.3 Infrastructure</div>
+                    <div class="parameter-group-title">3.3 Infrastructure</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">4.3.1</div>
+                        <div class="parameter-number">3.3.1</div>
                         <div class="parameter-label">Desalination CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="desalination_capex" value="4" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">4.3.2</div>
+                        <div class="parameter-number">3.3.2</div>
                         <div class="parameter-label">Desalination OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="desalination_opex" value="0.5" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">4.4 Water Storage</div>
+                    <div class="parameter-group-title">3.4 Water Storage</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">4.4.1</div>
+                        <div class="parameter-number">3.4.1</div>
                         <div class="parameter-label">Water storage CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="water_storage_capex" value="5" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">4.4.2</div>
+                        <div class="parameter-number">3.4.2</div>
                         <div class="parameter-label">Water storage capacity <span class="parameter-unit">(m³)</span></div>
                         <input type="number" class="parameter-input" id="water_storage_capacity" value="2500" step="100">
                     </div>
@@ -939,48 +869,30 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">5.1 Nitrogen Supply Parameters</div>
+                    <div class="parameter-group-title">4. Nitrogen Supply Parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">5.1.1</div>
+                        <div class="parameter-number">4.1</div>
                         <div class="parameter-label">Nitrogen demand <span class="parameter-unit">(t N₂/day)</span></div>
                         <input type="number" class="parameter-input" id="nitrogen_demand" value="1550" step="10">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">5.1.2</div>
+                        <div class="parameter-number">4.2</div>
                         <div class="parameter-label">ASU CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="asu_capex" value="200" step="10">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">5.1.3</div>
+                        <div class="parameter-number">4.3</div>
                         <div class="parameter-label">ASU OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="asu_opex" value="10" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">5.1.4</div>
+                        <div class="parameter-number">4.4</div>
                         <div class="parameter-label">ASU electricity demand <span class="parameter-unit">(GWh/year)</span></div>
                         <input type="number" class="parameter-input" id="asu_electricity" value="50" step="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">5.1.5</div>
-                        <div class="parameter-label">ASU capacity <span class="parameter-unit">(t N₂/day)</span></div>
-                        <input type="number" class="parameter-input" id="asu_capacity" value="1550" step="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">5.1.6</div>
-                        <div class="parameter-label">ASU CAPEX per unit capacity <span class="parameter-unit">(€/t N₂/day)</span></div>
-                        <input type="number" class="parameter-input" id="asu_capex_per_unit" value="0" step="1000">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">5.1.7</div>
-                        <div class="parameter-label">ASU OPEX share <span class="parameter-unit">(-, fraction of CAPEX)</span></div>
-                        <input type="number" class="parameter-input" id="asu_opex_share" value="0" step="0.01" min="0" max="1">
                     </div>
                 </div>
 
@@ -1024,64 +936,40 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">6.1 Production rates</div>
+                    <div class="parameter-group-title">5.2 Production rates</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">6.1.1</div>
+                        <div class="parameter-number">5.2.1</div>
                         <div class="parameter-label">Ammonia production <span class="parameter-unit">(t NH₃/day)</span></div>
                         <input type="number" class="parameter-input" id="ammonia_production" value="1995" step="10">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">6.1.2</div>
+                        <div class="parameter-number">5.2.2</div>
                         <div class="parameter-label">Annual ammonia demand <span class="parameter-unit">(kt NH₃/year)</span></div>
                         <input type="number" class="parameter-input" id="ammonia_annual_demand" value="687" step="1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">6.2 Cost parameters</div>
+                    <div class="parameter-group-title">5.3 Cost parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">6.2.1</div>
+                        <div class="parameter-number">5.3.1</div>
                         <div class="parameter-label">Haber-Bosch CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="haber_bosch_capex" value="125" step="5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">6.2.2</div>
+                        <div class="parameter-number">5.3.2</div>
                         <div class="parameter-label">Haber-Bosch OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="haber_bosch_opex" value="5" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">6.2.3</div>
+                        <div class="parameter-number">5.3.3</div>
                         <div class="parameter-label">Haber-Bosch electricity <span class="parameter-unit">(GWh/year)</span></div>
                         <input type="number" class="parameter-input" id="haber_bosch_electricity" value="100" step="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">6.2.4</div>
-                        <div class="parameter-label">Haber-Bosch capacity <span class="parameter-unit">(t NH₃/day)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_capacity" value="1995" step="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">6.2.5</div>
-                        <div class="parameter-label">Haber-Bosch CAPEX per unit <span class="parameter-unit">(€/t NH₃/day)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_capex_per_unit" value="0" step="1000">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">6.2.6</div>
-                        <div class="parameter-label">Haber-Bosch OPEX share <span class="parameter-unit">(-, fraction of CAPEX)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_opex_share" value="0" step="0.01" min="0" max="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">6.2.7</div>
-                        <div class="parameter-label">Haber-Bosch efficiency/loss <span class="parameter-unit">(%, loss)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_loss" value="5" step="0.1" min="0" max="100">
                     </div>
                 </div>
 
@@ -1125,66 +1013,36 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">7.1 Storage Capacities</div>
+                    <div class="parameter-group-title">6. Storage Capacities</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">7.1.1</div>
+                        <div class="parameter-number">6.1</div>
                         <div class="parameter-label">H₂ storage CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="storage_h2_capex" value="50" step="5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">7.1.2</div>
+                        <div class="parameter-number">6.2</div>
                         <div class="parameter-label">NH₃ storage CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="storage_nh3_capex" value="100" step="5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">7.1.3</div>
+                        <div class="parameter-number">6.3</div>
                         <div class="parameter-label">Storage OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="storage_opex" value="5" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">7.1.4</div>
+                        <div class="parameter-number">6.4</div>
                         <div class="parameter-label">Water storage CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="water_storage_capex_storage" value="5" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">7.1.5</div>
+                        <div class="parameter-number">6.5</div>
                         <div class="parameter-label">Water storage capacity <span class="parameter-unit">(m³)</span></div>
                         <input type="number" class="parameter-input" id="water_storage_capacity_storage" value="2500" step="100">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">7.1.6</div>
-                        <div class="parameter-label">NH₃ storage capacity <span class="parameter-unit">(t NH₃)</span></div>
-                        <input type="number" class="parameter-input" id="nh3_storage_capacity" value="68527" step="1000">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">7.1.7</div>
-                        <div class="parameter-label">H₂ storage capacity <span class="parameter-unit">(t H₂)</span></div>
-                        <input type="number" class="parameter-input" id="h2_storage_capacity" value="662" step="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">7.1.8</div>
-                        <div class="parameter-label">NH₃ storage CAPEX per t <span class="parameter-unit">(€/t NH₃)</span></div>
-                        <input type="number" class="parameter-input" id="capex_per_t_nh3_storage" value="0" step="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">7.1.9</div>
-                        <div class="parameter-label">Storage OPEX share <span class="parameter-unit">(-, fraction of CAPEX)</span></div>
-                        <input type="number" class="parameter-input" id="storage_opex_share" value="0" step="0.01" min="0" max="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">7.1.10</div>
-                        <div class="parameter-label">Storage loss rate <span class="parameter-unit">(%/year)</span></div>
-                        <input type="number" class="parameter-input" id="storage_loss_rate" value="0.5" step="0.1" min="0" max="10">
                     </div>
                 </div>
 
@@ -1220,144 +1078,54 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">8.1 Logistics</div>
+                    <div class="parameter-group-title">7.1 Logistics</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">8.1.1</div>
-                        <div class="parameter-label">NH₃ density <span class="parameter-unit">(t/m³, at -33°C/9 bar)</span></div>
-                        <input type="number" class="parameter-input" id="nh3_density" value="0.682" step="0.001">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.1.2</div>
+                        <div class="parameter-number">7.1.2</div>
                         <div class="parameter-label">Sea transport distance <span class="parameter-unit">(km)</span></div>
                         <input type="number" class="parameter-input" id="transport_distance" value="13000" step="100">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">8.1.3</div>
+                        <div class="parameter-number">7.1.3</div>
                         <div class="parameter-label">One-way transport time <span class="parameter-unit">(days)</span></div>
                         <input type="number" class="parameter-input" id="transport_time" value="26" step="1">
                     </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.1.4</div>
-                        <div class="parameter-label">Port time (loading/unloading) <span class="parameter-unit">(days)</span></div>
-                        <input type="number" class="parameter-input" id="port_time" value="2" step="0.5">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.1.5</div>
-                        <div class="parameter-label">Ship speed <span class="parameter-unit">(knots)</span></div>
-                        <input type="number" class="parameter-input" id="ship_speed" value="14" step="0.5">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.1.6</div>
-                        <div class="parameter-label">Tank fill factor <span class="parameter-unit">(-)</span></div>
-                        <input type="number" class="parameter-input" id="fill_factor" value="0.95" step="0.01" min="0" max="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.1.7</div>
-                        <div class="parameter-label">NH₃ shipping loss rate <span class="parameter-unit">(%/trip)</span></div>
-                        <input type="number" class="parameter-input" id="nh3_shipping_loss" value="0.1" step="0.05" min="0" max="5">
-                    </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">8.2 Transport costs</div>
+                    <div class="parameter-group-title">7.2 Transport costs</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">8.2.1</div>
-                        <div class="parameter-label">Shipping cost per t NH₃ <span class="parameter-unit">(€/t)</span></div>
-                        <input type="number" class="parameter-input" id="shipping_cost_per_t_nh3" value="0" step="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.2</div>
-                        <div class="parameter-label">Shipping cost per t·km <span class="parameter-unit">(€/t·km)</span></div>
-                        <input type="number" class="parameter-input" id="shipping_cost_per_tkm" value="0" step="0.001">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.3</div>
-                        <div class="parameter-label">Fuel cost per trip <span class="parameter-unit">(€/trip)</span></div>
-                        <input type="number" class="parameter-input" id="fuel_cost_per_trip" value="0" step="1000">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.4</div>
-                        <div class="parameter-label">Harbor fees per trip <span class="parameter-unit">(€/trip)</span></div>
-                        <input type="number" class="parameter-input" id="harbor_fees_per_trip" value="0" step="1000">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.5</div>
-                        <div class="parameter-label">Insurance rate <span class="parameter-unit">(% of CAPEX/year)</span></div>
-                        <input type="number" class="parameter-input" id="insurance_rate" value="1" step="0.1" min="0" max="10">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.6</div>
+                        <div class="parameter-number">7.2.1</div>
                         <div class="parameter-label">Taxes and customs <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="taxes_customs" value="75.69" step="0.1">
                     </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.7</div>
-                        <div class="parameter-label">Customs rate <span class="parameter-unit">(%)</span></div>
-                        <input type="number" class="parameter-input" id="customs_rate" value="0" step="0.1" min="0" max="100">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.2.8</div>
-                        <div class="parameter-label">VAT rate <span class="parameter-unit">(%)</span></div>
-                        <input type="number" class="parameter-input" id="vat_rate" value="0" step="0.1" min="0" max="100">
-                    </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">8.3 Vessel parameters</div>
+                    <div class="parameter-group-title">7.3 Vessel parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">8.3.1</div>
+                        <div class="parameter-number">7.3.2</div>
                         <div class="parameter-label">Tank volume <span class="parameter-unit">(m³)</span></div>
                         <input type="number" class="parameter-input" id="vessel_tank_volume" value="40000" step="1000">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">8.3.2</div>
+                        <div class="parameter-number">7.3.3</div>
                         <div class="parameter-label">Investment cost per vessel <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="vessel_capex" value="61.5" step="1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">8.3.3</div>
-                        <div class="parameter-label">Number of vessels <span class="parameter-unit">(calculated)</span></div>
-                        <input type="number" class="parameter-input" id="num_vessels" value="4" step="1" readonly style="background-color: #e9ecef;">
+                        <div class="parameter-number">7.3.4</div>
+                        <div class="parameter-label">Number of vessels</div>
+                        <input type="number" class="parameter-input" id="num_vessels" value="4" step="1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">8.3.4</div>
-                        <div class="parameter-label">Cycle time <span class="parameter-unit">(days, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="cycle_time_days" value="0" step="0.1" readonly style="background-color: #e9ecef;">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.3.5</div>
-                        <div class="parameter-label">Trips per ship per year <span class="parameter-unit">(calculated)</span></div>
-                        <input type="number" class="parameter-input" id="trips_per_ship_a" value="0" step="0.1" readonly style="background-color: #e9ecef;">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.3.6</div>
-                        <div class="parameter-label">Ship payload NH₃ <span class="parameter-unit">(t, calculated)</span></div>
-                        <input type="number" class="parameter-input" id="ship_payload_nh3" value="0" step="1" readonly style="background-color: #e9ecef;">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">8.3.7</div>
+                        <div class="parameter-number">7.3.5</div>
                         <div class="parameter-label">Vessel OPEX <span class="parameter-unit">(million €/year per vessel)</span></div>
                         <input type="number" class="parameter-input" id="vessel_opex" value="5" step="0.5">
                     </div>
@@ -1399,40 +1167,28 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">9.1 Cracking process</div>
+                    <div class="parameter-group-title">8.1 Cracking process</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">9.1.1</div>
+                        <div class="parameter-number">8.1.1</div>
                         <div class="parameter-label">Cracking efficiency <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="cracking_efficiency" value="95" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">9.2 Cost parameters</div>
+                    <div class="parameter-group-title">8.3 Cost parameters</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">9.2.1</div>
+                        <div class="parameter-number">8.3.1</div>
                         <div class="parameter-label">Cracking CAPEX <span class="parameter-unit">(million €)</span></div>
                         <input type="number" class="parameter-input" id="cracking_capex" value="500" step="10">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">9.2.2</div>
+                        <div class="parameter-number">8.3.2</div>
                         <div class="parameter-label">Cracking OPEX <span class="parameter-unit">(million €/year)</span></div>
                         <input type="number" class="parameter-input" id="cracking_opex" value="10" step="0.5">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">9.2.3</div>
-                        <div class="parameter-label">H₂ purity loss <span class="parameter-unit">(-, fraction)</span></div>
-                        <input type="number" class="parameter-input" id="h2_purity_loss" value="0.02" step="0.01" min="0" max="1">
-                    </div>
-
-                    <div class="parameter-item">
-                        <div class="parameter-number">9.2.4</div>
-                        <div class="parameter-label">H₂ recovery fraction <span class="parameter-unit">(-, fraction)</span></div>
-                        <input type="number" class="parameter-input" id="h2_recovery_fraction" value="0.98" step="0.01" min="0" max="1">
                     </div>
                 </div>
 
@@ -1472,64 +1228,64 @@
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.1 Current Base Cost</div>
+                    <div class="parameter-group-title">9.1 Current Base Cost</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.1.1</div>
+                        <div class="parameter-number">9.1.1</div>
                         <div class="parameter-label">Current cost per kg H₂ <span class="parameter-unit">(€/kg)</span></div>
                         <input type="number" class="parameter-input" id="current_cost_per_kg" value="0" step="0.01" readonly>
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.2 Cost Reduction Scenarios</div>
+                    <div class="parameter-group-title">9.2 Cost Reduction Scenarios</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.1</div>
+                        <div class="parameter-number">9.2.1</div>
                         <div class="parameter-label">Annual CAPEX reduction <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="capex_reduction_rate" value="5" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.2</div>
+                        <div class="parameter-number">9.2.2</div>
                         <div class="parameter-label">Annual OPEX reduction <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="opex_reduction_rate" value="2" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.2.3</div>
+                        <div class="parameter-number">9.2.3</div>
                         <div class="parameter-label">Technology learning rate <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="learning_rate" value="10" step="0.5">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.3 Market Factors</div>
+                    <div class="parameter-group-title">9.3 Market Factors</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.1</div>
+                        <div class="parameter-number">9.3.1</div>
                         <div class="parameter-label">Annual inflation rate <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="inflation_rate" value="2" step="0.1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.2</div>
+                        <div class="parameter-number">9.3.2</div>
                         <div class="parameter-label">Market demand growth <span class="parameter-unit">(%/year)</span></div>
                         <input type="number" class="parameter-input" id="demand_growth" value="15" step="0.5">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">10.3.3</div>
+                        <div class="parameter-number">9.3.3</div>
                         <div class="parameter-label">Scale-up efficiency gain <span class="parameter-unit">(%)</span></div>
                         <input type="number" class="parameter-input" id="scale_efficiency" value="3" step="0.1">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-group-title">10.4 Scenario Selection</div>
+                    <div class="parameter-group-title">9.4 Scenario Selection</div>
                     
                     <div class="parameter-item">
-                        <div class="parameter-number">10.4.1</div>
+                        <div class="parameter-number">9.4.1</div>
                         <div class="parameter-label">Prediction scenario</div>
                         <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
                             <option value="optimistic">Optimistic (Fast cost reduction)</option>
@@ -1707,14 +1463,6 @@
             return capex * crf;
         }
 
-        // Annualize Depex (Rückbaukosten am Ende der Lebensdauer)
-        function annualizeDepex(depex, discountRate, lifetime) {
-            // Barwert des Rückbaus am Ende der Lebensdauer
-            const pv = depex / Math.pow(1 + discountRate / 100, lifetime);
-            const crf = CRF(discountRate / 100, lifetime);
-            return pv * crf;
-        }
-
         // Get input value
         function getInput(id) {
             const element = document.getElementById(id);
@@ -1729,22 +1477,6 @@
             };
         }
 
-        // Get H₂ reference quantity based on user choice
-        function getH2Reference() {
-            const referenceChoice = document.getElementById('h2_reference_choice');
-            if (!referenceChoice) {
-                // Fallback: use steel plant demand if selector doesn't exist
-                return getInput('h2_steel_demand') * 1000000; // kt to kg
-            }
-            
-            const choice = referenceChoice.value;
-            if (choice === 'import') {
-                return getInput('h2_import_target') * 1000; // t to kg
-            } else {
-                return getInput('h2_steel_demand') * 1000000; // kt to kg
-            }
-        }
-
         // Calculate Wind Costs (Page 1)
         function calculateWindCosts() {
             const params = getCommonParams();
@@ -1756,16 +1488,16 @@
 
             const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor; // MWh
             const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
-            const windDepexAnnual = annualizeDepex(windDepex, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
             const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-            const electricityPriceWind = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
 
             document.getElementById('wind_cost_annual').textContent = (windCostAnnual / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('wind_capex_annual').textContent = (windCAPEXannual / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('wind_opex_annual').textContent = (windOPEX / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('wind_depex_annual').textContent = (windDepexAnnual / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('wind_electricity_output').textContent = (windElectricityAnnual / 1000).toFixed(2) + ' GWh/year';
-            document.getElementById('wind_electricity_price').textContent = (electricityPriceWind * 1000).toFixed(4) + ' €/MWh';
+            document.getElementById('wind_electricity_price').textContent = (internalElectricityPrice * 1000).toFixed(4) + ' €/MWh';
         }
 
         // Calculate Electrolysis Costs (Page 2)
@@ -1773,9 +1505,7 @@
             const params = getCommonParams();
             const h2Production = getInput('h2_production') * 1000000; // kt to kg
             const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
-            const electrolysisAvailability = getInput('electrolysis_availability') / 100;
-            // effektive Stunden aus Verfügbarkeit
-            const hOpEffectiveLocal = 8760 * electrolysisAvailability;
+            const electrolysisOperatingHours = getInput('electrolysis_operating_hours');
             const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
             const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
 
@@ -1787,15 +1517,15 @@
             const windDepex = getInput('wind_depex') * 1000000;
             const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
             const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
-            const windDepexAnnual = annualizeDepex(windDepex, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
             const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-            const electricityPriceElectrolysis = windCostAnnual / (windElectricityAnnual * 1000);
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
 
             const electrolysisElectricityDemand = h2Production * electrolysisSpecificEnergy; // kWh
-            const electrolysisPower = electrolysisElectricityDemand / hOpEffectiveLocal; // kW
+            const electrolysisPower = electrolysisElectricityDemand / electrolysisOperatingHours; // kW
             const electrolysisCAPEX = electrolysisPower * electrolysisCAPEXperkW;
             const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, params.discountRate, params.lifetime);
-            const electrolysisElectricityCost = electricityPriceElectrolysis * electrolysisElectricityDemand;
+            const electrolysisElectricityCost = internalElectricityPrice * electrolysisElectricityDemand;
             const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEX + electrolysisElectricityCost;
 
             document.getElementById('electrolysis_cost_annual').textContent = (electrolysisCostAnnual / 1000000).toFixed(2) + ' M€/year';
@@ -1823,14 +1553,14 @@
             const windDepex = getInput('wind_depex') * 1000000;
             const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
             const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
-            const windDepexAnnual = annualizeDepex(windDepex, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
             const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-            const electricityPriceDesalination = windCostAnnual / (windElectricityAnnual * 1000);
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
 
             const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³
             const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
             const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, params.discountRate, params.lifetime);
-            const desalinationElectricityCost = electricityPriceDesalination * desalinationElectricityDemand;
+            const desalinationElectricityCost = internalElectricityPrice * desalinationElectricityDemand;
             const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + desalinationElectricityCost;
 
             document.getElementById('desalination_cost_annual').textContent = (desalinationCostAnnual / 1000000).toFixed(2) + ' M€/year';
@@ -1859,43 +1589,24 @@
         function calculateASUCosts() {
             const params = getCommonParams();
             const nitrogenDemand = getInput('nitrogen_demand'); // t/day
-            let asuCAPEX = getInput('asu_capex') * 1000000; // million to €
-            let asuOPEX = getInput('asu_opex') * 1000000; // million to €
+            const asuCAPEX = getInput('asu_capex') * 1000000; // million to €
+            const asuOPEX = getInput('asu_opex') * 1000000; // million to €
             const asuElectricity = getInput('asu_electricity') * 1000000; // GWh to kWh
-            const asuCapacity = getInput('asu_capacity'); // t N₂/day
-            const asuCAPEXperUnit = getInput('asu_capex_per_unit');
-            const asuOPEXshare = getInput('asu_opex_share');
-            
-            // If CAPEX per unit is provided, calculate from capacity
-            if (asuCAPEXperUnit > 0) {
-                asuCAPEX = asuCapacity * asuCAPEXperUnit;
-            }
-            // If OPEX share is provided, calculate from CAPEX
-            if (asuOPEXshare > 0 && asuOPEX === 0) {
-                asuOPEX = asuCAPEX * asuOPEXshare;
-            }
 
-            // Get electricity price (internal or external)
-            const electricityCostMethod = document.getElementById('electricity_cost_method').value;
-            let electricityPrice = 0;
-            
-            if (electricityCostMethod === 'internal_LCOE') {
-                const windCapacity = getInput('wind_capacity') * 1000;
-                const windCapacityFactor = getInput('wind_capacity_factor') / 100;
-                const windCAPEX = getInput('wind_capex') * 1000000000;
-                const windOPEX = getInput('wind_opex') * 1000000;
-                const windDepex = getInput('wind_depex') * 1000000;
-                const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
-                const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
-                const windDepexAnnual = annualizeDepex(windDepex, params.discountRate, params.lifetime);
-                const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-                electricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
-            } else {
-                electricityPrice = getInput('external_electricity_price') / 1000; // MWh to kWh
-            }
+            // Get internal electricity price
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
 
             const asuCAPEXannual = annualizeCAPEX(asuCAPEX, params.discountRate, params.lifetime);
-            const asuElectricityCost = electricityPrice * asuElectricity;
+            const asuElectricityCost = internalElectricityPrice * asuElectricity;
             const asuCostAnnual = asuCAPEXannual + asuOPEX + asuElectricityCost;
             const nitrogenDemandAnnual = nitrogenDemand * 365; // t/year
 
@@ -1910,43 +1621,24 @@
         function calculateHaberBoschCosts() {
             const params = getCommonParams();
             const ammoniaProduction = getInput('ammonia_production'); // t/day
-            let haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
-            let haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
+            const haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
+            const haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
             const haberBoschElectricity = getInput('haber_bosch_electricity') * 1000000; // GWh to kWh
-            const haberBoschCapacity = getInput('haber_bosch_capacity'); // t NH₃/day
-            const haberBoschCAPEXperUnit = getInput('haber_bosch_capex_per_unit');
-            const haberBoschOPEXshare = getInput('haber_bosch_opex_share');
-            
-            // If CAPEX per unit is provided, calculate from capacity
-            if (haberBoschCAPEXperUnit > 0) {
-                haberBoschCAPEX = haberBoschCapacity * haberBoschCAPEXperUnit;
-            }
-            // If OPEX share is provided, calculate from CAPEX
-            if (haberBoschOPEXshare > 0 && haberBoschOPEX === 0) {
-                haberBoschOPEX = haberBoschCAPEX * haberBoschOPEXshare;
-            }
 
-            // Get electricity price (internal or external)
-            const electricityCostMethod = document.getElementById('electricity_cost_method').value;
-            let electricityPrice = 0;
-            
-            if (electricityCostMethod === 'internal_LCOE') {
-                const windCapacity = getInput('wind_capacity') * 1000;
-                const windCapacityFactor = getInput('wind_capacity_factor') / 100;
-                const windCAPEX = getInput('wind_capex') * 1000000000;
-                const windOPEX = getInput('wind_opex') * 1000000;
-                const windDepex = getInput('wind_depex') * 1000000;
-                const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
-                const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
-                const windDepexAnnual = annualizeDepex(windDepex, params.discountRate, params.lifetime);
-                const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-                electricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
-            } else {
-                electricityPrice = getInput('external_electricity_price') / 1000; // MWh to kWh
-            }
+            // Get internal electricity price
+            const windCapacity = getInput('wind_capacity') * 1000;
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000;
+            const windOPEX = getInput('wind_opex') * 1000000;
+            const windDepex = getInput('wind_depex') * 1000000;
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, params.discountRate, params.lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, params.discountRate, params.lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
 
             const haberBoschCAPEXannual = annualizeCAPEX(haberBoschCAPEX, params.discountRate, params.lifetime);
-            const haberBoschElectricityCost = electricityPrice * haberBoschElectricity;
+            const haberBoschElectricityCost = internalElectricityPrice * haberBoschElectricity;
             const haberBoschCostAnnual = haberBoschCAPEXannual + haberBoschOPEX + haberBoschElectricityCost;
             const ammoniaProductionAnnual = ammoniaProduction * 365; // t/year
 
@@ -2003,84 +1695,15 @@
         // Calculate Transport Costs (Page 7)
         function calculateTransportCosts() {
             const params = getCommonParams();
-            
-            // Get NH₃ transport requirements
-            const h2Reference = getH2Reference();
-            const haberBoschLoss = getInput('haber_bosch_loss') / 100;
-            const nh3ShippingLoss = getInput('nh3_shipping_loss') / 100;
-            
-            // H₂ to NH₃ conversion (stoichiometric: 3 H₂ + N₂ → 2 NH₃)
-            // Mass ratio: 17 kg NH₃ per 3 kg H₂ = 5.67 kg NH₃ per kg H₂
-            const nh3PerH2Ratio = 17 / 3; // t NH₃ / t H₂
-            
-            // Calculate required NH₃ considering losses
-            const h2ForNH3 = h2Reference / 1000; // kg to t
-            const nh3Needed = h2ForNH3 * nh3PerH2Ratio / (1 - haberBoschLoss);
-            const nh3TransportRequired = nh3Needed / (1 - nh3ShippingLoss); // t/a
-            
-            // Transport logistics
-            const transportDistance = getInput('transport_distance'); // km
-            const onewayTime = getInput('transport_time'); // days
-            const portTime = getInput('port_time'); // days
-            const cycleTime = 2 * onewayTime + portTime; // days
-            const tripsPerShip = 365 / cycleTime;
-            
-            // Ship capacity
-            const vesselTankVolume = getInput('vessel_tank_volume'); // m³
-            const nh3Density = getInput('nh3_density'); // t/m³
-            const fillFactor = getInput('fill_factor');
-            const shipPayload = vesselTankVolume * nh3Density * fillFactor; // t
-            
-            // Calculate required number of vessels
-            const numVessels = Math.ceil(nh3TransportRequired / (shipPayload * tripsPerShip));
-            
-            // Update calculated fields
-            document.getElementById('num_vessels').value = numVessels;
-            document.getElementById('cycle_time_days').value = cycleTime.toFixed(1);
-            document.getElementById('trips_per_ship_a').value = tripsPerShip.toFixed(1);
-            document.getElementById('ship_payload_nh3').value = shipPayload.toFixed(0);
-            
-            // Transport costs
+            const taxesCustoms = getInput('taxes_customs') * 1000000; // million to €
             const vesselCAPEX = getInput('vessel_capex') * 1000000; // million to €
+            const numVessels = getInput('num_vessels');
+            const vesselOPEX = getInput('vessel_opex') * 1000000; // million to € per vessel
+
             const vesselTotalCAPEX = vesselCAPEX * numVessels;
             const vesselCAPEXannual = annualizeCAPEX(vesselTotalCAPEX, params.discountRate, params.lifetime);
-            const vesselOPEX = getInput('vessel_opex') * 1000000; // million to € per vessel
             const vesselOPEXtotal = vesselOPEX * numVessels;
-            
-            // Variable transport costs
-            const shippingCostPerT = getInput('shipping_cost_per_t_nh3');
-            const shippingCostPerTkm = getInput('shipping_cost_per_tkm');
-            const fuelCostPerTrip = getInput('fuel_cost_per_trip');
-            const harborFeesPerTrip = getInput('harbor_fees_per_trip');
-            const insuranceRate = getInput('insurance_rate') / 100;
-            
-            let variableShippingCost = 0;
-            if (shippingCostPerT > 0) {
-                variableShippingCost = nh3TransportRequired * shippingCostPerT;
-            } else if (shippingCostPerTkm > 0) {
-                variableShippingCost = nh3TransportRequired * transportDistance * shippingCostPerTkm;
-            }
-            
-            const totalTrips = numVessels * tripsPerShip;
-            const fuelCostTotal = fuelCostPerTrip * totalTrips;
-            const harborFeesTotal = harborFeesPerTrip * totalTrips;
-            const insuranceCost = vesselTotalCAPEX * insuranceRate;
-            
-            // Taxes and customs
-            let taxesCustoms = getInput('taxes_customs') * 1000000; // million to €
-            const customsRate = getInput('customs_rate') / 100;
-            const vatRate = getInput('vat_rate') / 100;
-            
-            // If customs/VAT rates are provided, calculate from NH₃ value
-            if (customsRate > 0 || vatRate > 0) {
-                // Estimate NH₃ price (could be input parameter)
-                const nh3PricePerT = 500; // €/t (placeholder, could be input)
-                const nh3Value = nh3TransportRequired * nh3PricePerT;
-                taxesCustoms = nh3Value * (customsRate + vatRate);
-            }
-            
-            const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + variableShippingCost + 
-                                       fuelCostTotal + harborFeesTotal + insuranceCost + taxesCustoms;
+            const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + taxesCustoms;
 
             document.getElementById('transport_cost_annual').textContent = (transportCostAnnual / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('transport_vessel_capex_annual').textContent = (vesselCAPEXannual / 1000000).toFixed(2) + ' M€/year';
@@ -2277,307 +1900,128 @@
 
         // Main calculation function
         function calculateCosts() {
-            try {
-                // Get all inputs
-                const discountRate = getInput('discount_rate');
-                const lifetime = getInput('project_lifetime');
-                
-                // Get H₂ reference quantity
-                const h2Reference = getH2Reference(); // kg
-                const h2Production = getInput('h2_production') * 1000000; // kt to kg
+            // Get all inputs
+            const h2ImportTarget = getInput('h2_import_target') * 1000; // t to kg
+            const h2SteelDemand = getInput('h2_steel_demand') * 1000000; // kt to kg
+            const discountRate = getInput('discount_rate');
+            const lifetime = getInput('project_lifetime');
 
-                // Electricity cost method
-                const electricityCostMethod = document.getElementById('electricity_cost_method').value;
-                const includeWindInTotal = document.getElementById('include_wind_cost_in_total').value === 'true';
+            // Wind parameters
+            const windCapacity = getInput('wind_capacity') * 1000; // GW to MW
+            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+            const windCAPEX = getInput('wind_capex') * 1000000000; // billion to €
+            const windOPEX = getInput('wind_opex') * 1000000; // million to €
+            const windDepex = getInput('wind_depex') * 1000000; // million to €
 
-                // Wind parameters
-                const windCapacity = getInput('wind_capacity') * 1000; // GW to MW
-                const windCapacityFactor = getInput('wind_capacity_factor') / 100;
-                const windCAPEX = getInput('wind_capex') * 1000000000; // billion to €
-                const windOPEX = getInput('wind_opex') * 1000000; // million to €
-                const windDepex = getInput('wind_depex') * 1000000; // million to €
-                
-                // Calculate electricity price
-                let electricityPrice = 0;
-                const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor; // MWh
-                const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
-                const windDepexAnnual = annualizeDepex(windDepex, discountRate, lifetime);
-                const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
-                
-                if (electricityCostMethod === 'internal_LCOE') {
-                    electricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
-                } else {
-                    electricityPrice = getInput('external_electricity_price') / 1000; // MWh to kWh
-                }
+            // Electrolysis parameters
+            const h2Production = getInput('h2_production') * 1000000; // kt to kg
+            const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
+            const electrolysisAvailability = getInput('electrolysis_availability') / 100;
+            const electrolysisOperatingHours = getInput('electrolysis_operating_hours');
+            const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
+            const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
 
-                // Electrolysis parameters
-                const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
-                const electrolysisAvailability = getInput('electrolysis_availability') / 100;
-                const hOpEffective = 8760 * electrolysisAvailability; // effective hours
-                const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
-                const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
+            // Water parameters
+            const seawaterDemand = getInput('seawater_demand'); // L/kg
+            const deionisedWaterDemand = getInput('deionised_water_demand'); // L/kg
+            const desalinationSpecificEnergy = getInput('desalination_specific_energy'); // kWh/m³
+            const desalinationCAPEX = getInput('desalination_capex') * 1000000; // million to €
+            const desalinationOPEX = getInput('desalination_opex') * 1000000; // million to €
 
-                // Water parameters
-                const seawaterDemand = getInput('seawater_demand'); // L/kg
-                const deionisedWaterDemand = getInput('deionised_water_demand'); // L/kg
-                const desalinationSpecificEnergy = getInput('desalination_specific_energy'); // kWh/m³
-                const desalinationCAPEX = getInput('desalination_capex') * 1000000; // million to €
-                const desalinationOPEX = getInput('desalination_opex') * 1000000; // million to €
+            // ASU parameters
+            const nitrogenDemand = getInput('nitrogen_demand'); // t/day
+            const asuCAPEX = getInput('asu_capex') * 1000000; // million to €
+            const asuOPEX = getInput('asu_opex') * 1000000; // million to €
+            const asuElectricity = getInput('asu_electricity') * 1000000; // GWh to kWh
 
-                // ASU parameters
-                const nitrogenDemand = getInput('nitrogen_demand'); // t/day
-                let asuCAPEX = getInput('asu_capex') * 1000000; // million to €
-                let asuOPEX = getInput('asu_opex') * 1000000; // million to €
-                const asuElectricity = getInput('asu_electricity') * 1000000; // GWh to kWh
-                const asuCapacity = getInput('asu_capacity'); // t N₂/day
-                const asuCAPEXperUnit = getInput('asu_capex_per_unit');
-                const asuOPEXshare = getInput('asu_opex_share');
-                
-                if (asuCAPEXperUnit > 0) {
-                    asuCAPEX = asuCapacity * asuCAPEXperUnit;
-                }
-                if (asuOPEXshare > 0 && asuOPEX === 0) {
-                    asuOPEX = asuCAPEX * asuOPEXshare;
-                }
+            // Haber-Bosch parameters
+            const ammoniaProduction = getInput('ammonia_production'); // t/day
+            const ammoniaAnnualDemand = getInput('ammonia_annual_demand') * 1000000; // kt to kg
+            const haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
+            const haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
+            const haberBoschElectricity = getInput('haber_bosch_electricity') * 1000000; // GWh to kWh
 
-                // Haber-Bosch parameters
-                const ammoniaProduction = getInput('ammonia_production'); // t/day
-                const ammoniaAnnualDemand = getInput('ammonia_annual_demand') * 1000000; // kt to kg
-                let haberBoschCAPEX = getInput('haber_bosch_capex') * 1000000; // million to €
-                let haberBoschOPEX = getInput('haber_bosch_opex') * 1000000; // million to €
-                const haberBoschElectricity = getInput('haber_bosch_electricity') * 1000000; // GWh to kWh
-                const haberBoschCapacity = getInput('haber_bosch_capacity'); // t NH₃/day
-                const haberBoschCAPEXperUnit = getInput('haber_bosch_capex_per_unit');
-                const haberBoschOPEXshare = getInput('haber_bosch_opex_share');
-                const haberBoschLoss = getInput('haber_bosch_loss') / 100;
-                
-                if (haberBoschCAPEXperUnit > 0) {
-                    haberBoschCAPEX = haberBoschCapacity * haberBoschCAPEXperUnit;
-                }
-                if (haberBoschOPEXshare > 0 && haberBoschOPEX === 0) {
-                    haberBoschOPEX = haberBoschCAPEX * haberBoschOPEXshare;
-                }
+            // Storage parameters
+            const storageH2CAPEX = getInput('storage_h2_capex') * 1000000; // million to €
+            const storageNH3CAPEX = getInput('storage_nh3_capex') * 1000000; // million to €
+            const storageOPEX = getInput('storage_opex') * 1000000; // million to €
+            // Get water storage from Page 6 (can be edited there) or fallback to Page 3
+            let waterStorageCAPEX = getInput('water_storage_capex_storage') * 1000000; // million to €
+            if (waterStorageCAPEX === 0) {
+                waterStorageCAPEX = getInput('water_storage_capex') * 1000000; // fallback to Page 3
+            }
 
-                // Storage parameters
-                let storageH2CAPEX = getInput('storage_h2_capex') * 1000000; // million to €
-                let storageNH3CAPEX = getInput('storage_nh3_capex') * 1000000; // million to €
-                let storageOPEX = getInput('storage_opex') * 1000000; // million to €
-                
-                const nh3StorageCapacity = getInput('nh3_storage_capacity'); // t
-                const h2StorageCapacity = getInput('h2_storage_capacity'); // t
-                const capexPerTNH3 = getInput('capex_per_t_nh3_storage');
-                const storageOPEXshare = getInput('storage_opex_share');
-                
-                if (capexPerTNH3 > 0 && storageNH3CAPEX === 0) {
-                    storageNH3CAPEX = nh3StorageCapacity * capexPerTNH3;
-                }
-                if (storageOPEXshare > 0 && storageOPEX === 0) {
-                    storageOPEX = (storageH2CAPEX + storageNH3CAPEX) * storageOPEXshare;
-                }
-                
-                let waterStorageCAPEX = getInput('water_storage_capex_storage') * 1000000; // million to €
-                if (waterStorageCAPEX === 0) {
-                    waterStorageCAPEX = getInput('water_storage_capex') * 1000000; // fallback
-                }
+            // Transport parameters
+            const transportDistance = getInput('transport_distance');
+            const transportTime = getInput('transport_time');
+            const taxesCustoms = getInput('taxes_customs') * 1000000; // million to €
+            const vesselTankVolume = getInput('vessel_tank_volume');
+            const vesselCAPEX = getInput('vessel_capex') * 1000000; // million to €
+            const numVessels = getInput('num_vessels');
+            const vesselOPEX = getInput('vessel_opex') * 1000000; // million to € per vessel
 
-                // Cracking parameters
-                const crackingCAPEX = getInput('cracking_capex') * 1000000; // million to €
-                const crackingOPEX = getInput('cracking_opex') * 1000000; // million to €
+            // Cracking parameters
+            const crackingEfficiency = getInput('cracking_efficiency') / 100;
+            const crackingCAPEX = getInput('cracking_capex') * 1000000; // million to €
+            const crackingOPEX = getInput('cracking_opex') * 1000000; // million to €
 
-                // ========== CALCULATIONS ==========
+            // ========== CALCULATIONS ==========
 
-                let windCostAnnualTotal = 0;
-                if (includeWindInTotal) {
-                    windCostAnnualTotal = windCAPEXannual + windOPEX + windDepexAnnual;
-                }
+            // 1. Wind electricity generation
+            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor; // MWh
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+            const windDepexAnnual = annualizeCAPEX(windDepex, discountRate, lifetime);
+            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
 
-                // Electrolysis calculation with theoretical minimum check
-                // Theoretical minimum: 39.4 kWh/kg H₂ (based on enthalpy: 285.83 kJ/mol H₂O)
-                // Practical PEM: 50-70 kWh/kg H₂ (with system losses)
-                const theoreticalEnergyPerKg = 39.4; // kWh/kg H₂ (theoretical minimum)
-                const electrolysisEfficiency = electrolysisSpecificEnergy > 0 ? 
-                    (theoreticalEnergyPerKg / electrolysisSpecificEnergy) : 0.7; // default 70% if not calculated
-                
-                const electrolysisElectricityDemand = h2Production * electrolysisSpecificEnergy; // kWh
-                const electrolysisPower = electrolysisElectricityDemand / hOpEffective; // kW
-                const electrolysisCAPEX = electrolysisPower * electrolysisCAPEXperkW;
-                const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
-                
-                // Water consumption: stoichiometrically 9 L per kg H₂ (2 H₂O → 2 H₂ + O₂)
-                const waterConsumptionLiters = h2Production * 9; // L/year
-                
-                const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEX + (electricityPrice * electrolysisElectricityDemand);
+            // Internal electricity price
+            const internalElectricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
 
-                // Water demand calculation
-                // Theoretical: 9 L water per kg H₂ (stoichiometry: 2 H₂O → 2 H₂ + O₂)
-                // Input value should be close to 9-10 L/kg H₂
-                const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³ (L to m³ conversion)
-                const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
-                // Typical desalination energy: 3-5 kWh/m³ for reverse osmosis
-                const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, discountRate, lifetime);
-                const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + (electricityPrice * desalinationElectricityDemand);
+            // 2. Electrolysis
+            const electrolysisElectricityDemand = h2Production * electrolysisSpecificEnergy; // kWh
+            const electrolysisPower = electrolysisElectricityDemand / electrolysisOperatingHours; // kW
+            const electrolysisCAPEX = electrolysisPower * electrolysisCAPEXperkW;
+            const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
+            const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEX + (internalElectricityPrice * electrolysisElectricityDemand);
 
-                const asuCAPEXannual = annualizeCAPEX(asuCAPEX, discountRate, lifetime);
-                const asuCostAnnual = asuCAPEXannual + asuOPEX + (electricityPrice * asuElectricity);
+            // 3. Water desalination
+            const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³ (L to m³)
+            const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+            const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, discountRate, lifetime);
+            const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + (internalElectricityPrice * desalinationElectricityDemand);
 
-                // Haber-Bosch: 3 H₂ + N₂ → 2 NH₃ (400-500°C, 150-300 bar)
-                // Energy: 10-12 MWh per tonne NH₃
-                // Conversion efficiency: typically 90-95%
-                const haberBoschCAPEXannual = annualizeCAPEX(haberBoschCAPEX, discountRate, lifetime);
-                const haberBoschCostAnnual = haberBoschCAPEXannual + haberBoschOPEX + (electricityPrice * haberBoschElectricity);
+            // 4. ASU
+            const asuCAPEXannual = annualizeCAPEX(asuCAPEX, discountRate, lifetime);
+            const asuCostAnnual = asuCAPEXannual + asuOPEX + (internalElectricityPrice * asuElectricity);
 
-                // Storage: H₂ (cryogenic: 0.5-2% boil-off/day), NH₃ (refrigerated: ~0.1%/year)
-                const storageTotalCAPEX = storageH2CAPEX + storageNH3CAPEX + waterStorageCAPEX;
-                const storageCAPEXannual = annualizeCAPEX(storageTotalCAPEX, discountRate, lifetime);
-                // Storage loss compensation cost could be added here
-                const storageCostAnnual = storageCAPEXannual + storageOPEX;
+            // 5. Haber-Bosch
+            const haberBoschCAPEXannual = annualizeCAPEX(haberBoschCAPEX, discountRate, lifetime);
+            const haberBoschCostAnnual = haberBoschCAPEXannual + haberBoschOPEX + (internalElectricityPrice * haberBoschElectricity);
 
-                // Transport - logistics
-                // Haber-Bosch stoichiometry: 3 H₂ + N₂ → 2 NH₃
-                // Mass ratio: 3×2 g H₂ + 28 g N₂ → 2×17 g NH₃
-                // Therefore: 6 g H₂ → 34 g NH₃, so 1 kg H₂ → (34/6) = 5.667 kg NH₃
-                // Or: 1 t H₂ → 5.667 t NH₃ (but typically ~5.67 t NH₃ per t H₂)
-                const nh3PerH2RatioTransport = 17 / 3; // t NH₃ / t H₂ (correct stoichiometric ratio: 34/6 = 17/3)
-                const nh3ShippingLossTransport = getInput('nh3_shipping_loss') / 100;
-                
-                const h2ForNH3Transport = h2Reference / 1000; // kg to t
-                // Account for Haber-Bosch conversion efficiency (typically 90-95%)
-                const haberBoschConversionEfficiency = 1 - haberBoschLoss; // e.g., 0.95 if 5% loss
-                const nh3NeededTransport = h2ForNH3Transport * nh3PerH2RatioTransport / haberBoschConversionEfficiency;
-                const nh3TransportRequiredMain = nh3NeededTransport / (1 - nh3ShippingLossTransport); // t/a
-                
-                const transportDistanceMain = getInput('transport_distance');
-                const onewayTimeMain = getInput('transport_time');
-                const portTimeMain = getInput('port_time');
-                const cycleTimeMain = 2 * onewayTimeMain + portTimeMain;
-                const tripsPerShipMain = 365 / cycleTimeMain;
-                
-                const vesselTankVolumeMain = getInput('vessel_tank_volume');
-                const nh3DensityMain = getInput('nh3_density');
-                const fillFactorMain = getInput('fill_factor');
-                const shipPayloadMain = vesselTankVolumeMain * nh3DensityMain * fillFactorMain;
-                
-                const numVesselsMain = Math.ceil(nh3TransportRequiredMain / (shipPayloadMain * tripsPerShipMain));
-                
-                const vesselCAPEXMain = getInput('vessel_capex') * 1000000;
-                const vesselOPEXMain = getInput('vessel_opex') * 1000000;
-                const vesselTotalCAPEXMain = vesselCAPEXMain * numVesselsMain;
-                const vesselCAPEXannual = annualizeCAPEX(vesselTotalCAPEXMain, discountRate, lifetime);
-                const vesselOPEXtotal = vesselOPEXMain * numVesselsMain;
-                
-                const shippingCostPerTMain = getInput('shipping_cost_per_t_nh3');
-                const shippingCostPerTkmMain = getInput('shipping_cost_per_tkm');
-                const fuelCostPerTripMain = getInput('fuel_cost_per_trip');
-                const harborFeesPerTripMain = getInput('harbor_fees_per_trip');
-                const insuranceRateMain = getInput('insurance_rate') / 100;
-                
-                let variableShippingCostMain = 0;
-                if (shippingCostPerTMain > 0) {
-                    variableShippingCostMain = nh3TransportRequiredMain * shippingCostPerTMain;
-                } else if (shippingCostPerTkmMain > 0) {
-                    variableShippingCostMain = nh3TransportRequiredMain * transportDistanceMain * shippingCostPerTkmMain;
-                }
-                
-                const totalTripsMain = numVesselsMain * tripsPerShipMain;
-                const fuelCostTotalMain = fuelCostPerTripMain * totalTripsMain;
-                const harborFeesTotalMain = harborFeesPerTripMain * totalTripsMain;
-                const insuranceCostMain = vesselTotalCAPEXMain * insuranceRateMain;
-                
-                let taxesCustomsMain = getInput('taxes_customs') * 1000000;
-                const customsRateMain = getInput('customs_rate') / 100;
-                const vatRateMain = getInput('vat_rate') / 100;
-                
-                if (customsRateMain > 0 || vatRateMain > 0) {
-                    const nh3PricePerTMain = 500; // €/t (placeholder)
-                    const nh3ValueMain = nh3TransportRequiredMain * nh3PricePerTMain;
-                    taxesCustomsMain = nh3ValueMain * (customsRateMain + vatRateMain);
-                }
-                
-                const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + variableShippingCostMain + 
-                                           fuelCostTotalMain + harborFeesTotalMain + insuranceCostMain + taxesCustomsMain;
+            // 6. Storage
+            const storageTotalCAPEX = storageH2CAPEX + storageNH3CAPEX + waterStorageCAPEX;
+            const storageCAPEXannual = annualizeCAPEX(storageTotalCAPEX, discountRate, lifetime);
+            const storageCostAnnual = storageCAPEXannual + storageOPEX;
 
-                // 8. Cracking (Ammonia Decomposition)
-                // Reaction: 2 NH₃ → N₂ + 3 H₂ (endothermic, requires 850-1000°C)
-                // Thermal energy: ~1.2-1.5 MWh per tonne NH₃ (if not using waste heat)
-                // Conversion efficiency: typically 85-95% (some NH₃ not decomposed)
-                // H₂ recovery: 95-98% (some H₂ lost in separation)
-                const crackingEfficiency = getInput('cracking_efficiency') / 100;
-                const h2PurityLoss = getInput('h2_purity_loss');
-                const h2RecoveryFraction = getInput('h2_recovery_fraction');
-                const effectiveCrackingEfficiency = crackingEfficiency * (1 - h2PurityLoss) * h2RecoveryFraction;
-                
-                // Thermal energy cost (if not using waste heat)
-                const thermalEnergyPerTNH3 = 1.35; // MWh/t NH₃ (average)
-                const nh3ForCracking = nh3NeededTransport; // t/a
-                const thermalEnergyRequired = nh3ForCracking * thermalEnergyPerTNH3 * 1000; // kWh/a
-                const thermalEnergyCost = electricityPrice * thermalEnergyRequired; // Assuming electricity for heating if no waste heat
-                
-                const crackingCAPEXannual = annualizeCAPEX(crackingCAPEX, discountRate, lifetime);
-                const crackingCostAnnual = crackingCAPEXannual + crackingOPEX + thermalEnergyCost;
+            // 7. Transport
+            const vesselTotalCAPEX = vesselCAPEX * numVessels;
+            const vesselCAPEXannual = annualizeCAPEX(vesselTotalCAPEX, discountRate, lifetime);
+            const vesselOPEXtotal = vesselOPEX * numVessels;
+            const transportCostAnnual = vesselCAPEXannual + vesselOPEXtotal + taxesCustoms;
 
-                const storageLossRate = getInput('storage_loss_rate') / 100;
-                const nh3ShippingLoss = getInput('nh3_shipping_loss') / 100;
-                
-                // Chain efficiency calculation
-                // Haber-Bosch: typically 90-95% conversion efficiency
-                const etaHB = 1 - haberBoschLoss;
-                // Storage: annual loss rate (for cryogenic storage: 0.5-2% per year)
-                const etaStorage = 1 - storageLossRate;
-                // Shipping: loss per trip (boil-off, venting: typically 0.1-0.5% per trip)
-                const etaShipping = 1 - nh3ShippingLoss;
-                // Cracking: thermal decomposition efficiency (typically 85-95%)
-                const etaCracking = effectiveCrackingEfficiency;
-                
-                // Overall chain efficiency (multiplicative)
-                const chainEfficiency = etaHB * etaStorage * etaShipping * etaCracking;
-                
-                // Validate chain efficiency
-                if (!isFinite(chainEfficiency) || chainEfficiency <= 0 || chainEfficiency > 1) {
-                    alert('Ungültige Ketteneffizienz berechnet: ' + chainEfficiency.toFixed(4) + 
-                          '. Bitte Verluste prüfen (müssen zwischen 0% und 100% liegen).\n' +
-                          'Haber-Bosch Loss: ' + (haberBoschLoss * 100).toFixed(2) + '%\n' +
-                          'Storage Loss: ' + (storageLossRate * 100).toFixed(2) + '%\n' +
-                          'Shipping Loss: ' + (nh3ShippingLoss * 100).toFixed(2) + '%\n' +
-                          'Cracking Efficiency: ' + (effectiveCrackingEfficiency * 100).toFixed(2) + '%');
-                    return;
-                }
-                
-                // Validate h2Reference
-                if (!isFinite(h2Reference) || h2Reference <= 0) {
-                    alert('H₂-Referenzmenge ist ungültig: ' + h2Reference + '. Bitte h2_import_target oder h2_steel_demand prüfen.');
-                    return;
-                }
-                
-                const h2DeliveredAnnual = h2Reference * chainEfficiency; // kg
+            // 8. Cracking
+            const crackingCAPEXannual = annualizeCAPEX(crackingCAPEX, discountRate, lifetime);
+            const crackingCostAnnual = crackingCAPEXannual + crackingOPEX;
 
-                if (!isFinite(h2DeliveredAnnual) || h2DeliveredAnnual <= 0) {
-                    alert('Gelieferte H₂-Menge ist 0 oder ungültig: ' + h2DeliveredAnnual + 
-                          '. Bitte Eingaben prüfen (Verluste, Effizienzen, Referenzmenge).');
-                    console.error('h2Reference:', h2Reference, 'chainEfficiency:', chainEfficiency);
-                    return;
-                }
+            // Total annual cost
+            const totalAnnualCost = windCostAnnual + electrolysisCostAnnual + desalinationCostAnnual + 
+                                   asuCostAnnual + haberBoschCostAnnual + storageCostAnnual + 
+                                   transportCostAnnual + crackingCostAnnual;
 
-                const totalAnnualCost = windCostAnnualTotal + electrolysisCostAnnual + desalinationCostAnnual + 
-                                       asuCostAnnual + haberBoschCostAnnual + storageCostAnnual + 
-                                       transportCostAnnual + crackingCostAnnual;
+            // Delivered hydrogen (accounting for cracking efficiency)
+            const h2DeliveredAnnual = h2SteelDemand * crackingEfficiency; // kg
 
-                // Cost per kg delivered H₂ (Levelized Cost of Hydrogen - LCOH)
-                if (h2DeliveredAnnual <= 0) {
-                    alert('Division durch 0: Gelieferte H₂-Menge ist 0. Bitte Verluste und Effizienzen prüfen.');
-                    return;
-                }
-                
-                const costPerKg = totalAnnualCost / h2DeliveredAnnual;
-                
-                // Validate result
-                if (!isFinite(costPerKg) || costPerKg <= 0 || costPerKg > 1000) {
-                    alert('Berechnungsfehler: Kosten pro kg sind ungültig: ' + costPerKg.toFixed(4) + ' €/kg.\n' +
-                          'Total Cost: ' + (totalAnnualCost / 1000000).toFixed(2) + ' M€/year\n' +
-                          'H₂ Delivered: ' + (h2DeliveredAnnual / 1000000).toFixed(2) + ' t/year\n' +
-                          'Bitte Eingaben prüfen.');
-                    console.error('Invalid costPerKg:', costPerKg, 'totalAnnualCost:', totalAnnualCost, 'h2DeliveredAnnual:', h2DeliveredAnnual);
-                    return;
-                }
+            // Cost per kg H₂
+            const costPerKg = totalAnnualCost / h2DeliveredAnnual;
 
             // ========== DISPLAY RESULTS ==========
             document.getElementById('result_cost_per_kg').textContent = costPerKg.toFixed(4) + ' €/kg';
@@ -2590,10 +2034,10 @@
             // Update prediction page current cost (don't auto-calculate, user should click button)
 
             // Cost breakdown - separate CapEx, OpEx, and Variable costs
-            const electrolysisVariableCost = electricityPrice * electrolysisElectricityDemand;
-            const desalinationVariableCost = electricityPrice * desalinationElectricityDemand;
-            const asuVariableCost = electricityPrice * asuElectricity;
-            const haberBoschVariableCost = electricityPrice * haberBoschElectricity;
+            const electrolysisVariableCost = internalElectricityPrice * electrolysisElectricityDemand;
+            const desalinationVariableCost = internalElectricityPrice * desalinationElectricityDemand;
+            const asuVariableCost = internalElectricityPrice * asuElectricity;
+            const haberBoschVariableCost = internalElectricityPrice * haberBoschElectricity;
             
             // Calculate costs per kg H₂
             const costPerKgFactor = 1 / h2DeliveredAnnual;
@@ -2601,8 +2045,8 @@
             const breakdown = [
                 { 
                     name: 'Wind Farm', 
-                    capex: (includeWindInTotal ? (windCAPEXannual + windDepexAnnual) : 0) * costPerKgFactor,
-                    opex: (includeWindInTotal ? windOPEX : 0) * costPerKgFactor,
+                    capex: (windCAPEXannual + windDepexAnnual) * costPerKgFactor,
+                    opex: windOPEX * costPerKgFactor,
                     variable: 0
                 },
                 { 
@@ -2638,8 +2082,8 @@
                 { 
                     name: 'Transport', 
                     capex: vesselCAPEXannual * costPerKgFactor,
-                    opex: (vesselOPEXtotal + taxesCustomsMain + insuranceCostMain) * costPerKgFactor,
-                    variable: (variableShippingCostMain + fuelCostTotalMain + harborFeesTotalMain) * costPerKgFactor
+                    opex: (vesselOPEXtotal + taxesCustoms) * costPerKgFactor,
+                    variable: 0
                 },
                 { 
                     name: 'Cracking', 
@@ -2716,13 +2160,11 @@
                             display: true,
                             position: 'top',
                             labels: {
-                                color: '#333333', /* dunkles Grau statt Blau */
+                                color: '#4A90E2',
                                 font: {
                                     size: 12,
                                     weight: '600'
-                                },
-                                usePointStyle: true,
-                                pointStyle: 'line' /* Legende als Strich-Symbol statt gefülltem Kasten */
+                                }
                             }
                         },
                         title: {
@@ -2831,13 +2273,11 @@
                             display: true,
                             position: 'top',
                             labels: {
-                                color: '#333333', /* dunkles Grau statt Blau */
+                                color: '#4A90E2',
                                 font: {
                                     size: 12,
                                     weight: '600'
-                                },
-                                usePointStyle: true,
-                                pointStyle: 'line' /* Legende als Strich-Symbol statt gefülltem Kasten */
+                                }
                             }
                         },
                         title: {
@@ -2897,11 +2337,6 @@
                     }
                 }
             });
-            } catch (error) {
-                console.error('Error in calculateCosts():', error);
-                alert('Berechnungsfehler: ' + error.message + '\n\nBitte Browser-Konsole (F12) für Details öffnen.');
-                return;
-            }
         }
 
             // Add event listeners to all inputs for auto-calculation

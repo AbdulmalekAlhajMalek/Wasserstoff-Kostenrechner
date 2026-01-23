@@ -733,6 +733,15 @@
                     
                     <div class="parameter-item">
                         <div class="parameter-number">3.1.1</div>
+                        <div class="parameter-label">Elektrolyseur-Technologie <span class="parameter-unit">(-)</span></div>
+                        <select class="parameter-input" id="electrolyzer_technology">
+                            <option value="AEL">AEL (Alkaline Electrolyzer)</option>
+                            <option value="PEM">PEM (Proton Exchange Membrane)</option>
+                        </select>
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.1.2</div>
                         <div class="parameter-label">Wasserstoffproduktion <span class="parameter-unit">(kt H₂/Jahr)</span></div>
                         <input type="number" class="parameter-input" id="h2_production" value="110" step="1">
                     </div>
@@ -779,6 +788,12 @@
                         <div class="parameter-number">3.3.5</div>
                         <div class="parameter-label">Vollaststunden-Äquivalent <span class="parameter-unit">(h/a)</span></div>
                         <input type="number" class="parameter-input" id="full_load_hours_equivalent" value="5094" step="100">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">3.3.6</div>
+                        <div class="parameter-label">Rampenrate Elektrolyseur <span class="parameter-unit">(-, Anteil pro Stunde)</span></div>
+                        <input type="number" class="parameter-input" id="el_ramp_frac_per_h" value="0.80" step="0.05" min="0" max="1">
                     </div>
                 </div>
 
@@ -865,6 +880,24 @@
                         <div class="parameter-label">Specific electricity demand <span class="parameter-unit">(kWh/m³)</span></div>
                         <input type="number" class="parameter-input" id="desalination_specific_energy" value="5" step="0.1">
                     </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.2.2</div>
+                        <div class="parameter-label">RO CAPEX per m³/day <span class="parameter-unit">(€/m³/day)</span></div>
+                        <input type="number" class="parameter-input" id="ro_capex_per_m3_per_day" value="1500" step="50">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.2.3</div>
+                        <div class="parameter-label">RO OPEX fraction per year <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="ro_opex_fraction_per_year" value="0.05" step="0.01" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.2.4</div>
+                        <div class="parameter-label">RO OPEX per m³ <span class="parameter-unit">(€/m³)</span></div>
+                        <input type="number" class="parameter-input" id="ro_opex_per_m3" value="0.3825" step="0.01">
+                    </div>
                 </div>
 
                 <div class="parameter-group">
@@ -896,6 +929,24 @@
                         <div class="parameter-number">4.4.2</div>
                         <div class="parameter-label">Water storage capacity <span class="parameter-unit">(m³)</span></div>
                         <input type="number" class="parameter-input" id="water_storage_capacity" value="2500" step="100">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.4.3</div>
+                        <div class="parameter-label">Water tank CAPEX per m³ <span class="parameter-unit">(€/m³)</span></div>
+                        <input type="number" class="parameter-input" id="water_tank_capex_per_m3" value="200" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.4.4</div>
+                        <div class="parameter-label">Water tank OPEX fraction per year <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="water_tank_opex_fraction_per_year" value="0.02" step="0.01" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.4.5</div>
+                        <div class="parameter-label">Water tank loss fraction per hour <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="water_tank_loss_frac_per_hour" value="0.001" step="0.0001" min="0" max="0.1">
                     </div>
                 </div>
 
@@ -1083,6 +1134,18 @@
                         <div class="parameter-label">Haber-Bosch efficiency/loss <span class="parameter-unit">(%, loss)</span></div>
                         <input type="number" class="parameter-input" id="haber_bosch_loss" value="5" step="0.1" min="0" max="100">
                     </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.2.8</div>
+                        <div class="parameter-label">Haber-Bosch availability <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="haber_bosch_availability" value="0.94" step="0.01" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">6.2.9</div>
+                        <div class="parameter-label">Rampenrate Haber-Bosch <span class="parameter-unit">(-, Anteil pro Stunde)</span></div>
+                        <input type="number" class="parameter-input" id="hb_ramp_frac_per_h" value="0.10" step="0.01" min="0" max="1">
+                    </div>
                 </div>
 
                 <div class="page-results" id="page5_results">
@@ -1185,6 +1248,120 @@
                         <div class="parameter-number">7.1.10</div>
                         <div class="parameter-label">Storage loss rate <span class="parameter-unit">(%/year)</span></div>
                         <input type="number" class="parameter-input" id="storage_loss_rate" value="0.5" step="0.1" min="0" max="10">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.2 H₂ Storage Parameters (LH₂)</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.1</div>
+                        <div class="parameter-label">H₂ storage efficiency in (η_in) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_storage_eta_in" value="0.995" step="0.001" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.2</div>
+                        <div class="parameter-label">H₂ storage efficiency out (η_out) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_storage_eta_out" value="0.995" step="0.001" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.3</div>
+                        <div class="parameter-label">H₂ spec. energy in (liquefaction) <span class="parameter-unit">(kWh/kg H₂)</span></div>
+                        <input type="number" class="parameter-input" id="h2_spec_kwh_per_kg_in" value="11.0" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.4</div>
+                        <div class="parameter-label">H₂ spec. energy out (regasification) <span class="parameter-unit">(kWh/kg H₂)</span></div>
+                        <input type="number" class="parameter-input" id="h2_spec_kwh_per_kg_out" value="0.06" step="0.01">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.5</div>
+                        <div class="parameter-label">H₂ boil-off loss fraction per hour <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_boil_off_loss_frac_per_hour" value="0.0000208" step="0.000001" min="0" max="0.001">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.6</div>
+                        <div class="parameter-label">H₂ re-liquefaction energy <span class="parameter-unit">(kWh/kg BOG)</span></div>
+                        <input type="number" class="parameter-input" id="h2_reliq_kwh_per_kg_bog" value="11.0" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.2.7</div>
+                        <div class="parameter-label">H₂ re-liquefaction fraction <span class="parameter-unit">(-, Anteil BOG)</span></div>
+                        <input type="number" class="parameter-input" id="h2_reliq_frac" value="1.0" step="0.1" min="0" max="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.3 NH₃ Storage Parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.1</div>
+                        <div class="parameter-label">NH₃ spec. energy in <span class="parameter-unit">(kWh/t NH₃)</span></div>
+                        <input type="number" class="parameter-input" id="nh3_spec_kwh_per_t_in" value="1.0" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.2</div>
+                        <div class="parameter-label">NH₃ spec. energy out <span class="parameter-unit">(kWh/t NH₃)</span></div>
+                        <input type="number" class="parameter-input" id="nh3_spec_kwh_per_t_out" value="1.0" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.3.3</div>
+                        <div class="parameter-label">NH₃ cooling energy <span class="parameter-unit">(kWh/t NH₃/day)</span></div>
+                        <input type="number" class="parameter-input" id="nh3_cooling_kwh_per_t_per_day" value="40.0" step="1">
+                    </div>
+                </div>
+
+                <div class="parameter-group">
+                    <div class="parameter-group-title">7.4 SOC Control Parameters</div>
+                    
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.1</div>
+                        <div class="parameter-label">H₂ SOC low fraction (EL priorisieren) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_soc_low_frac" value="0.3" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.2</div>
+                        <div class="parameter-label">H₂ SOC high fraction (HB priorisieren) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_soc_high_frac" value="0.60" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.3</div>
+                        <div class="parameter-label">H₂ EL stop fraction <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_el_stop_frac" value="0.95" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.4</div>
+                        <div class="parameter-label">H₂ EL start fraction <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="h2_el_start_frac" value="0.30" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.5</div>
+                        <div class="parameter-label">NH₃ target level (ships) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="nh3_target_level_ships" value="1.2" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.6</div>
+                        <div class="parameter-label">NH₃ deadband (ships) <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="nh3_deadband_ships" value="1.1" step="0.1">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">7.4.7</div>
+                        <div class="parameter-label">HB min fraction when on <span class="parameter-unit">(-)</span></div>
+                        <input type="number" class="parameter-input" id="hb_min_frac_when_on" value="0.40" step="0.05" min="0" max="1">
                     </div>
                 </div>
 

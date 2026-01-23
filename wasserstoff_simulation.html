@@ -2491,6 +2491,7 @@
                 }
 
                 // Electrolysis parameters
+                const electrolyzerTechnology = document.getElementById('electrolyzer_technology')?.value || 'AEL';
                 const electrolysisSpecificEnergy = getInput('electrolysis_specific_energy'); // kWh/kg
                 const electrolysisAvailability = getInput('electrolysis_availability') / 100;
                 // Effektive Stunden: Wenn Input vorhanden, verwende diesen, sonst berechne aus Verfügbarkeit
@@ -2498,8 +2499,23 @@
                 if (hOpEffective <= 0) {
                     hOpEffective = 8760 * electrolysisAvailability;
                 }
-                const electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
-                const electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
+                
+                // Technology-specific CAPEX/OPEX (if not provided, use defaults from Code_Final.py)
+                let electrolysisCAPEXperkW = getInput('electrolysis_capex_per_kw');
+                let electrolysisOPEX = getInput('electrolysis_opex') * 1000000; // million to €
+                
+                // If CAPEX/OPEX not provided, use technology defaults
+                if (electrolysisCAPEXperkW === 0) {
+                    if (electrolyzerTechnology === 'PEM') {
+                        electrolysisCAPEXperkW = 580; // $/kW from Code_Final.py
+                    } else {
+                        electrolysisCAPEXperkW = 464; // $/kW for AEL from Code_Final.py
+                    }
+                }
+                
+                // Min load fraction based on technology
+                const minLoadFraction = getInput('min_load_fraction');
+                const elRampFracPerH = getInput('el_ramp_frac_per_h') || 0.80;
 
                 // Water parameters
                 const seawaterDemand = getInput('seawater_demand'); // L/kg

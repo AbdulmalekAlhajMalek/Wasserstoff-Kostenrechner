@@ -140,6 +140,17 @@
             margin-top: 32px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
+        
+        /* Optimization results: smaller font + right-aligned values */
+        #optimization_results .page-result-label {
+            font-size: 0.9em;
+        }
+        
+        #optimization_results .page-result-value {
+            font-size: 0.95em;
+            text-align: right;
+            width: 100%;
+        }
 
         /* Ensure page-section content is above results-section */
         .page-section {
@@ -1743,21 +1754,6 @@
                     </div>
                 </div>
 
-                <div class="parameter-group">
-                    <div class="parameter-group-title">Scenario Selection</div>
-                    
-                    <div class="parameter-item">
-                        <div class="parameter-number"></div>
-                        <div class="parameter-label">Prediction scenario</div>
-                        <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
-                            <option value="optimistic">Optimistic (Fast cost reduction)</option>
-                            <option value="realistic" selected>Realistic (Moderate reduction)</option>
-                            <option value="pessimistic">Pessimistic (Slow reduction)</option>
-                            <option value="custom">Custom (Use input values)</option>
-                        </select>
-                    </div>
-                </div>
-
                 <!-- Optimization Section -->
                 <div class="parameter-group" style="margin-top: 32px; border-top: 2px solid #e0e0e0; padding-top: 24px;">
                     <div class="parameter-group-title" style="color: #DC143C; font-weight: 700; font-size: 1.2em;">Optimierung</div>
@@ -1929,6 +1925,22 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Scenario Selection moved below detailed configurations -->
+                    <div class="parameter-group" style="margin-top: 32px;">
+                        <div class="parameter-group-title">Scenario Selection</div>
+                        
+                        <div class="parameter-item">
+                            <div class="parameter-number"></div>
+                            <div class="parameter-label">Prediction scenario</div>
+                            <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
+                                <option value="optimistic">Optimistic (Fast cost reduction)</option>
+                                <option value="realistic" selected>Realistic (Moderate reduction)</option>
+                                <option value="pessimistic">Pessimistic (Slow reduction)</option>
+                                <option value="custom">Custom (Use input values)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Calculate Prediction Button -->
@@ -2033,28 +2045,42 @@
     </div>
 
     <script>
-        let costChart = null;
-        let costTypeChart = null;
-
-        // Page Navigation
+        // Page Navigation - Define early to ensure it's available
         function showPage(pageIndex) {
-            const pages = document.querySelectorAll('.page-section');
-            pages.forEach(page => page.classList.remove('active'));
-            pages[pageIndex].classList.add('active');
-            
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach((link, index) => {
-                if (index === pageIndex) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
+            try {
+                const pages = document.querySelectorAll('.page-section');
+                if (pages.length === 0) {
+                    // DOM not ready yet, wait a bit
+                    setTimeout(function() { showPage(pageIndex); }, 100);
+                    return;
                 }
-            });
-            
-            // Calculate costs for the current page
-            calculatePageCosts(pageIndex);
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                pages.forEach(page => page.classList.remove('active'));
+                if (pages[pageIndex]) {
+                    pages[pageIndex].classList.add('active');
+                }
+                
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach((link, index) => {
+                    if (index === pageIndex) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                
+                // Calculate costs for the current page (if function exists)
+                if (typeof calculatePageCosts === 'function') {
+                    try {
+                        calculatePageCosts(pageIndex);
+                    } catch (e) {
+                        console.warn('calculatePageCosts error:', e);
+                    }
+                }
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error in showPage:', error);
+            }
         }
 
         // Calculate costs for specific page
@@ -2726,9 +2752,26 @@
                 const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
                 
                 if (electricityCostMethod === 'internal_LCOE') {
-                    electricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
+                    if (windElectricityAnnual > 0 && isFinite(windElectricityAnnual)) {
+                        electricityPrice = windCostAnnual / (windElectricityAnnual * 1000); // €/kWh
+                    } else {
+                        alert('Ungültige Wind-Stromproduktion berechnet. Bitte Wind-Parameter prüfen.');
+                        return;
+                    }
                 } else {
-                    electricityPrice = getInput('external_electricity_price') / 1000; // MWh to kWh
+                    const externalPrice = getInput('external_electricity_price');
+                    if (isFinite(externalPrice) && externalPrice > 0) {
+                        electricityPrice = externalPrice / 1000; // MWh to kWh
+                    } else {
+                        alert('Ungültiger externer Strompreis. Bitte external_electricity_price prüfen.');
+                        return;
+                    }
+                }
+                
+                // Validate electricity price
+                if (!isFinite(electricityPrice) || electricityPrice <= 0) {
+                    alert('Ungültiger Strompreis berechnet: ' + electricityPrice + '. Bitte Strompreis-Parameter prüfen.');
+                    return;
                 }
 
                 // Electrolysis parameters
@@ -3047,9 +3090,24 @@
                     return;
                 }
                 
-                let numVesselsMain = Math.ceil(numVesselsManualMain);
-                if (!(numVesselsMain > 0 && isFinite(numVesselsMain))) {
-                    numVesselsMain = Math.ceil(nh3TransportRequiredMain / (shipPayloadMain * tripsPerShipMain));
+                let numVesselsMain = 0;
+                if (numVesselsManualMain > 0 && isFinite(numVesselsManualMain)) {
+                    numVesselsMain = Math.ceil(numVesselsManualMain);
+                } else {
+                    // Calculate from transport requirements
+                    const transportCapacityPerYear = shipPayloadMain * tripsPerShipMain;
+                    if (transportCapacityPerYear > 0 && isFinite(transportCapacityPerYear)) {
+                        numVesselsMain = Math.ceil(nh3TransportRequiredMain / transportCapacityPerYear);
+                    } else {
+                        alert('Ungültige Transport-Kapazität berechnet. Bitte Transport-Parameter prüfen.');
+                        return;
+                    }
+                }
+                
+                // Validate numVesselsMain
+                if (!isFinite(numVesselsMain) || numVesselsMain <= 0) {
+                    alert('Ungültige Anzahl Schiffe berechnet. Bitte Transport-Parameter prüfen.');
+                    return;
                 }
                 
                 const vesselCAPEXMain = getInput('vessel_capex') * 1000000;
@@ -3095,15 +3153,54 @@
                 // Conversion efficiency: typically 85-95% (some NH₃ not decomposed)
                 // H₂ recovery: 95-98% (some H₂ lost in separation)
                 const crackingEfficiency = getInput('cracking_efficiency') / 100;
-                const h2PurityLoss = getInput('h2_purity_loss');
-                const h2RecoveryFraction = getInput('h2_recovery_fraction');
+                const h2PurityLoss = getInput('h2_purity_loss') || 0;
+                const h2RecoveryFraction = getInput('h2_recovery_fraction') || 1.0;
+                
+                // Validate cracking parameters
+                if (!isFinite(crackingEfficiency) || crackingEfficiency <= 0 || crackingEfficiency > 1) {
+                    alert('Cracking Efficiency muss zwischen 0% und 100% liegen. Bitte cracking_efficiency prüfen.');
+                    return;
+                }
+                if (!isFinite(h2PurityLoss) || h2PurityLoss < 0 || h2PurityLoss > 1) {
+                    alert('H₂ Purity Loss muss zwischen 0% und 100% liegen. Bitte h2_purity_loss prüfen.');
+                    return;
+                }
+                if (!isFinite(h2RecoveryFraction) || h2RecoveryFraction <= 0 || h2RecoveryFraction > 1) {
+                    alert('H₂ Recovery Fraction muss zwischen 0% und 100% liegen. Bitte h2_recovery_fraction prüfen.');
+                    return;
+                }
+                
                 const effectiveCrackingEfficiency = crackingEfficiency * (1 - h2PurityLoss) * h2RecoveryFraction;
+                
+                // Validate effective cracking efficiency
+                if (!isFinite(effectiveCrackingEfficiency) || effectiveCrackingEfficiency <= 0 || effectiveCrackingEfficiency > 1) {
+                    alert('Ungültige effektive Cracking-Effizienz berechnet: ' + effectiveCrackingEfficiency.toFixed(4) + 
+                          '. Bitte Cracking-Parameter prüfen.');
+                    return;
+                }
                 
                 // Thermal energy cost (if not using waste heat)
                 const thermalEnergyPerTNH3 = 1.35; // MWh/t NH₃ (average)
+                
+                // Validate nh3NeededTransport (should be defined earlier in transport section)
+                if (typeof nh3NeededTransport === 'undefined' || !isFinite(nh3NeededTransport) || nh3NeededTransport <= 0) {
+                    alert('NH₃-Menge für Cracking ist ungültig. Bitte Transport-Berechnung prüfen.');
+                    return;
+                }
+                
                 const nh3ForCracking = nh3NeededTransport; // t/a
                 const thermalEnergyRequired = nh3ForCracking * thermalEnergyPerTNH3 * 1000; // kWh/a
                 const thermalEnergyCost = electricityPrice * thermalEnergyRequired; // Assuming electricity for heating if no waste heat
+                
+                // Validate crackingCAPEX and crackingOPEX (should be defined earlier)
+                if (typeof crackingCAPEX === 'undefined' || !isFinite(crackingCAPEX)) {
+                    alert('Cracking CAPEX ist nicht definiert. Bitte cracking_capex prüfen.');
+                    return;
+                }
+                if (typeof crackingOPEX === 'undefined' || !isFinite(crackingOPEX)) {
+                    alert('Cracking OPEX ist nicht definiert. Bitte cracking_opex prüfen.');
+                    return;
+                }
                 
                 const crackingCAPEXannual = annualizeCAPEX(crackingCAPEX, discountRate, lifetime);
                 const crackingCostAnnual = crackingCAPEXannual + crackingOPEX + thermalEnergyCost;
@@ -3259,8 +3356,15 @@
             document.getElementById('cost_breakdown_list').innerHTML = breakdownHTML;
 
             // Update chart - Stacked Bar Chart
-            if (costChart) {
-                costChart.destroy();
+            const costChartCanvas = document.getElementById('costChart');
+            if (!costChartCanvas) {
+                console.warn('costChart canvas element not found');
+            } else {
+                // Check if there's an existing chart and destroy it
+                const existingChart = Chart.getChart(costChartCanvas);
+                if (existingChart) {
+                    existingChart.destroy();
+                }
             }
 
             // Color palette for different components
@@ -3275,8 +3379,11 @@
                 'Cracking': { capex: '#5D4037', opex: '#6D4C41', variable: '#8D6E63' }
             };
 
-            const ctx = document.getElementById('costChart').getContext('2d');
-            costChart = new Chart(ctx, {
+            const ctx = costChartCanvas ? costChartCanvas.getContext('2d') : null;
+            if (!ctx) {
+                console.error('Could not get canvas context for costChart');
+            } else {
+                const costChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: breakdown.map(item => item.name),
@@ -3372,11 +3479,17 @@
                         }
                     }
                 }
-            });
+                });
+            }
 
             // Second Chart: Total CapEx vs Total OpEx vs Total Variable Costs
-            if (costTypeChart) {
-                costTypeChart.destroy();
+            const costTypeChartCanvas = document.getElementById('costTypeChart');
+            if (costTypeChartCanvas) {
+                // Check if there's an existing chart and destroy it
+                const existingCostTypeChart = Chart.getChart(costTypeChartCanvas);
+                if (existingCostTypeChart) {
+                    existingCostTypeChart.destroy();
+                }
             }
 
             // Calculate totals
@@ -3384,8 +3497,9 @@
             const totalOpEx = breakdown.reduce((sum, item) => sum + item.opex, 0);
             const totalVariable = breakdown.reduce((sum, item) => sum + item.variable, 0);
 
-            const ctx2 = document.getElementById('costTypeChart').getContext('2d');
-            costTypeChart = new Chart(ctx2, {
+            if (costTypeChartCanvas) {
+                const ctx2 = costTypeChartCanvas.getContext('2d');
+                const costTypeChart = new Chart(ctx2, {
                 type: 'bar',
                 data: {
                     labels: ['Total Costs'],
@@ -3489,7 +3603,8 @@
                         }
                     }
                 }
-            });
+                });
+            }
             } catch (error) {
                 console.error('Error in calculateCosts():', error);
                 alert('Berechnungsfehler: ' + error.message + '\n\nBitte Browser-Konsole (F12) für Details öffnen.');

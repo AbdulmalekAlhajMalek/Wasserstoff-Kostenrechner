@@ -71,6 +71,42 @@
             box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
             z-index: 1000;
             border-bottom: none;
+            transition: padding 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar .nav-container {
+            position: relative;
+        }
+
+        /* Shrinking header when scrolled - hide logo, keep only tabs */
+        .navbar.scrolled {
+            padding: 8px 0 10px 0;
+            box-shadow: 0 2px 8px rgba(135, 206, 235, 0.2);
+        }
+
+        .navbar.scrolled .nav-container {
+            gap: 0;
+        }
+
+        .navbar.scrolled .nav-logo {
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar.scrolled .nav-menu a {
+            padding: 10px 18px;
+            font-size: 1.4em;
+        }
+
+        .navbar.scrolled .theme-selector {
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding: 0;
+            margin: 0;
         }
 
         .nav-container {
@@ -81,16 +117,22 @@
             align-items: flex-start;
             padding: 0 20px;
             gap: 15px;
+            transition: gap 0.3s ease;
         }
 
         .theme-selector {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-left: auto;
             padding: 8px 12px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
+            transition: all 0.3s ease;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            opacity: 1;
+            height: auto;
         }
 
         .theme-selector label {
@@ -117,19 +159,22 @@
 
         .nav-logo {
             font-size: 1.4em;
-            font-weight: 600;
+            font-weight: 800;
             letter-spacing: 0.5px;
             color: #1a1a1a;
             display: flex;
             align-items: center;
             gap: 10px;
             width: 100%;
+            transition: height 0.3s ease, opacity 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+            height: auto;
+            opacity: 1;
         }
         
         .nav-logo .h2-symbol {
             font-size: 1.6em;
             font-weight: 700;
-            color: #1a1a1a;
+            color: #1a237e;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -146,11 +191,11 @@
         .nav-menu a {
             color: #1a1a1a;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 12px 20px;
             border-radius: 5px;
-            transition: background 0.3s;
-            font-size: 1.1em;
-            font-weight: 700;
+            transition: background 0.3s, padding 0.3s ease, font-size 0.3s ease;
+            font-size: 1.5em;
+            font-weight: 400;
         }
 
         .nav-menu a:hover {
@@ -177,13 +222,24 @@
 
         /* Main Content */
         .main-content {
-            margin-top: 130px;
+            margin-top: 150px;
             display: flex;
             max-width: 1400px;
             margin-left: auto;
             margin-right: auto;
             gap: 20px;
             padding: 20px;
+            transition: margin-top 0.3s ease;
+        }
+
+        /* Reduced margin when header is scrolled - only tabs visible */
+        body.scrolled .main-content {
+            margin-top: 75px;
+        }
+
+        body.scrolled .results-section {
+            top: 85px;
+            max-height: calc(100vh - 95px);
         }
 
         .input-section {
@@ -195,11 +251,12 @@
             flex: 1;
             min-width: 500px;
             position: sticky;
-            top: 90px;
+            top: 210px;
             height: fit-content;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 220px);
             overflow-y: auto;
             z-index: 1;
+            transition: top 0.3s ease, max-height 0.3s ease;
         }
 
         /* Optimization results should be above results-section */
@@ -342,6 +399,7 @@
             color: white;
             padding: 28px 32px;
             border-radius: 12px;
+            margin-top: 0;
             margin-bottom: 28px;
             box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
             border: none;
@@ -2228,6 +2286,18 @@
     </div>
 
     <script>
+        // Shrinking header on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                document.body.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+                document.body.classList.remove('scrolled');
+            }
+        });
+
         // Page Navigation - Define early to ensure it's available
         // Theme management
         function changeTheme(theme) {

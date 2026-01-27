@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wasserstoff-Kostenrechner Simulation "Gruppe 7"</title>
+    <title>Wasserstoff-Kostenrechner Simulation "Gruppe 2"</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -47,6 +47,27 @@
             --text-primary: #ffffff;
             --text-secondary: #cccccc;
             --border-color: #333333;
+        }
+
+        /* In dunklen Themes: Schrift in den Seiten weiß darstellen */
+        body.dark-theme .page-section,
+        body.dark-theme .page-section * {
+            color: #ffffff !important;
+        }
+
+        body.black-theme .page-section,
+        body.black-theme .page-section * {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .results-section,
+        body.dark-theme .results-section * {
+            color: #ffffff !important;
+        }
+
+        body.black-theme .results-section,
+        body.black-theme .results-section * {
+            color: #ffffff !important;
         }
 
         /* Light gray theme */
@@ -120,19 +141,22 @@
             transition: gap 0.3s ease;
         }
 
-        .theme-selector {
+        .nav-right-controls {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 12px;
+            margin-left: auto;
+            position: relative;
+        }
+
+        .theme-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             transition: all 0.3s ease;
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            opacity: 1;
-            height: auto;
         }
 
         .theme-selector label {
@@ -222,7 +246,7 @@
 
         /* Main Content */
         .main-content {
-            margin-top: 150px;
+            margin-top: 230px;
             display: flex;
             max-width: 1400px;
             margin-left: auto;
@@ -251,9 +275,9 @@
             flex: 1;
             min-width: 500px;
             position: sticky;
-            top: 210px;
+            top: 270px;
             height: fit-content;
-            max-height: calc(100vh - 220px);
+            max-height: calc(100vh - 280px);
             overflow-y: auto;
             z-index: 1;
             transition: top 0.3s ease, max-height 0.3s ease;
@@ -527,6 +551,169 @@
             color: #95a5a6;
             font-size: 0.85em;
             margin-left: 5px;
+        }
+
+
+        .parameter-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .parameter-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Project toolbar */
+        .project-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .project-toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .project-toolbar label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .project-toolbar input[type="text"],
+        .project-toolbar select {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            min-width: 180px;
+            font-size: 0.9em;
+        }
+
+        .project-toolbar button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background: #4A90E2;
+            color: #fff;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .project-toolbar button:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+        }
+
+        .project-toolbar button:active {
+            transform: translateY(0);
+        }
+
+        .project-toolbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-toolbar-nav select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.85em;
+            max-width: 180px;
+        }
+
+        .project-toolbar-nav button {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: #4A90E2;
+            color: #fff;
+            font-size: 0.8em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .project-toolbar-nav button:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+        }
+
+        .project-toolbar-nav button:active {
+            transform: translateY(0);
+        }
+
+        .export-button {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: #2e7d32;
+            color: #fff;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .export-button:hover {
+            background: #1b5e20;
+            transform: translateY(-1px);
+        }
+
+        .export-button:active {
+            transform: translateY(0);
+        }
+
+        .plausibility-badge {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .plausibility-ok {
+            background: #e8f5e9;
+            border: 1px solid #2e7d32;
+            color: #1b5e20;
+        }
+
+        .plausibility-low {
+            background: #fff3e0;
+            border: 1px solid #fb8c00;
+            color: #e65100;
+        }
+
+        .plausibility-high {
+            background: #ffebee;
+            border: 1px solid #c62828;
+            color: #b71c1c;
+        }
+
+        @media (max-width: 900px) {
+            .project-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         /* Calculate Button */
@@ -818,7 +1005,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <span class="h2-symbol">H₂</span>
-                <span>Wasserstoff-Kostenrechner Simulation "Gruppe 7"</span>
+                <span>Wasserstoff-Kostenrechner Simulation "Gruppe 2"</span>
             </div>
             <div style="display: flex; width: 100%; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
                 <ul class="nav-menu">
@@ -833,14 +1020,25 @@
                     <li><a href="#" onclick="showPage(8); return false;" class="nav-link" data-page="8">9. Cracking</a></li>
                     <li><a href="#" onclick="showPage(9); return false;" class="nav-link nav-prognose" data-page="9">Prognose</a></li>
                 </ul>
-                <div class="theme-selector">
-                    <label for="theme-select">🎨 Hintergrund:</label>
-                    <select id="theme-select" onchange="changeTheme(this.value)">
-                        <option value="light">Weiß (Hell)</option>
-                        <option value="light-gray">Hellgrau</option>
-                        <option value="dark">Dunkel</option>
-                        <option value="black">Schwarz</option>
-                    </select>
+                <div class="nav-right-controls">
+                    <div class="theme-selector">
+                        <label for="theme-select">🎨 Hintergrund:</label>
+                        <select id="theme-select" onchange="changeTheme(this.value)">
+                            <option value="light">Weiß (Hell)</option>
+                            <option value="light-gray">Hellgrau</option>
+                            <option value="dark">Dunkel</option>
+                            <option value="black">Schwarz</option>
+                        </select>
+                    </div>
+                    <div class="project-toolbar-nav">
+                        <select id="project_select">
+                            <option value="">Projekt auswählen…</option>
+                        </select>
+                        <button type="button" onclick="saveProjectConfig()" title="Aktuelles Projekt speichern">Speichern</button>
+                        <button type="button" onclick="loadSelectedProject()" title="Gespeichertes Projekt laden">Öffnen</button>
+                        <button type="button" onclick="deleteSelectedProject()" title="Gespeichertes Projekt löschen">✕</button>
+                        <button type="button" class="export-button" onclick="exportProjectPdf()" title="Bericht als PDF speichern">PDF</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1792,9 +1990,21 @@
                     <div class="parameter-group-title">8.3 Vessel parameters</div>
                     
                     <div class="parameter-item">
+                        <div class="parameter-number">8.3.0</div>
+                        <div class="parameter-label">Schiffstyp für NH₃-Transport</div>
+                        <select class="parameter-select" id="vessel_type" onchange="onVesselTypeChange(this.value)">
+                            <option value="">Benutzerdefiniert (eigene Tankgröße)</option>
+                            <option value="handysize">Handysize Gas Carrier (~20.000 m³)</option>
+                            <option value="mgc" selected>Midsize Gas Carrier (MGC, ~35.000–50.000 m³)</option>
+                            <option value="lgc">Large Gas Carrier (LGC, ~50.000 m³)</option>
+                            <option value="vlgc">Very Large Gas Carrier (VLGC, ~80.000 m³)</option>
+                        </select>
+                    </div>
+
+                    <div class="parameter-item">
                         <div class="parameter-number">8.3.1</div>
                         <div class="parameter-label">Tank volume <span class="parameter-unit">(m³)</span></div>
-                        <input type="number" class="parameter-input" id="vessel_tank_volume" value="40000" step="1000">
+                        <input type="number" class="parameter-input" id="vessel_tank_volume" value="48000" step="1000">
                     </div>
 
                     <div class="parameter-item">
@@ -2003,11 +2213,11 @@
                         <div class="parameter-number"></div>
                         <div class="parameter-label">Optimierungsbereich Elektrolyseur-Leistung <span class="parameter-unit">(MW)</span></div>
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                            <input type="number" class="parameter-input" id="opt_pel_min" value="1000" step="50">
+                            <input type="number" class="parameter-input" id="opt_pel_min" value="200" step="50">
                             <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
-                            <input type="number" class="parameter-input" id="opt_pel_max" value="1200" step="50">
+                            <input type="number" class="parameter-input" id="opt_pel_max" value="2000" step="100">
                             <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
-                            <input type="number" class="parameter-input" id="opt_pel_step" value="50" step="10">
+                            <input type="number" class="parameter-input" id="opt_pel_step" value="100" step="10">
                         </div>
                     </div>
 
@@ -2017,7 +2227,7 @@
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
                             <input type="number" class="parameter-input" id="opt_h2_days_min" value="1" step="0.5">
                             <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
-                            <input type="number" class="parameter-input" id="opt_h2_days_max" value="2" step="0.5">
+                            <input type="number" class="parameter-input" id="opt_h2_days_max" value="7" step="0.5">
                             <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
                             <input type="number" class="parameter-input" id="opt_h2_days_step" value="1" step="0.5">
                         </div>
@@ -2027,11 +2237,11 @@
                         <div class="parameter-number"></div>
                         <div class="parameter-label">Optimierungsbereich NH₃-Speicher <span class="parameter-unit">(Schiffe)</span></div>
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                            <input type="number" class="parameter-input" id="opt_nh3_ships_min" value="1" step="0.25">
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_min" value="3" step="0.25">
                             <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
-                            <input type="number" class="parameter-input" id="opt_nh3_ships_max" value="1.5" step="0.25">
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_max" value="8" step="0.25">
                             <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
-                            <input type="number" class="parameter-input" id="opt_nh3_ships_step" value="0.25" step="0.25">
+                            <input type="number" class="parameter-input" id="opt_nh3_ships_step" value="1" step="1">
                         </div>
                     </div>
 
@@ -2062,10 +2272,17 @@
                         </div>
                     </div>
 
-                    <div class="calculate-section" style="margin-top: 20px;">
+                    <div class="calculate-section" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
                         <button class="calculate-btn" onclick="runOptimization()" style="background: linear-gradient(135deg, #DC143C 0%, #FF6347 100%);">
-                            OPTIMIERUNG DURCHFÜHREN
+                            OPTIMIERUNG (INTERNES RASTER)
                         </button>
+                        <button class="calculate-btn" onclick="runGurobiOptimization()" style="background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);">
+                            OPTIMIERUNG (GUROBI-SERVER)
+                        </button>
+                        <div style="font-size: 0.85em; color: #555; text-align: left;">
+                            Hinweis: Für die Gurobi-Optimierung muss der Python-Server <code>gurobi_server.py</code> lokal laufen
+                            (<code>python gurobi_server.py</code> im Projektordner).
+                        </div>
                     </div>
                 </div>
 
@@ -2114,8 +2331,14 @@
 
                     <!-- Comparison Section -->
                     <div style="margin-top: 32px; padding: 20px; background: #f8f9fa; border-radius: 12px;">
-                        <h3 style="color: #DC143C; margin-bottom: 20px; font-size: 1.2em;">Vergleich: Aktuell vs. Optimiert</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <h3 style="color: #DC143C; margin-bottom: 8px; font-size: 1.2em;">Vergleich der Konfigurationen</h3>
+                        <p style="font-size: 0.85em; color: #555; margin-bottom: 16px;">
+                            Hier werden die aktuellen Einstellungen der Anlage den optimierten Ergebnissen
+                            aus der internen Raster-Suche und der Gurobi-Optimierung gegenübergestellt.
+                            Alle Werte sind absolute Kennzahlen (z.&nbsp;B. €/kg, MW, t, m³); es wird
+                            keine prozentuale Einsparung ausgewiesen.
+                        </p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
                             <div style="padding: 15px; background: white; border-radius: 8px; border: 2px solid #4A90E2;">
                                 <div style="font-weight: 600; color: #4A90E2; margin-bottom: 10px;">Aktuelle Konfiguration</div>
                                 <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_current_cost" style="font-weight: 600;">-</span></div>
@@ -2124,16 +2347,19 @@
                                 <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_current_nh3">-</span></div>
                             </div>
                             <div style="padding: 15px; background: white; border-radius: 8px; border: 2px solid #DC143C;">
-                                <div style="font-weight: 600; color: #DC143C; margin-bottom: 10px;">Optimierte Konfiguration</div>
-                                <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_opt_cost" style="font-weight: 600; color: #DC143C;">-</span></div>
-                                <div style="font-size: 0.9em; margin-bottom: 5px;">P_el: <span id="comparison_opt_pel">-</span> MW</div>
-                                <div style="font-size: 0.9em; margin-bottom: 5px;">H₂ Storage: <span id="comparison_opt_h2">-</span></div>
-                                <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_opt_nh3">-</span></div>
+                                <div style="font-weight: 600; color: #DC143C; margin-bottom: 10px;">Optimiert (internes Raster)</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_internal_cost" style="font-weight: 600; color: #DC143C;">-</span></div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">P_el: <span id="comparison_internal_pel">-</span> MW</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">H₂ Storage: <span id="comparison_internal_h2">-</span></div>
+                                <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_internal_nh3">-</span></div>
                             </div>
-                        </div>
-                        <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #4CAF50;">
-                            <div style="font-weight: 600; color: #2E7D32; margin-bottom: 5px;">Kosteneinsparung</div>
-                            <div style="font-size: 1.1em; color: #2E7D32; font-weight: 700;" id="comparison_savings">-</div>
+                            <div style="padding: 15px; background: white; border-radius: 8px; border: 2px solid #2E7D32;">
+                                <div style="font-weight: 600; color: #2E7D32; margin-bottom: 10px;">Optimiert (Gurobi-Server)</div>
+                                <div style="font-size: 0.9em; margin-bottom: 5px;">Kosten: <span id="comparison_gurobi_cost" style="font-weight: 600; color: #2E7D32;">-</span></div>
+                        <div style="font-size: 0.9em; margin-bottom: 5px;">P_el: <span id="comparison_gurobi_pel">-</span> MW</div>
+                        <div style="font-size: 0.9em; margin-bottom: 5px;">H₂ Storage: <span id="comparison_gurobi_h2">-</span></div>
+                        <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_gurobi_nh3">-</span></div>
+                            </div>
                         </div>
                     </div>
 
@@ -2167,73 +2393,8 @@
                         </div>
                     </div>
 
-                    <!-- Scenario Selection moved below detailed configurations -->
-                    <div class="parameter-group" style="margin-top: 32px;">
-                        <div class="parameter-group-title">Scenario Selection</div>
-                        
-                        <div class="parameter-item">
-                            <div class="parameter-number"></div>
-                            <div class="parameter-label">Prediction scenario</div>
-                            <select class="parameter-input" id="prediction_scenario" style="padding: 12px 16px;">
-                                <option value="optimistic">Optimistic (Fast cost reduction)</option>
-                                <option value="realistic" selected>Realistic (Moderate reduction)</option>
-                                <option value="pessimistic">Pessimistic (Slow reduction)</option>
-                                <option value="custom">Custom (Use input values)</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Calculate Prediction Button -->
-                <div class="calculate-section" style="margin-top: 24px;">
-                    <button class="calculate-btn" onclick="calculatePrediction()" style="background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);">
-                        RUN 10-YEAR PRICE PREDICTION SIMULATION
-                    </button>
-                </div>
-
-                <div class="page-results" id="page9_results">
-                    <div class="page-results-title">10-Year Price Prediction</div>
-                    
-                    <div class="page-result-main">
-                        <div class="page-result-item" style="background: transparent; border: none; padding: 0; margin: 0;">
-                            <div class="page-result-label">Current Cost (Year 0)</div>
-                            <div class="page-result-value" id="prediction_current_cost" style="color: #4A90E2;">-</div>
-                        </div>
-                    </div>
-
-                    <div class="page-result-item">
-                        <div class="page-result-label">Predicted Cost (Year 10)</div>
-                        <div class="page-result-value" id="prediction_year10_cost">-</div>
-                    </div>
-
-                    <div class="page-result-item">
-                        <div class="page-result-label">Total Cost Reduction</div>
-                        <div class="page-result-value" id="prediction_total_reduction">-</div>
-                    </div>
-
-                    <div class="page-result-item">
-                        <div class="page-result-label">Average Annual Reduction</div>
-                        <div class="page-result-value" id="prediction_avg_reduction">-</div>
-                    </div>
-
-                    <div style="margin-top: 24px;">
-                        <canvas id="predictionChart" style="max-height: 400px;"></canvas>
-                    </div>
-
-                    <div style="margin-top: 24px;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f8f9fa; border-bottom: 2px solid #4A90E2;">
-                                    <th style="padding: 12px; text-align: left; color: #4A90E2; font-weight: 600;">Year</th>
-                                    <th style="padding: 12px; text-align: right; color: #4A90E2; font-weight: 600;">Cost (€/kg)</th>
-                                    <th style="padding: 12px; text-align: right; color: #4A90E2; font-weight: 600;">Reduction (%)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="prediction_table_body">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
                 <div class="page-navigation">
                     <button class="nav-button" onclick="showPage(8)">← Zurück</button>
@@ -2257,6 +2418,10 @@
                         <div class="result-label">Cost per kg H₂ delivered</div>
                         <div class="result-value" id="result_cost_per_kg" style="color: #ffffff;">-</div>
                     </div>
+                </div>
+
+                <div id="plausibility_badge" class="plausibility-badge plausibility-low" style="display:none;">
+                    <!-- Wird per JavaScript befüllt -->
                 </div>
 
                 <div class="result-item">
@@ -2445,6 +2610,413 @@
             } else {
                 return getInput('h2_steel_demand') * 1000000; // kt to kg
             }
+        }
+
+        // -----------------------------
+        // Projekt-Speicherfunktion
+        // -----------------------------
+        const PROJECT_STORAGE_KEY = 'h2_projects_v1';
+
+        function getStoredProjects() {
+            try {
+                const raw = localStorage.getItem(PROJECT_STORAGE_KEY);
+                if (!raw) return {};
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (e) {
+                console.warn('Projekt-Daten konnten nicht gelesen werden:', e);
+                return {};
+            }
+        }
+
+        function saveStoredProjects(projects) {
+            try {
+                localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(projects));
+            } catch (e) {
+                alert('Projekt konnte nicht gespeichert werden (localStorage voll oder blockiert).');
+                console.error(e);
+            }
+        }
+
+        function collectProjectData() {
+            const data = {};
+            const elements = document.querySelectorAll('.input-section input, .input-section select, .input-section textarea');
+            elements.forEach(el => {
+                if (!el.id) return;
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    data[el.id] = el.checked;
+                } else {
+                    data[el.id] = el.value;
+                }
+            });
+            return data;
+        }
+
+        function applyProjectData(data) {
+            if (!data) return;
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = !!data[id];
+                } else {
+                    el.value = data[id];
+                }
+            });
+
+            // Nach dem Laden neu berechnen
+            try {
+                const pages = document.querySelectorAll('.page-section');
+                const currentPage = Array.from(pages).findIndex(page => page.classList.contains('active'));
+                if (currentPage >= 0) {
+                    calculatePageCosts(currentPage);
+                }
+                if (typeof calculateCosts === 'function') {
+                    calculateCosts();
+                }
+            } catch (e) {
+                console.warn('Fehler beim Neuberechnen nach Projekt-Laden:', e);
+            }
+        }
+
+        function refreshProjectSelect() {
+            const select = document.getElementById('project_select');
+            if (!select) return;
+            const projects = getStoredProjects();
+            const names = Object.keys(projects).sort((a, b) => a.localeCompare(b, 'de-DE'));
+            select.innerHTML = '<option value=\"\">Projekt auswählen…</option>';
+            names.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            });
+        }
+
+        function saveProjectConfig() {
+            let nameInput = document.getElementById('project_name_input');
+            let name = nameInput ? nameInput.value.trim() : '';
+            if (!name) {
+                const select = document.getElementById('project_select');
+                const prefill = select && select.value ? select.value : '';
+                name = prompt('Bitte Projektnamen eingeben:', prefill || '');
+                if (!name) {
+                    return;
+                }
+            }
+            const projects = getStoredProjects();
+            projects[name] = {
+                data: collectProjectData(),
+                savedAt: new Date().toISOString()
+            };
+            saveStoredProjects(projects);
+            refreshProjectSelect();
+            alert('Projekt "' + name + '" wurde gespeichert.');
+            if (nameInput) {
+                nameInput.value = name;
+            }
+            const select = document.getElementById('project_select');
+            if (select) {
+                select.value = name;
+            }
+        }
+
+        function loadSelectedProject() {
+            const select = document.getElementById('project_select');
+            if (!select) return;
+            const name = select.value;
+            if (!name) {
+                alert('Bitte ein gespeichertes Projekt auswählen.');
+                return;
+            }
+            const projects = getStoredProjects();
+            if (!projects[name]) {
+                alert('Projekt "' + name + '" wurde nicht gefunden.');
+                refreshProjectSelect();
+                return;
+            }
+            applyProjectData(projects[name].data);
+            const nameInput = document.getElementById('project_name_input');
+            if (nameInput) {
+                nameInput.value = name;
+            }
+        }
+
+        function deleteSelectedProject() {
+            const select = document.getElementById('project_select');
+            if (!select) return;
+            const name = select.value;
+            if (!name) {
+                alert('Bitte ein gespeichertes Projekt auswählen, das gelöscht werden soll.');
+                return;
+            }
+            if (!confirm('Projekt "' + name + '" wirklich löschen?')) {
+                return;
+            }
+            const projects = getStoredProjects();
+            if (projects[name]) {
+                delete projects[name];
+                saveStoredProjects(projects);
+                refreshProjectSelect();
+                alert('Projekt "' + name + '" wurde gelöscht.');
+            }
+        }
+
+        // Typische NH₃-Schiffsklassen (vereinfachte Annahmen, gerundete Werte)
+        const VESSEL_TYPES = {
+            handysize: {
+                name: 'Handysize Gas Carrier',
+                tankVolume: 20000, // m³
+                // CAPEX/OPEX werden aus Referenz (48.000 m³, 61.5 M€ / 5 M€/a) skaliert
+            },
+            mgc: {
+                name: 'Midsize Gas Carrier (MGC)',
+                tankVolume: 48000 // m³ – orientiert an typischer MGC-Größe
+            },
+            lgc: {
+                name: 'Large Gas Carrier (LGC)',
+                tankVolume: 55000 // m³
+            },
+            vlgc: {
+                name: 'Very Large Gas Carrier (VLGC)',
+                tankVolume: 80000 // m³
+            }
+        };
+
+        function onVesselTypeChange(type) {
+            const tankInput = document.getElementById('vessel_tank_volume');
+            const capexInput = document.getElementById('vessel_capex');
+            const opexInput = document.getElementById('vessel_opex');
+            if (!tankInput || !capexInput || !opexInput) return;
+
+            // Referenz für Skalierung: 48.000 m³, 61.5 M€, 5 M€/a
+            const refVolume = 48000;
+            const refCapex = 61.5;
+            const refOpex = 5.0;
+
+            if (!type || !VESSEL_TYPES[type]) {
+                // Benutzerdefiniert – nichts automatisch überschreiben
+                return;
+            }
+
+            const cfg = VESSEL_TYPES[type];
+            const vol = cfg.tankVolume;
+            tankInput.value = vol.toFixed(0);
+
+            const factor = vol / refVolume;
+            const newCapex = refCapex * factor;
+            const newOpex = refOpex * factor;
+
+            capexInput.value = newCapex.toFixed(1);
+            opexInput.value = newOpex.toFixed(2);
+
+            // Nach Änderung direkt Transportkosten neu berechnen, falls Seite aktiv
+            try {
+                calculateTransportCosts();
+            } catch (e) {
+                console.warn('Fehler bei automatischer Transport-Neuberechnung nach Schiffstyp-Änderung:', e);
+            }
+        }
+
+        // Export current configuration and results as printable HTML (for PDF export)
+        function exportProjectPdf() {
+            const projectSelect = document.getElementById('project_select');
+            const projectName = projectSelect && projectSelect.value ? projectSelect.value : 'Unbenanntes Projekt';
+
+            // Sammle zentrale Ergebnisse
+            const costPerKg = document.getElementById('result_cost_per_kg')?.textContent || '-';
+            const totalAnnual = document.getElementById('result_total_annual')?.textContent || '-';
+            const h2Delivered = document.getElementById('result_h2_delivered')?.textContent || '-';
+
+            // Einige wichtige Eingaben (System-Seite)
+            const h2Target = document.getElementById('h2_import_target')?.value || '';
+            const h2Steel = document.getElementById('h2_steel_demand')?.value || '';
+            const discountRate = document.getElementById('discount_rate')?.value || '';
+            const lifetime = document.getElementById('project_lifetime')?.value || '';
+
+            // Parameter + Ergebnisse pro Seite einsammeln
+            let perPageSectionsHtml = '';
+            const pageSections = document.querySelectorAll('.page-section');
+            pageSections.forEach((section, index) => {
+                const headerEl = section.querySelector('.page-header h2');
+                const pageTitle = headerEl ? headerEl.innerText.replace(/\s+/g, ' ').trim() : `Seite ${index + 1}`;
+
+                // Parameter-Tabelle für diese Seite
+                let rows = '';
+                const paramItems = section.querySelectorAll('.parameter-item');
+                paramItems.forEach(item => {
+                    const labelEl = item.querySelector('.parameter-label');
+                    const valueEl = item.querySelector('input, select, textarea');
+                    if (!labelEl || !valueEl) return;
+                    let value;
+                    if (valueEl.type === 'checkbox') {
+                        value = valueEl.checked ? 'Ja' : 'Nein';
+                    } else {
+                        value = valueEl.value;
+                    }
+                    const label = labelEl.innerText.replace(/\s+/g, ' ').trim();
+                    rows += `<tr><td>${label}</td><td>${value}</td></tr>`;
+                });
+
+                // Ergebnisse dieser Seite (falls vorhanden)
+                let pageResultsHtml = '';
+                const pageResultsId = `page${index}_results`;
+                const pageResultsDiv = document.getElementById(pageResultsId);
+                if (pageResultsDiv) {
+                    pageResultsHtml = pageResultsDiv.innerHTML;
+                }
+
+                perPageSectionsHtml += `
+  <div class="section">
+    <h2>Seite ${index + 1}: ${pageTitle}</h2>
+    <p class="small">Eingabeparameter und berechnete Ergebnisse für diese Seite.</p>
+    <table>
+      <tr><th>Parameter</th><th>Wert</th></tr>
+      ${rows}
+    </table>
+    ${pageResultsHtml ? `<div style="margin-top:16px;">${pageResultsHtml}</div>` : ''}
+  </div>`;
+            });
+
+            // Optimierungsergebnisse (falls vorhanden)
+            let optimizationHtml = '<p>Noch keine Optimierung berechnet.</p>';
+            const optDiv = document.getElementById('optimization_results');
+            if (optDiv && optDiv.innerText.trim() !== '' && optDiv.style.display !== 'none') {
+                optimizationHtml = optDiv.innerHTML;
+            }
+
+            // Canvas-Diagramme als Bilder exportieren
+            function canvasToImg(id) {
+                const canvas = document.getElementById(id);
+                if (!canvas) return '';
+                try {
+                    const url = canvas.toDataURL('image/png');
+                    return `<img src="${url}" alt="${id}" style="max-width:100%; margin-top:10px; border:1px solid #ccc;" />`;
+                } catch (e) {
+                    console.warn('Konnte Canvas nicht exportieren:', id, e);
+                    return '';
+                }
+            }
+
+            const costChartImg = canvasToImg('costChart');
+            const costTypeChartImg = canvasToImg('costTypeChart');
+
+            const win = window.open('', '_blank', 'width=900,height=1000');
+            if (!win) {
+                alert('Popup wurde vom Browser blockiert. Bitte Popups für diese Seite erlauben.');
+                return;
+            }
+
+            const html = `
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>H₂ Kostenrechner Bericht - ${projectName}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 20px; color: #222; }
+    h1, h2, h3 { color: #1a237e; }
+    .header { border-bottom: 2px solid #1a237e; margin-bottom: 16px; padding-bottom: 8px; }
+    .section { margin-top: 24px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; font-size: 0.9em; }
+    th { background: #e3f2fd; text-align: left; }
+    .explanation { font-size: 0.9em; line-height: 1.5; }
+    .small { font-size: 0.8em; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>H₂ Kostenrechner – Projektbericht</h1>
+    <div><strong>Projektname:</strong> ${projectName}</div>
+    <div><strong>Datum:</strong> ${new Date().toLocaleString('de-DE')}</div>
+  </div>
+
+  <div class="section">
+    <h2>1. Zentrale Ergebnisse</h2>
+    <table>
+      <tr><th>Kennzahl</th><th>Wert</th></tr>
+      <tr><td>Kosten pro kg H₂ (delivered)</td><td>${costPerKg}</td></tr>
+      <tr><td>Gesamtkosten pro Jahr</td><td>${totalAnnual}</td></tr>
+      <tr><td>Jährlich gelieferter H₂</td><td>${h2Delivered}</td></tr>
+    </table>
+    <p class="explanation">
+      Die Kennzahl <strong>Kosten pro kg H₂ delivered</strong> fasst alle Investitions-, Betriebs-,
+      Transport- und Speicher­kosten entlang der gesamten Kette zusammen und teilt sie durch die
+      gelieferte H₂-Menge. Sie ist die wichtigste Größe für den Vergleich verschiedener Szenarien.
+    </p>
+    <p class="explanation">
+      Zum Vergleich: Veröffentlichte Studien für importierten erneuerbaren Wasserstoff (via Ammoniak)
+      nach Europa liegen typischerweise bei etwa <strong>4,8–6,2&nbsp;€/kg H₂</strong> im Jahr 2030.
+      Werte deutlich darunter deuten auf sehr optimistische Annahmen hin, Werte deutlich darüber auf
+      eher konservative oder ungünstige Randbedingungen.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>2. Zentrale Eingabeparameter</h2>
+    <table>
+      <tr><th>Parameter</th><th>Wert</th></tr>
+      <tr><td>Importziel H₂ (t/Jahr)</td><td>${h2Target}</td></tr>
+      <tr><td>Stahlwerksbedarf (kt/Jahr)</td><td>${h2Steel}</td></tr>
+      <tr><td>Diskontrate (%)</td><td>${discountRate}</td></tr>
+      <tr><td>Projektlebensdauer (Jahre)</td><td>${lifetime}</td></tr>
+    </table>
+    <p class="explanation">
+      Diese Parameter steuern die Skalierung des gesamten Systems. Die Diskontrate und
+      Projektlebensdauer bestimmen, wie Investitionskosten über die Zeit auf Jahreskosten
+      umgelegt werden.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>3. Interpretation der Ergebnisse</h2>
+    <p class="explanation">
+      <strong>Hohe Werte</strong> bei den Kosten pro kg H₂ weisen auf teure Teilbereiche der
+      Kette hin (z.&nbsp;B. Windstrom, Elektrolyse, Speicher oder Transport). Durch Variation
+      der Eingaben auf den einzelnen Seiten (Wind, Elektrolyse, Wasser, Stickstoff,
+      Ammoniak, Speicher, Transport, Cracking) können Sie Szenarien vergleichen und
+      Kostentreiber identifizieren.
+    </p>
+    <p class="explanation">
+      Für Dokumentation und Berichte empfiehlt es sich, mehrere Projekte mit
+      unterschiedlichen Annahmen zu speichern und jeweils einen PDF-Bericht zu erzeugen.
+    </p>
+  </div>
+
+  ${perPageSectionsHtml}
+
+  <div class="section">
+    <h2>Optimierungsergebnisse</h2>
+    <p class="small">
+      Dieser Abschnitt zeigt die aktuell angezeigten Optimierungsergebnisse aus der Benutzeroberfläche.
+    </p>
+    <div>
+      ${optimizationHtml}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Diagramme</h2>
+    <p class="small">
+      Export der wichtigsten Kosten­diagramme aus der Simulation.
+    </p>
+    ${costChartImg ? `<h3>Gesamtkosten-Verteilung</h3>${costChartImg}` : '<p class="small">Diagramm "costChart" ist noch nicht berechnet.</p>'}
+    ${costTypeChartImg ? `<h3>Kostentypen</h3>${costTypeChartImg}` : '<p class="small">Diagramm "costTypeChart" ist noch nicht berechnet.</p>'}
+  </div>
+</body>
+</html>
+`;
+
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+
+            // Warten, bis das neue Dokument geladen ist, dann Druckdialog öffnen
+            win.onload = function() {
+                win.focus();
+                win.print();
+            };
         }
 
         // Calculate Wind Costs (Page 1)
@@ -2838,6 +3410,7 @@
 
         // Calculate Price Prediction (Page 9)
         let predictionChart = null;
+        let gurobiPredictionChart = null;
 
         function calculatePrediction() {
             // Get current cost from main calculation
@@ -2861,32 +3434,13 @@
             // Update current cost input
             document.getElementById('current_cost_per_kg').value = currentCost.toFixed(4);
 
-            // Get scenario
-            const scenario = document.getElementById('prediction_scenario').value;
-            
-            // Get input values
+            // Get input values (use custom values directly, no scenario selection)
             let capexReduction = getInput('capex_reduction_rate');
             let opexReduction = getInput('opex_reduction_rate');
             let learningRate = getInput('learning_rate');
             const inflationRate = getInput('inflation_rate');
             const demandGrowth = getInput('demand_growth');
             const scaleEfficiency = getInput('scale_efficiency');
-
-            // Apply scenario presets
-            if (scenario === 'optimistic') {
-                capexReduction = 8;
-                opexReduction = 4;
-                learningRate = 15;
-            } else if (scenario === 'realistic') {
-                capexReduction = 5;
-                opexReduction = 2;
-                learningRate = 10;
-            } else if (scenario === 'pessimistic') {
-                capexReduction = 3;
-                opexReduction = 1;
-                learningRate = 5;
-            }
-            // 'custom' uses input values
 
             // Calculate 10-year prediction
             const years = [];
@@ -3005,6 +3559,485 @@
                     }
                 }
             });
+        }
+
+        function calculateGurobiPrediction() {
+            // Prüfe, ob Gurobi-Optimierung bereits durchgeführt wurde
+            if (!window.gurobiOptBest || !window.gurobiOptBest.costPerKg) {
+                alert('Bitte zuerst die OPTIMIERUNG (GUROBI-SERVER) ausführen.');
+                return;
+            }
+
+            const currentCost = window.gurobiOptBest.costPerKg;
+
+            // Zeige Gurobi-Ergebnisse an
+            const gurobiResultsDiv = document.getElementById('page9_gurobi_results');
+            gurobiResultsDiv.style.display = 'block';
+
+            // Get input values (use custom values directly, no scenario selection)
+            let capexReduction = getInput('capex_reduction_rate');
+            let opexReduction = getInput('opex_reduction_rate');
+            let learningRate = getInput('learning_rate');
+            const inflationRate = getInput('inflation_rate');
+            const demandGrowth = getInput('demand_growth');
+            const scaleEfficiency = getInput('scale_efficiency');
+
+            // Calculate 10-year prediction
+            const years = [];
+            const costs = [];
+            const reductions = [];
+            
+            let yearCost = currentCost;
+            const baseCost = currentCost;
+
+            for (let year = 0; year <= 10; year++) {
+                years.push(year);
+                
+                if (year === 0) {
+                    costs.push(yearCost);
+                    reductions.push(0);
+                } else {
+                    // Calculate cost reduction factors
+                    const capexFactor = Math.pow(1 - capexReduction / 100, year);
+                    const opexFactor = Math.pow(1 - opexReduction / 100, year);
+                    const learningFactor = Math.pow(1 - learningRate / 100, year);
+                    const scaleFactor = Math.pow(1 - scaleEfficiency / 100, year);
+                    const inflationFactor = Math.pow(1 + inflationRate / 100, year);
+                    const demandFactor = Math.pow(1 - demandGrowth / 100, year); // Higher demand = lower cost per unit
+
+                    // Apply reductions (assuming 60% CAPEX, 30% OPEX, 10% other factors)
+                    const costReduction = 0.6 * (1 - capexFactor) + 0.3 * (1 - opexFactor) + 0.1 * (1 - learningFactor * scaleFactor);
+                    const netReduction = costReduction * (1 / demandFactor);
+                    
+                    yearCost = baseCost * (1 - netReduction) * inflationFactor;
+                    costs.push(yearCost);
+                    reductions.push(((baseCost - yearCost) / baseCost * 100));
+                }
+            }
+
+            // Display results
+            document.getElementById('gurobi_prediction_current_cost').textContent = currentCost.toFixed(4) + ' €/kg';
+            document.getElementById('gurobi_prediction_year10_cost').textContent = costs[10].toFixed(4) + ' €/kg';
+            
+            const totalReduction = ((currentCost - costs[10]) / currentCost * 100);
+            document.getElementById('gurobi_prediction_total_reduction').textContent = totalReduction.toFixed(2) + ' %';
+            document.getElementById('gurobi_prediction_avg_reduction').textContent = (totalReduction / 10).toFixed(2) + ' %/year';
+
+            // Update table
+            let tableHTML = '';
+            for (let i = 0; i <= 10; i++) {
+                tableHTML += `
+                    <tr style="border-bottom: 1px solid #e8e8e8;">
+                        <td style="padding: 10px; color: #2E7D32;">Year ${i}</td>
+                        <td style="padding: 10px; text-align: right; color: #2E7D32; font-weight: 600; font-family: 'Courier New', monospace;">${costs[i].toFixed(4)}</td>
+                        <td style="padding: 10px; text-align: right; color: #2E7D32;">${reductions[i].toFixed(2)}%</td>
+                    </tr>
+                `;
+            }
+            document.getElementById('gurobi_prediction_table_body').innerHTML = tableHTML;
+
+            // Update chart
+            if (gurobiPredictionChart) {
+                gurobiPredictionChart.destroy();
+            }
+
+            const ctx = document.getElementById('gurobiPredictionChart').getContext('2d');
+            gurobiPredictionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years.map(y => `Year ${y}`),
+                    datasets: [{
+                        label: 'Cost per kg H₂ (€/kg) - Gurobi-Optimiert',
+                        data: costs,
+                        borderColor: '#2E7D32',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2E7D32',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: '10-Year Hydrogen Cost Prediction (Gurobi-Optimiert)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#2E7D32'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Cost (€/kg H₂)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + ' €';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==============================
+        // Gurobi-Optimierung über Backend
+        // ==============================
+        async function runGurobiOptimization() {
+            const resultsDiv = document.getElementById('optimization_results');
+            resultsDiv.style.display = 'block';
+
+            document.getElementById('opt_result_s').textContent = 'Berechne (Gurobi)...';
+            document.getElementById('opt_result_pel').textContent = 'Berechne (Gurobi)...';
+            document.getElementById('opt_result_h2_storage').textContent = 'Berechne (Gurobi)...';
+            document.getElementById('opt_result_nh3_storage').textContent = 'Berechne (Gurobi)...';
+            document.getElementById('opt_result_water_tank').textContent = 'Berechne (Gurobi)...';
+            document.getElementById('opt_result_cost').textContent = 'Berechne (Gurobi)...';
+
+            const progressDiv = document.getElementById('optimization_progress');
+            const progressBar = document.getElementById('optimization_progress_bar');
+            const progressText = document.getElementById('optimization_progress_text');
+            const statusText = document.getElementById('optimization_status');
+            progressDiv.style.display = 'block';
+            progressBar.style.width = '15%';
+            progressText.textContent = 'Gurobi-Request...';
+            statusText.textContent = 'Sende Daten an Gurobi-Server...';
+
+            // Grenzen aus dem Formular lesen
+            const bounds = {
+                s_min: getInput('opt_s_min') || 0.95,
+                s_max: getInput('opt_s_max') || 1.0,
+                s_step: getInput('opt_s_step') || 0.01,
+                pel_min: getInput('opt_pel_min') || 500,
+                pel_max: getInput('opt_pel_max') || 2500,
+                pel_step: getInput('opt_pel_step') || 100,
+                h2_min: getInput('opt_h2_days_min') || 1,
+                h2_max: getInput('opt_h2_days_max') || 2,
+                h2_step: getInput('opt_h2_days_step') || 1,
+                nh3_min: getInput('opt_nh3_ships_min') || 3,
+                nh3_max: getInput('opt_nh3_ships_max') || 8,
+                nh3_step: getInput('opt_nh3_ships_step') || 1,
+                water_min: getInput('opt_water_tank_min') || 500,
+                water_max: getInput('opt_water_tank_max') || 4500,
+                water_step: getInput('opt_water_tank_step') || 2000,
+            };
+
+            // Wichtige Parameter für die heuristische Kostenfunktion im Backend
+            const params = {
+                h2_production_kt: getInput('h2_production') || 120.8,
+                base_cost_per_kg: getInput('current_cost_per_kg') || 3.0,
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/optimize_gurobi', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ bounds, params }),
+                });
+
+                progressBar.style.width = '60%';
+                progressText.textContent = 'Verarbeite Ergebnis...';
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error('HTTP ' + response.status + ': ' + text);
+                }
+
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.message || 'Gurobi-Optimierung fehlgeschlagen.');
+                }
+
+                const best = result.best || {};
+
+                // Ergebnis anzeigen
+                document.getElementById('opt_result_s').textContent =
+                    (best.s ?? bounds.s_min).toFixed(2) + ' (' + ((best.s ?? bounds.s_min) * 100).toFixed(0) + '% Windkapazität)';
+                document.getElementById('opt_result_pel').textContent =
+                    (best.pel ?? bounds.pel_min).toFixed(0) + ' MW';
+
+                const h2Storage = best.h2Storage ?? 0;
+                const h2Days = best.h2_days ?? bounds.h2_min;
+                document.getElementById('opt_result_h2_storage').textContent =
+                    h2Days.toFixed(1) + ' Tage (' + h2Storage.toFixed(0) + ' t)';
+
+                const nh3Ships = best.nh3_ships ?? bounds.nh3_min;
+                const nh3Storage = best.nh3Storage ?? 0;
+                document.getElementById('opt_result_nh3_storage').textContent =
+                    nh3Ships.toFixed(2) + ' Schiffe (' + nh3Storage.toFixed(0) + ' t)';
+
+                const waterTank = best.water_tank ?? bounds.water_min;
+                document.getElementById('opt_result_water_tank').textContent =
+                    waterTank.toFixed(0) + ' m³';
+
+                const costPerKg = best.costPerKg ?? params.base_cost_per_kg;
+                document.getElementById('opt_result_cost').textContent =
+                    costPerKg.toFixed(4) + ' €/kg';
+
+                progressBar.style.width = '100%';
+                progressText.textContent = '100%';
+                statusText.textContent = 'Gurobi-Optimierung abgeschlossen!';
+
+                // Gurobi-Ergebnis für Vergleich speichern
+                window.gurobiOptBest = {
+                    costPerKg: costPerKg,
+                    pel: best.pel ?? bounds.pel_min,
+                    h2Storage: h2Storage,
+                    nh3Ships: nh3Ships,
+                    nh3Storage: nh3Storage
+                };
+                // Vollständige Design-Entscheidung für spätere Tagesprofile merken
+                window.gurobiOptDecision = {
+                    s: best.s ?? bounds.s_min,
+                    pel: best.pel ?? bounds.pel_min,
+                    h2_days: best.h2_days ?? bounds.h2_min,
+                    nh3_ships: nh3Ships,
+                    water_tank: waterTank
+                };
+
+                // Vergleichsanzeige aktualisieren (Gurobi-Spalte) – nur absolute Werte, keine Einsparungen
+                document.getElementById('comparison_gurobi_cost').textContent = costPerKg.toFixed(4) + ' €/kg';
+                document.getElementById('comparison_gurobi_pel').textContent = (best.pel ?? bounds.pel_min).toFixed(0);
+                document.getElementById('comparison_gurobi_h2').textContent = h2Storage.toFixed(0) + ' t';
+                document.getElementById('comparison_gurobi_nh3').textContent = nh3Storage.toFixed(0) + ' t';
+
+                // Aktualisiere die Kosten-Diagramme mit Gurobi-Vergleich
+                // Hole die aktuellen Kosten-Parameter für die Breakdown-Berechnung
+                const currentCostElement = document.getElementById('result_cost_per_kg');
+                if (currentCostElement && currentCostElement.textContent !== '-') {
+                    const costText = currentCostElement.textContent.replace(' €/kg', '').trim();
+                    const currentCostPerKg = parseFloat(costText);
+                    if (currentCostPerKg > 0 && isFinite(currentCostPerKg)) {
+                        // Berechne die Parameter für die Breakdown-Berechnung
+                        const discountRate = getInput('discount_rate') / 100;
+                        const lifetime = getInput('project_lifetime');
+                        const electricityCostMethod = document.getElementById('electricity_cost_method').value;
+                        let electricityPrice = 0;
+                        if (electricityCostMethod === 'internal_LCOE') {
+                            const windCapacity = getInput('wind_capacity') * 1000;
+                            const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+                            const windCAPEX = getInput('wind_capex') * 1000000000;
+                            const windOPEX = getInput('wind_opex') * 1000000;
+                            const windDepex = getInput('wind_depex') * 1000000;
+                            const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+                            const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+                            const windDepexAnnual = annualizeDepex(windDepex, discountRate, lifetime);
+                            const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+                            electricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+                        } else {
+                            electricityPrice = getInput('external_electricity_price') / 1000;
+                        }
+                        const h2DeliveredElement = document.getElementById('result_h2_delivered');
+                        let h2DeliveredAnnual = 0;
+                        if (h2DeliveredElement && h2DeliveredElement.textContent !== '-') {
+                            const h2Text = h2DeliveredElement.textContent.replace(' t/year', '').trim();
+                            h2DeliveredAnnual = parseFloat(h2Text) * 1000000; // t to kg
+                        }
+                        const costPerKgFactor = h2DeliveredAnnual > 0 ? 1 / h2DeliveredAnnual : 0;
+
+                        // Aktualisiere die Diagramme
+                        updateCostChartsWithGurobi(window.gurobiOptBest, window.gurobiOptDecision, 
+                            discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor);
+                    }
+                }
+            } catch (error) {
+                console.error('Gurobi-Optimierung Fehler:', error);
+                statusText.textContent = 'Fehler bei Gurobi-Optimierung: ' + error.message;
+            }
+        }
+
+        // Berechnet Kosten-Breakdown für Gurobi-optimierte Konfiguration
+        function calculateGurobiBreakdown(gurobiOptBest, gurobiOptDecision, discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor) {
+            if (!gurobiOptBest || !gurobiOptDecision) return null;
+
+            const pel = gurobiOptBest.pel || getInput('wind_capacity') * 1000;
+            const h2Storage = gurobiOptBest.h2Storage || getInput('h2_storage_capacity');
+            const nh3Storage = gurobiOptBest.nh3Storage || getInput('nh3_storage_capacity');
+            const s = gurobiOptDecision.s || 1.0;
+            const waterTank = gurobiOptDecision.water_tank || getInput('water_storage_capacity_storage');
+
+            // Vereinfachte Berechnung basierend auf Gurobi-Parametern
+            // Wind (skaliert mit s)
+            const windCapacityMW = getInput('wind_capacity') * 1000 * s;
+            const windCAPEXperMW = 2000000;
+            const windOPEXperKWperYear = 60;
+            const windCAPEX = windCAPEXperMW * windCapacityMW;
+            const windOPEX = windOPEXperKWperYear * windCapacityMW * 1000 * lifetime;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+            const windOPEXannual = windOPEX / lifetime;
+
+            // Electrolysis
+            const electrolyzerTech = getInput('electrolyzer_technology') || 'AEL';
+            const elParams = electrolyzerTech === 'AEL' ? 
+                { capex: 464, opex: 40.6, spec_kwh: 48.0 } : 
+                { capex: 580, opex: 24.36, spec_kwh: 48.0 };
+            const usdToEur = 0.92;
+            const electrolysisCAPEX = elParams.capex * pel * 1000 * usdToEur;
+            const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
+            const electrolysisOPEX = elParams.opex * pel * 1000 * lifetime * usdToEur;
+            const electrolysisOPEXannual = electrolysisOPEX / lifetime;
+            const h2Production = getInput('h2_production') * 1000000;
+            const electrolysisElectricityDemand = h2Production * elParams.spec_kwh;
+            const electrolysisVariableCost = electricityPrice * electrolysisElectricityDemand;
+
+            // Desalination
+            const roWaterKgPerKgH2 = 10.0;
+            const roCAPEXperM3perDay = 1200 * usdToEur;
+            const h2KgPerHDesign = (pel * 1000) / elParams.spec_kwh;
+            const roM3PerDayDesign = (h2KgPerHDesign * roWaterKgPerKgH2 / 1000.0) * 24.0;
+            const roCAPEX = roCAPEXperM3perDay * roM3PerDayDesign;
+            const roCAPEXannual = annualizeCAPEX(roCAPEX, discountRate, lifetime);
+            const roOPEXfrac = 0.05;
+            const roOPEX = roCAPEX * roOPEXfrac * lifetime;
+            const annualWaterM3 = (h2Production * roWaterKgPerKgH2) / 1000;
+            const roOPEXannual = roOPEX / lifetime;
+            const desalinationCAPEXannual = roCAPEXannual;
+            const desalinationOPEX = roOPEXannual;
+            const desalinationElectricityDemand = annualWaterM3 * 4.0; // kWh/m³
+            const desalinationVariableCost = electricityPrice * desalinationElectricityDemand;
+
+            // ASU
+            const n2KgPerKgNH3 = 28.0 / 34.0;
+            const annualNH3ProdT = (h2Production / 1000) * (17/3);
+            const hbCapacityTNH3perDay = annualNH3ProdT / 365;
+            const n2CapacityKgPerH = (hbCapacityTNH3perDay / 24.0) * 1000.0 * n2KgPerKgNH3;
+            const n2CAPEXperKgN2perH = 1700 * usdToEur;
+            const n2CAPEX = n2CAPEXperKgN2perH * n2CapacityKgPerH;
+            const n2CAPEXannual = annualizeCAPEX(n2CAPEX, discountRate, lifetime);
+            const n2OPEXfrac = 0.03;
+            const n2OPEX = n2CAPEX * n2OPEXfrac * lifetime;
+            const n2OPEXannual = n2OPEX / lifetime;
+            const asuElectricity = n2CapacityKgPerH * 0.33 * 8760 / 1000000; // GWh
+            const asuVariableCost = electricityPrice * asuElectricity * 1000000;
+
+            // Haber-Bosch
+            const hbCAPEXperTNH3perYear = 491.4 * usdToEur;
+            const hbCAPEX = hbCAPEXperTNH3perYear * annualNH3ProdT;
+            const hbCAPEXannual = annualizeCAPEX(hbCAPEX, discountRate, lifetime);
+            const hbOPEXperTNH3 = 24.57 * usdToEur;
+            const hbOPEX = hbOPEXperTNH3 * annualNH3ProdT * lifetime;
+            const hbOPEXannual = hbOPEX / lifetime;
+            const haberBoschElectricity = annualNH3ProdT * 0.55 / 1000; // GWh
+            const haberBoschVariableCost = electricityPrice * haberBoschElectricity * 1000000;
+
+            // Storage
+            const h2StorageCAPEXperT = 33000 * usdToEur;
+            const h2StorageCAPEX = h2Storage * h2StorageCAPEXperT;
+            const h2StorageCAPEXannual = annualizeCAPEX(h2StorageCAPEX, discountRate, lifetime);
+            const h2StorageOPEX = h2StorageCAPEX * 0.03 * lifetime;
+            const h2StorageOPEXannual = h2StorageOPEX / lifetime;
+            const nh3StorageCAPEXperT = 810 * usdToEur;
+            const nh3StorageCAPEX = nh3Storage * nh3StorageCAPEXperT;
+            const nh3StorageCAPEXannual = annualizeCAPEX(nh3StorageCAPEX, discountRate, lifetime);
+            const nh3StorageOPEX = nh3StorageCAPEX * 0.02 * lifetime;
+            const nh3StorageOPEXannual = nh3StorageOPEX / lifetime;
+            const waterTankCAPEXperM3 = 50 * usdToEur;
+            const waterTankCAPEX = waterTank * waterTankCAPEXperM3;
+            const waterTankCAPEXannual = annualizeCAPEX(waterTankCAPEX, discountRate, lifetime);
+            const waterTankOPEX = waterTankCAPEX * 0.02 * lifetime;
+            const waterTankOPEXannual = waterTankOPEX / lifetime;
+            const storageCAPEXannual = h2StorageCAPEXannual + nh3StorageCAPEXannual + waterTankCAPEXannual;
+            const storageOPEX = h2StorageOPEXannual + nh3StorageOPEXannual + waterTankOPEXannual;
+
+            // Transport (vereinfacht - verwende aktuelle Werte)
+            const transportCostElement = document.getElementById('transport_cost_annual');
+            let transportCostAnnual = 0;
+            if (transportCostElement && transportCostElement.textContent) {
+                const transportCostText = transportCostElement.textContent.replace(' M€/year', '').replace(' M€/a', '').trim();
+                transportCostAnnual = parseFloat(transportCostText) * 1000000;
+                if (isNaN(transportCostAnnual)) transportCostAnnual = 0;
+            }
+            // Grobe Aufteilung Transport: 50% CAPEX, 30% OPEX, 20% Variable
+            const transportCAPEXannual = transportCostAnnual * 0.5;
+            const transportOPEXannual = transportCostAnnual * 0.3;
+            const transportVariableCost = transportCostAnnual * 0.2;
+
+            // Cracking
+            const crackingCostElement = document.getElementById('cracking_cost_annual');
+            let crackingCostAnnual = 0;
+            if (crackingCostElement && crackingCostElement.textContent) {
+                const crackingCostText = crackingCostElement.textContent.replace(' M€/year', '').replace(' M€/a', '').trim();
+                crackingCostAnnual = parseFloat(crackingCostText) * 1000000;
+                if (isNaN(crackingCostAnnual)) crackingCostAnnual = 0;
+            }
+            // Grobe Aufteilung Cracking: 60% CAPEX, 40% OPEX
+            const crackingCAPEXannual = crackingCostAnnual * 0.6;
+            const crackingOPEXannual = crackingCostAnnual * 0.4;
+
+            return [
+                { 
+                    name: 'Wind Farm', 
+                    capex: (windCAPEXannual) * costPerKgFactor,
+                    opex: windOPEXannual * costPerKgFactor,
+                    variable: 0
+                },
+                { 
+                    name: 'Electrolysis', 
+                    capex: electrolysisCAPEXannual * costPerKgFactor,
+                    opex: electrolysisOPEXannual * costPerKgFactor,
+                    variable: electrolysisVariableCost * costPerKgFactor
+                },
+                { 
+                    name: 'Desalination', 
+                    capex: desalinationCAPEXannual * costPerKgFactor,
+                    opex: desalinationOPEX * costPerKgFactor,
+                    variable: desalinationVariableCost * costPerKgFactor
+                },
+                { 
+                    name: 'ASU (Nitrogen)', 
+                    capex: n2CAPEXannual * costPerKgFactor,
+                    opex: n2OPEXannual * costPerKgFactor,
+                    variable: asuVariableCost * costPerKgFactor
+                },
+                { 
+                    name: 'Haber-Bosch', 
+                    capex: hbCAPEXannual * costPerKgFactor,
+                    opex: hbOPEXannual * costPerKgFactor,
+                    variable: haberBoschVariableCost * costPerKgFactor
+                },
+                { 
+                    name: 'Storage', 
+                    capex: storageCAPEXannual * costPerKgFactor,
+                    opex: storageOPEX * costPerKgFactor,
+                    variable: 0
+                },
+                { 
+                    name: 'Transport', 
+                    capex: transportCAPEXannual * costPerKgFactor,
+                    opex: transportOPEXannual * costPerKgFactor,
+                    variable: transportVariableCost * costPerKgFactor
+                },
+                { 
+                    name: 'Cracking', 
+                    capex: crackingCAPEXannual * costPerKgFactor,
+                    opex: crackingOPEXannual * costPerKgFactor,
+                    variable: 0
+                }
+            ];
         }
 
         // Main calculation function
@@ -3555,9 +4588,38 @@
                 }
 
             // ========== DISPLAY RESULTS ==========
-            document.getElementById('result_cost_per_kg').textContent = costPerKg.toFixed(4) + ' €/kg';
+            const costPerKgText = costPerKg.toFixed(4) + ' €/kg';
+            document.getElementById('result_cost_per_kg').textContent = costPerKgText;
             document.getElementById('result_total_annual').textContent = (totalAnnualCost / 1000000).toFixed(2) + ' M€/year';
             document.getElementById('result_h2_delivered').textContent = (h2DeliveredAnnual / 1000000).toFixed(2) + ' t/year';
+
+            // Plausibilitätscheck vs. Literatur (z.B. 4,8–6,2 €/kg importierter H₂ via NH₃)
+            try {
+                const badge = document.getElementById('plausibility_badge');
+                if (badge) {
+                    const litMin = 4.8;
+                    const litMax = 6.2;
+                    let cls = 'plausibility-ok';
+                    let txt = '';
+
+                    if (costPerKg < litMin * 0.8) {
+                        cls = 'plausibility-low';
+                        txt = 'Hinweis: Das Modell-Ergebnis (' + costPerKgText + ') liegt deutlich UNTER typischen Literaturwerten für importierten H₂ via NH₃ (ca. 4,8–6,2 €/kg in 2030-Studien). Die Annahmen sind sehr optimistisch.';
+                    } else if (costPerKg > litMax * 1.2) {
+                        cls = 'plausibility-high';
+                        txt = 'Hinweis: Das Modell-Ergebnis (' + costPerKgText + ') liegt deutlich ÜBER typischen Literaturwerten für importierten H₂ via NH₃ (ca. 4,8–6,2 €/kg in 2030-Studien). Bitte Annahmen prüfen.';
+                    } else {
+                        cls = 'plausibility-ok';
+                        txt = 'Plausibilität: Das Modell-Ergebnis (' + costPerKgText + ') liegt im Bereich aktueller Studien für importierten H₂ via NH₃ (ca. 4,8–6,2 €/kg in 2030-Analysen).';
+                    }
+
+                    badge.className = 'plausibility-badge ' + cls;
+                    badge.textContent = txt;
+                    badge.style.display = 'block';
+                }
+            } catch (e) {
+                console.warn('Fehler beim Plausibilitäts-Update:', e);
+            }
 
             // Update prediction page current cost
             document.getElementById('current_cost_per_kg').value = costPerKg.toFixed(4);
@@ -3573,11 +4635,12 @@
             // Calculate costs per kg H₂
             const costPerKgFactor = 1 / h2DeliveredAnnual;
             
-                const breakdown = [
-                { 
-                    name: 'Wind Farm', 
-                    capex: (windCAPEXannual + windDepexAnnual) * costPerKgFactor,
-                    opex: windOPEX * costPerKgFactor,
+            const breakdown = [
+                {
+                    name: 'Wind Farm',
+                    // Nur dann in den Gesamtkosten, wenn includeWindInTotal = true
+                    capex: includeWindInTotal ? (windCAPEXannual + windDepexAnnual) * costPerKgFactor : 0,
+                    opex: includeWindInTotal ? windOPEX * costPerKgFactor : 0,
                     variable: 0
                 },
                 { 
@@ -3616,13 +4679,16 @@
                     opex: (vesselOPEXtotal + taxesCustomsMain + insuranceCostMain) * costPerKgFactor,
                     variable: (variableShippingCostMain + fuelCostTotalMain + harborFeesTotalMain) * costPerKgFactor
                 },
-                { 
-                    name: 'Cracking', 
+                {
+                    name: 'Cracking',
                     capex: crackingCAPEXannual * costPerKgFactor,
                     opex: crackingOPEX * costPerKgFactor,
                     variable: 0
                 }
             ];
+
+            // Speichere Breakdown für späteren Vergleich
+            currentCostBreakdown = breakdown;
 
             // Calculate totals for display
             let breakdownHTML = '';
@@ -3652,46 +4718,87 @@
                 }
             }
 
-            // Color palette for different components
-            const componentColors = {
-                'Wind Farm': { capex: '#4A90E2', opex: '#5BA3F5', variable: '#6BB6FF' },
-                'Electrolysis': { capex: '#2E7D32', opex: '#4CAF50', variable: '#81C784' },
-                'Desalination': { capex: '#1565C0', opex: '#1976D2', variable: '#42A5F5' },
-                'ASU (Nitrogen)': { capex: '#6A1B9A', opex: '#7B1FA2', variable: '#9C27B0' },
-                'Haber-Bosch': { capex: '#C62828', opex: '#D32F2F', variable: '#E53935' },
-                'Storage': { capex: '#F57C00', opex: '#FB8C00', variable: '#FFB74D' },
-                'Transport': { capex: '#00897B', opex: '#009688', variable: '#4DB6AC' },
-                'Cracking': { capex: '#5D4037', opex: '#6D4C41', variable: '#8D6E63' }
+            // Konsistente Farben für alle Komponenten (gleiche Farbe für alle CapEx, alle OpEx, etc.)
+            const costTypeColors = {
+                capex: '#2E7D32',      // Dunkelgrün für alle CapEx
+                opex: '#C62828',      // Dunkelrot für alle OpEx
+                variable: '#F57C00'    // Orange für alle Variable Costs
             };
+            
+            // Color palette for different components (für X-Achsen-Labels)
+            const componentColors = {
+                'Wind Farm': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Electrolysis': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Desalination': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'ASU (Nitrogen)': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Haber-Bosch': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Storage': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Transport': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' },
+                'Cracking': { capex: '#2E7D32', opex: '#C62828', variable: '#F57C00' }
+            };
+
+            // Berechne Gurobi-Breakdown falls verfügbar
+            let gurobiBreakdown = null;
+            if (window.gurobiOptBest && window.gurobiOptBest.costPerKg && window.gurobiOptDecision) {
+                gurobiBreakdown = calculateGurobiBreakdown(window.gurobiOptBest, window.gurobiOptDecision, 
+                    discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor);
+            }
 
             const ctx = costChartCanvas ? costChartCanvas.getContext('2d') : null;
             if (!ctx) {
                 console.error('Could not get canvas context for costChart');
             } else {
+                // Erstelle grouped bars: Aktuell vs. Gurobi
+                const labels = breakdown.map(item => item.name);
+                const datasets = [];
+                
+                // Aktuelle Konfiguration - konsistente Farben
+                datasets.push({
+                    label: 'Aktuell: CapEx',
+                    data: breakdown.map(item => item.capex),
+                    backgroundColor: costTypeColors.capex,
+                    stack: 'Aktuell'
+                });
+                datasets.push({
+                    label: 'Aktuell: OpEx',
+                    data: breakdown.map(item => item.opex),
+                    backgroundColor: costTypeColors.opex,
+                    stack: 'Aktuell'
+                });
+                datasets.push({
+                    label: 'Aktuell: Variable',
+                    data: breakdown.map(item => item.variable),
+                    backgroundColor: costTypeColors.variable,
+                    stack: 'Aktuell'
+                });
+
+                // Gurobi-optimierte Konfiguration (falls verfügbar) - gleiche Farben mit Transparenz
+                if (gurobiBreakdown) {
+                    datasets.push({
+                        label: 'Gurobi: CapEx',
+                        data: gurobiBreakdown.map(item => item.capex),
+                        backgroundColor: costTypeColors.capex + '80', // 50% opacity
+                        stack: 'Gurobi'
+                    });
+                    datasets.push({
+                        label: 'Gurobi: OpEx',
+                        data: gurobiBreakdown.map(item => item.opex),
+                        backgroundColor: costTypeColors.opex + '80',
+                        stack: 'Gurobi'
+                    });
+                    datasets.push({
+                        label: 'Gurobi: Variable',
+                        data: gurobiBreakdown.map(item => item.variable),
+                        backgroundColor: costTypeColors.variable + '80',
+                        stack: 'Gurobi'
+                    });
+                }
+
                 const costChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: breakdown.map(item => item.name),
-                    datasets: [
-                        {
-                            label: 'CapEx (€/kg)',
-                            data: breakdown.map(item => item.capex),
-                            backgroundColor: breakdown.map(item => componentColors[item.name].capex),
-                            stack: 'Stack 0'
-                        },
-                        {
-                            label: 'OpEx (€/kg)',
-                            data: breakdown.map(item => item.opex),
-                            backgroundColor: breakdown.map(item => componentColors[item.name].opex),
-                            stack: 'Stack 0'
-                        },
-                        {
-                            label: 'Variable Costs (€/kg)',
-                            data: breakdown.map(item => item.variable),
-                            backgroundColor: breakdown.map(item => componentColors[item.name].variable),
-                            stack: 'Stack 0'
-                        }
-                    ]
+                    labels: labels,
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
@@ -3712,7 +4819,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Hydrogen Production Costs (€/kg) - Stacked by Cost Type',
+                            text: gurobiBreakdown ? 'Hydrogen Production Costs (€/kg) - Aktuell vs. Gurobi-Optimiert' : 'Hydrogen Production Costs (€/kg) - Stacked by Cost Type',
                             color: '#4A90E2',
                             font: {
                                 size: 16,
@@ -3730,6 +4837,8 @@
                     scales: {
                         x: {
                             stacked: true,
+                            categoryPercentage: gurobiBreakdown ? 0.4 : 0.6,
+                            barPercentage: 0.8,
                             ticks: {
                                 color: '#4A90E2',
                                 font: {
@@ -3765,6 +4874,29 @@
                     }
                 }
                 });
+
+                // Aktualisiere Diagramme mit Gurobi-Vergleich, falls verfügbar
+                if (window.gurobiOptBest && window.gurobiOptBest.costPerKg && window.gurobiOptDecision && currentCostBreakdown) {
+                    const electricityCostMethod = document.getElementById('electricity_cost_method').value;
+                    let electricityPrice = 0;
+                    if (electricityCostMethod === 'internal_LCOE') {
+                        const windCapacity = getInput('wind_capacity') * 1000;
+                        const windCapacityFactor = getInput('wind_capacity_factor') / 100;
+                        const windCAPEX = getInput('wind_capex') * 1000000000;
+                        const windOPEX = getInput('wind_opex') * 1000000;
+                        const windDepex = getInput('wind_depex') * 1000000;
+                        const windElectricityAnnual = windCapacity * 8760 * windCapacityFactor;
+                        const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+                        const windDepexAnnual = annualizeDepex(windDepex, discountRate, lifetime);
+                        const windCostAnnual = windCAPEXannual + windOPEX + windDepexAnnual;
+                        electricityPrice = windCostAnnual / (windElectricityAnnual * 1000);
+                    } else {
+                        electricityPrice = getInput('external_electricity_price') / 1000;
+                    }
+                    const costPerKgFactor = h2DeliveredAnnual > 0 ? 1 / h2DeliveredAnnual : 0;
+                    updateCostChartsWithGurobi(window.gurobiOptBest, window.gurobiOptDecision, 
+                        discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor);
+                }
             }
 
             // Second Chart: Total CapEx vs Total OpEx vs Total Variable Costs
@@ -3782,38 +4914,135 @@
             const totalOpEx = breakdown.reduce((sum, item) => sum + item.opex, 0);
             const totalVariable = breakdown.reduce((sum, item) => sum + item.variable, 0);
 
+            // Gurobi totals (falls verfügbar)
+            let gurobiTotalCapEx = null;
+            let gurobiTotalOpEx = null;
+            let gurobiTotalVariable = null;
+            if (gurobiBreakdown) {
+                gurobiTotalCapEx = gurobiBreakdown.reduce((sum, item) => sum + item.capex, 0);
+                gurobiTotalOpEx = gurobiBreakdown.reduce((sum, item) => sum + item.opex, 0);
+                gurobiTotalVariable = gurobiBreakdown.reduce((sum, item) => sum + item.variable, 0);
+            }
+
             if (costTypeChartCanvas) {
                 const ctx2 = costTypeChartCanvas.getContext('2d');
+                const datasets = [
+                    {
+                        label: 'Aktuell: Total CapEx (€/kg)',
+                        data: [totalCapEx],
+                        backgroundColor: '#2E7D32',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Aktuell: Total OpEx (€/kg)',
+                        data: [totalOpEx],
+                        backgroundColor: '#C62828',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Aktuell: Total Variable Costs (€/kg)',
+                        data: [totalVariable],
+                        backgroundColor: '#F57C00',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    }
+                ];
+
+                if (gurobiTotalCapEx !== null) {
+                    datasets.push({
+                        label: 'Gurobi: Total CapEx (€/kg)',
+                        data: [gurobiTotalCapEx],
+                        backgroundColor: '#2E7D3280',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    datasets.push({
+                        label: 'Gurobi: Total OpEx (€/kg)',
+                        data: [gurobiTotalOpEx],
+                        backgroundColor: '#C6282880',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    datasets.push({
+                        label: 'Gurobi: Total Variable Costs (€/kg)',
+                        data: [gurobiTotalVariable],
+                        backgroundColor: '#F57C0080',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                }
+
+                // Erstelle zwei separate Labels für Abstand zwischen den Balken
+                const chartLabels = gurobiTotalCapEx !== null ? ['Feste Kosten', 'Gurobi'] : ['Total Costs'];
+                const chartDatasets = [];
+                
+                if (gurobiTotalCapEx !== null) {
+                    // Separate Datasets für Aktuell und Gurobi
+                    chartDatasets.push({
+                        label: 'Feste Kosten: Total CapEx (€/kg)',
+                        data: [totalCapEx, null],
+                        backgroundColor: '#2E7D32',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    chartDatasets.push({
+                        label: 'Feste Kosten: Total OpEx (€/kg)',
+                        data: [totalOpEx, null],
+                        backgroundColor: '#C62828',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    chartDatasets.push({
+                        label: 'Feste Kosten: Total Variable Costs (€/kg)',
+                        data: [totalVariable, null],
+                        backgroundColor: '#F57C00',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    chartDatasets.push({
+                        label: 'Gurobi: Total CapEx (€/kg)',
+                        data: [null, gurobiTotalCapEx],
+                        backgroundColor: '#2E7D3280',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    chartDatasets.push({
+                        label: 'Gurobi: Total OpEx (€/kg)',
+                        data: [null, gurobiTotalOpEx],
+                        backgroundColor: '#C6282880',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                    chartDatasets.push({
+                        label: 'Gurobi: Total Variable Costs (€/kg)',
+                        data: [null, gurobiTotalVariable],
+                        backgroundColor: '#F57C0080',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    });
+                } else {
+                    chartDatasets.push(...datasets);
+                }
+
                 const costTypeChart = new Chart(ctx2, {
                 type: 'bar',
                 data: {
-                    labels: ['Total Costs'],
-                    datasets: [
-                        {
-                            label: 'Total CapEx (€/kg)',
-                            data: [totalCapEx],
-                            backgroundColor: '#2E7D32',
-                            stack: 'Stack 0',
-                            barThickness: 60,
-                            maxBarThickness: 80
-                        },
-                        {
-                            label: 'Total OpEx (€/kg)',
-                            data: [totalOpEx],
-                            backgroundColor: '#C62828',
-                            stack: 'Stack 0',
-                            barThickness: 60,
-                            maxBarThickness: 80
-                        },
-                        {
-                            label: 'Total Variable Costs (€/kg)',
-                            data: [totalVariable],
-                            backgroundColor: '#F57C00',
-                            stack: 'Stack 0',
-                            barThickness: 60,
-                            maxBarThickness: 80
-                        }
-                    ]
+                    labels: chartLabels,
+                    datasets: chartDatasets
                 },
                 options: {
                     responsive: true,
@@ -3834,7 +5063,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Total Hydrogen Production Costs by Type (€/kg)',
+                            text: gurobiBreakdown ? 'Total Hydrogen Production Costs by Type (€/kg) - Aktuell vs. Gurobi-Optimiert' : 'Total Hydrogen Production Costs by Type (€/kg)',
                             color: '#4A90E2',
                             font: {
                                 size: 16,
@@ -3852,7 +5081,7 @@
                     scales: {
                         x: {
                             stacked: true,
-                            categoryPercentage: 0.3,
+                            categoryPercentage: gurobiBreakdown ? 0.4 : 0.3,
                             barPercentage: 0.5,
                             ticks: {
                                 color: '#4A90E2',
@@ -3897,10 +5126,217 @@
             }
         }
 
+        // Aktualisiert die Kosten-Diagramme mit Gurobi-Vergleich
+        function updateCostChartsWithGurobi(gurobiOptBest, gurobiOptDecision, discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor) {
+            if (!gurobiOptBest || !gurobiOptDecision || !currentCostBreakdown) return;
+
+            // Berechne Gurobi-Breakdown
+            const gurobiBreakdown = calculateGurobiBreakdown(gurobiOptBest, gurobiOptDecision, 
+                discountRate, lifetime, electricityPrice, h2DeliveredAnnual, costPerKgFactor);
+            
+            if (!gurobiBreakdown) return;
+
+            // Aktualisiere das erste Diagramm (Komponenten-Breakdown)
+            const costChartCanvas = document.getElementById('costChart');
+            if (costChartCanvas) {
+                const existingChart = Chart.getChart(costChartCanvas);
+                if (existingChart) {
+                    existingChart.destroy();
+                }
+
+                // Konsistente Farben für alle Komponenten
+                const costTypeColors = {
+                    capex: '#2E7D32',      // Dunkelgrün für alle CapEx
+                    opex: '#C62828',      // Dunkelrot für alle OpEx
+                    variable: '#F57C00'    // Orange für alle Variable Costs
+                };
+
+                const labels = currentCostBreakdown.map(item => item.name);
+                const datasets = [];
+                
+                // Aktuelle Konfiguration - konsistente Farben
+                datasets.push({
+                    label: 'Aktuell: CapEx',
+                    data: currentCostBreakdown.map(item => item.capex),
+                    backgroundColor: costTypeColors.capex,
+                    stack: 'Aktuell'
+                });
+                datasets.push({
+                    label: 'Aktuell: OpEx',
+                    data: currentCostBreakdown.map(item => item.opex),
+                    backgroundColor: costTypeColors.opex,
+                    stack: 'Aktuell'
+                });
+                datasets.push({
+                    label: 'Aktuell: Variable',
+                    data: currentCostBreakdown.map(item => item.variable),
+                    backgroundColor: costTypeColors.variable,
+                    stack: 'Aktuell'
+                });
+
+                // Gurobi-optimierte Konfiguration - gleiche Farben mit Transparenz
+                datasets.push({
+                    label: 'Gurobi: CapEx',
+                    data: gurobiBreakdown.map(item => item.capex),
+                    backgroundColor: costTypeColors.capex + '80',
+                    stack: 'Gurobi'
+                });
+                datasets.push({
+                    label: 'Gurobi: OpEx',
+                    data: gurobiBreakdown.map(item => item.opex),
+                    backgroundColor: costTypeColors.opex + '80',
+                    stack: 'Gurobi'
+                });
+                datasets.push({
+                    label: 'Gurobi: Variable',
+                    data: gurobiBreakdown.map(item => item.variable),
+                    backgroundColor: costTypeColors.variable + '80',
+                    stack: 'Gurobi'
+                });
+
+                const ctx = costChartCanvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels, datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            title: {
+                                display: true,
+                                text: 'Hydrogen Production Costs (€/kg) - Aktuell vs. Gurobi-Optimiert',
+                                color: '#4A90E2',
+                                font: { size: 16, weight: '700' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                categoryPercentage: 0.4,
+                                barPercentage: 0.8
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                title: { display: true, text: 'Cost (€/kg H₂)' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Aktualisiere das zweite Diagramm (Total Costs by Type)
+            const costTypeChartCanvas = document.getElementById('costTypeChart');
+            if (costTypeChartCanvas) {
+                const existingChart = Chart.getChart(costTypeChartCanvas);
+                if (existingChart) {
+                    existingChart.destroy();
+                }
+
+                const totalCapEx = currentCostBreakdown.reduce((sum, item) => sum + item.capex, 0);
+                const totalOpEx = currentCostBreakdown.reduce((sum, item) => sum + item.opex, 0);
+                const totalVariable = currentCostBreakdown.reduce((sum, item) => sum + item.variable, 0);
+
+                const gurobiTotalCapEx = gurobiBreakdown.reduce((sum, item) => sum + item.capex, 0);
+                const gurobiTotalOpEx = gurobiBreakdown.reduce((sum, item) => sum + item.opex, 0);
+                const gurobiTotalVariable = gurobiBreakdown.reduce((sum, item) => sum + item.variable, 0);
+
+                // Erstelle zwei separate Labels für Abstand zwischen den Balken
+                const chartLabels = ['Feste Kosten', 'Gurobi'];
+                const chartDatasets = [
+                    {
+                        label: 'Feste Kosten: Total CapEx (€/kg)',
+                        data: [totalCapEx, null],
+                        backgroundColor: '#2E7D32',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Feste Kosten: Total OpEx (€/kg)',
+                        data: [totalOpEx, null],
+                        backgroundColor: '#C62828',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Feste Kosten: Total Variable Costs (€/kg)',
+                        data: [totalVariable, null],
+                        backgroundColor: '#F57C00',
+                        stack: 'Aktuell',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Gurobi: Total CapEx (€/kg)',
+                        data: [null, gurobiTotalCapEx],
+                        backgroundColor: '#2E7D3280',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Gurobi: Total OpEx (€/kg)',
+                        data: [null, gurobiTotalOpEx],
+                        backgroundColor: '#C6282880',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    },
+                    {
+                        label: 'Gurobi: Total Variable Costs (€/kg)',
+                        data: [null, gurobiTotalVariable],
+                        backgroundColor: '#F57C0080',
+                        stack: 'Gurobi',
+                        barThickness: 60,
+                        maxBarThickness: 80
+                    }
+                ];
+
+                const ctx2 = costTypeChartCanvas.getContext('2d');
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: chartDatasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            title: {
+                                display: true,
+                                text: 'Total Hydrogen Production Costs by Type (€/kg) - Aktuell vs. Gurobi-Optimiert',
+                                color: '#4A90E2',
+                                font: { size: 16, weight: '700' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                categoryPercentage: 0.4,
+                                barPercentage: 0.5
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                title: { display: true, text: 'Cost (€/kg H₂)' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
             // Add event listeners to all inputs for auto-calculation
         document.addEventListener('DOMContentLoaded', function() {
             // Load saved theme
             loadTheme();
+            // Load saved projects into dropdown
+            refreshProjectSelect();
             
             const allInputs = document.querySelectorAll('.parameter-input');
             allInputs.forEach(input => {
@@ -3917,13 +5353,6 @@
                 });
             });
 
-            // Add event listener for scenario selection
-            const scenarioSelect = document.getElementById('prediction_scenario');
-            if (scenarioSelect) {
-                scenarioSelect.addEventListener('change', function() {
-                    // Don't auto-calculate, wait for button click
-                });
-            }
 
             // Add event listeners for prediction inputs
             const predictionInputs = ['capex_reduction_rate', 'opex_reduction_rate', 'learning_rate', 
@@ -3936,6 +5365,12 @@
                     });
                 }
             });
+
+            // Standard-Schiffstyp initial anwenden (falls ausgewählt)
+            const vesselTypeSelect = document.getElementById('vessel_type');
+            if (vesselTypeSelect && vesselTypeSelect.value) {
+                onVesselTypeChange(vesselTypeSelect.value);
+            }
 
             // Calculate initial values
             calculatePageCosts(1);
@@ -3954,6 +5389,7 @@
         });
         // Optimization Function
         let optimizationChart = null;
+        let currentCostBreakdown = null; // Speichert die aktuellen Kosten-Breakdowns für Vergleich
 
         function runOptimization() {
             // Show loading message
@@ -3972,15 +5408,15 @@
             const sMin = parseFloat(getInput('opt_s_min')) || 0.95;
             const sMax = parseFloat(getInput('opt_s_max')) || 1.0;
             const sStep = parseFloat(getInput('opt_s_step')) || 0.01;
-            const pelMin = getInput('opt_pel_min') || 1000;
-            const pelMax = getInput('opt_pel_max') || 1200;
-            const pelStep = getInput('opt_pel_step') || 50;
+            const pelMin = getInput('opt_pel_min') || 500;
+            const pelMax = getInput('opt_pel_max') || 2500;
+            const pelStep = getInput('opt_pel_step') || 100;
             const h2DaysMin = getInput('opt_h2_days_min') || 1;
             const h2DaysMax = getInput('opt_h2_days_max') || 2;
             const h2DaysStep = getInput('opt_h2_days_step') || 1;
-            const nh3ShipsMin = getInput('opt_nh3_ships_min') || 1;
-            const nh3ShipsMax = getInput('opt_nh3_ships_max') || 1.5;
-            const nh3ShipsStep = getInput('opt_nh3_ships_step') || 0.25;
+            const nh3ShipsMin = getInput('opt_nh3_ships_min') || 3;
+            const nh3ShipsMax = getInput('opt_nh3_ships_max') || 8;
+            const nh3ShipsStep = getInput('opt_nh3_ships_step') || 1;
             const waterTankMin = getInput('opt_water_tank_min') || 500;
             const waterTankMax = getInput('opt_water_tank_max') || 4500;
             const waterTankStep = getInput('opt_water_tank_step') || 2000;
@@ -4009,6 +5445,14 @@
             const originalH2Storage = getInput('h2_storage_capacity');
             const originalNH3Storage = getInput('nh3_storage_capacity');
             const originalWaterTank = getInput('water_storage_capacity_storage') || getInput('water_storage_capacity');
+
+            // Transport-/Schiffs-Parameter für Nebenbedingungen (physikalische Plausibilität)
+            const optNh3Density = getInput('nh3_density'); // t/m³
+            const optFillFactor = getInput('fill_factor');
+            const optVesselTankVolume = getInput('vessel_tank_volume'); // m³
+            const optOneWayTime = getInput('transport_time'); // days
+            const optPortTime = getInput('port_time'); // days
+            const optNh3ShippingLoss = getInput('nh3_shipping_loss') / 100; // -
 
             // Generate parameter combinations
             const results = [];
@@ -4061,6 +5505,28 @@
                                 }
                                 const annualH2ProdT = annualH2ProdKt * 1000; // Convert kt/a to t/a (120.8 kt/a = 120800 t/a)
                                 const h2StorageCapacity = (annualH2ProdT / 365.0) * combo.h2Days; // t (same as Python: annual_h2_prod_t / 365.0 * h2_days)
+
+                                // Einfache Plausibilitätsprüfung für NH3-Schiffsanzahl:
+                                // Abschätzung der pro Jahr transportierten NH3-Menge pro Schiff
+                                if (optVesselTankVolume > 0 && optNh3Density > 0 && optFillFactor > 0 &&
+                                    optOneWayTime > 0 && optPortTime >= 0) {
+                                    const payloadPerShipT = optVesselTankVolume * optNh3Density * optFillFactor; // t pro Reise
+                                    const cycleTimeDays = 2 * optOneWayTime + optPortTime; // Hin- und Rückfahrt + Hafenzeit
+                                    const tripsPerShipPerYear = 365 / cycleTimeDays;
+                                    const annualPerShipT = payloadPerShipT * tripsPerShipPerYear;
+
+                                    // Jahresbedarf an NH3 (ohne Verluste) basierend auf H2-Referenz
+                                    const annualNh3ProdT = annualH2ProdT * (17/3); // t NH3/a
+                                    const nh3RequiredTransportT = annualNh3ProdT / (1 - Math.min(Math.max(optNh3ShippingLoss, 0), 0.95));
+
+                                    if (annualPerShipT > 0) {
+                                        const minShipsPhysical = nh3RequiredTransportT / annualPerShipT;
+                                        // Wenn vorgeschlagene Schiffsanzahl klar unter physikalischem Minimum liegt: Kombination verwerfen
+                                        if (combo.nh3Ships + 1e-6 < minShipsPhysical) {
+                                            continue;
+                                        }
+                                    }
+                                }
 
                                 // Calculate costs for this configuration
                                 // Using cost_components_proxy logic from Python Code_Final.py (lines 757-880)
@@ -4379,7 +5845,24 @@
                 })));
                 
                 const best = results[0];
-                const top10 = results.slice(0, 10);
+
+                // Baue eine Liste von bis zu 20 deutlich unterschiedlichen Konfigurationen
+                const maxRows = 20;
+                const topConfigs = [];
+                const seenKeys = new Set();
+                for (const r of results) {
+                    const key = [
+                        r.pel.toFixed(0),
+                        r.h2Days.toFixed(1),
+                        r.nh3Ships.toFixed(2),
+                        r.waterTank.toFixed(0)
+                    ].join('|');
+                    if (!seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        topConfigs.push(r);
+                    }
+                    if (topConfigs.length >= maxRows) break;
+                }
 
                 statusText.textContent = 'Ergebnisse werden angezeigt...';
 
@@ -4395,52 +5878,39 @@
                 progressDiv.style.display = 'none';
                 statusText.textContent = 'Optimierung abgeschlossen!';
 
-                // Comparison
-                // Only show comparison if currentCostPerKg is valid
+                // Aktuelles Szenario erfassen
                 if (currentCostPerKg > 0 && isFinite(currentCostPerKg)) {
                     document.getElementById('comparison_current_cost').textContent = currentCostPerKg.toFixed(4) + ' €/kg';
-                    document.getElementById('comparison_current_pel').textContent = currentPel.toFixed(0);
-                    document.getElementById('comparison_current_h2').textContent = currentH2Storage.toFixed(0) + ' t';
-                    document.getElementById('comparison_current_nh3').textContent = currentNH3Storage.toFixed(0) + ' t';
-
-                    document.getElementById('comparison_opt_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
-                    document.getElementById('comparison_opt_pel').textContent = best.pel.toFixed(0);
-                    document.getElementById('comparison_opt_h2').textContent = best.h2Storage.toFixed(0) + ' t';
-                    document.getElementById('comparison_opt_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
-
-                    const savings = currentCostPerKg - best.costPerKg;
-                    const savingsPercent = currentCostPerKg > 0 ? (savings / currentCostPerKg) * 100 : 0;
-                    
-                    if (isFinite(savings) && isFinite(savingsPercent)) {
-                        document.getElementById('comparison_savings').textContent = 
-                            savings.toFixed(4) + ' €/kg (' + savingsPercent.toFixed(2) + '% Einsparung)';
-                    } else {
-                        document.getElementById('comparison_savings').textContent = 
-                            'Vergleich nicht verfügbar (Bitte zuerst Hauptberechnung durchführen)';
-                    }
                 } else {
-                    // Show optimized values but indicate comparison not available
                     document.getElementById('comparison_current_cost').textContent = 'Nicht verfügbar';
-                    document.getElementById('comparison_current_pel').textContent = currentPel.toFixed(0);
-                    document.getElementById('comparison_current_h2').textContent = currentH2Storage.toFixed(0) + ' t';
-                    document.getElementById('comparison_current_nh3').textContent = currentNH3Storage.toFixed(0) + ' t';
-
-                    document.getElementById('comparison_opt_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
-                    document.getElementById('comparison_opt_pel').textContent = best.pel.toFixed(0);
-                    document.getElementById('comparison_opt_h2').textContent = best.h2Storage.toFixed(0) + ' t';
-                    document.getElementById('comparison_opt_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
-
-                    document.getElementById('comparison_savings').textContent = 
-                        'Vergleich nicht verfügbar (Bitte zuerst "CALCULATE TOTAL COSTS" ausführen)';
                 }
+                document.getElementById('comparison_current_pel').textContent = currentPel.toFixed(0);
+                document.getElementById('comparison_current_h2').textContent = currentH2Storage.toFixed(0) + ' t';
+                document.getElementById('comparison_current_nh3').textContent = currentNH3Storage.toFixed(0) + ' t';
+
+                // Ergebnis der internen Raster-Optimierung speichern und anzeigen
+                window.internalOptBest = {
+                    costPerKg: best.costPerKg,
+                    pel: best.pel,
+                    h2Storage: best.h2Storage,
+                    nh3Ships: best.nh3Ships,
+                    nh3Storage: best.nh3Storage
+                };
+
+                document.getElementById('comparison_internal_cost').textContent = best.costPerKg.toFixed(4) + ' €/kg';
+                document.getElementById('comparison_internal_pel').textContent = best.pel.toFixed(0);
+                document.getElementById('comparison_internal_h2').textContent = best.h2Storage.toFixed(0) + ' t';
+                document.getElementById('comparison_internal_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
+
+                // Keine explizite Kosteneinsparung mehr – es werden nur die absoluten Kosten je Konfiguration gezeigt.
 
                 // Populate table
                 const tableBody = document.getElementById('optimizationTableBody');
-                if (tableBody) {
+                if (tableBody && topConfigs.length > 0) {
                     tableBody.innerHTML = '';
-                    const bestCost = top10[0].costPerKg;
+                    const bestCost = topConfigs[0].costPerKg;
                     
-                    top10.forEach((config, index) => {
+                    topConfigs.forEach((config, index) => {
                         const row = document.createElement('tr');
                         const deltaPercent = ((config.costPerKg - bestCost) / bestCost * 100).toFixed(3);
                         const deltaAbs = (config.costPerKg - bestCost).toFixed(6);
@@ -4473,12 +5943,12 @@
                 optimizationChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: top10.map((r, i) => 'Konfig. ' + (i + 1)),
+                        labels: topConfigs.map((r, i) => 'Konfig. ' + (i + 1)),
                         datasets: [{
                             label: 'Kosten (€/kg H₂)',
-                            data: top10.map(r => r.costPerKg),
-                            backgroundColor: top10.map((r, i) => i === 0 ? '#DC143C' : '#FF6347'),
-                            borderColor: top10.map((r, i) => i === 0 ? '#8B0000' : '#DC143C'),
+                            data: topConfigs.map(r => r.costPerKg),
+                            backgroundColor: topConfigs.map((r, i) => i === 0 ? '#DC143C' : '#FF6347'),
+                            borderColor: topConfigs.map((r, i) => i === 0 ? '#8B0000' : '#DC143C'),
                             borderWidth: 2
                         }]
                     },
@@ -4491,7 +5961,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Top 10 Optimierungsergebnisse',
+                                text: 'Top 20 Optimierungsergebnisse',
                                 color: '#DC143C',
                                 font: {
                                     size: 16,
@@ -4505,7 +5975,7 @@
                                     },
                                     afterLabel: function(context) {
                                         const idx = context.dataIndex;
-                                        const r = top10[idx];
+                                        const r = topConfigs[idx];
                                         return [
                                             's (Wind): ' + r.s.toFixed(2) + ' (' + (r.s * 100).toFixed(0) + '%)',
                                             'P_el: ' + r.pel.toFixed(0) + ' MW',

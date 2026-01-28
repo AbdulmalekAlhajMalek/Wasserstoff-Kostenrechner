@@ -1061,13 +1061,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.1</div>
                         <div class="parameter-label">Wasserstoff-Importziel <span class="parameter-unit">(t H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_import_target" value="120800" step="1000">
+                        <input type="number" class="parameter-input" id="h2_import_target" value="110000" step="1000">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.2</div>
                         <div class="parameter-label">Stahlwerksbedarf <span class="parameter-unit">(kt H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_steel_demand" value="120.8" step="0.1">
+                        <input type="number" class="parameter-input" id="h2_steel_demand" value="110" step="0.1">
                     </div>
 
                     <div class="parameter-item">
@@ -1078,12 +1078,23 @@
 
                     <div class="parameter-item">
                         <div class="parameter-number">1.1.4</div>
-                        <div class="parameter-label">Projektlebensdauer <span class="parameter-unit">(Jahre)</span></div>
+                        <div class="parameter-label">Projektlebensdauer (Betrachtungszeitraum T) <span class="parameter-unit">(Jahre)</span></div>
                         <input type="number" class="parameter-input" id="project_lifetime" value="20" step="1">
                     </div>
 
                     <div class="parameter-item">
-                        <div class="parameter-number">1.1.5</div>
+                        <div class="parameter-number">1.1.5a</div>
+                        <div class="parameter-label">LHV H₂ <span class="parameter-unit">(kWh/t)</span></div>
+                        <input type="number" class="parameter-input" id="lhv_h2" value="33300" step="100">
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.1.5b</div>
+                        <div class="parameter-label">LHV NH₃ <span class="parameter-unit">(kWh/t)</span></div>
+                        <input type="number" class="parameter-input" id="lhv_nh3" value="5200" step="10">
+                    </div>
+
+                    <div class="parameter-item">
+                        <div class="parameter-number">1.1.6</div>
                         <div class="parameter-label">Referenz H₂-Menge <span class="parameter-unit">(für Berechnungen verwenden)</span></div>
                         <select class="parameter-input" id="h2_reference_choice" style="padding: 12px 16px;">
                             <option value="import">Importziel</option>
@@ -1235,7 +1246,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.1.2</div>
                         <div class="parameter-label">Wasserstoffproduktion <span class="parameter-unit">(kt H₂/Jahr)</span></div>
-                        <input type="number" class="parameter-input" id="h2_production" value="120.8" step="0.1">
+                        <input type="number" class="parameter-input" id="h2_production" value="120.799" step="0.01">
                     </div>
                 </div>
 
@@ -1245,7 +1256,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">3.2.1</div>
                         <div class="parameter-label">Spezifischer Strombedarf <span class="parameter-unit">(kWh/kg H₂)</span></div>
-                        <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="48" step="0.1">
+                        <input type="number" class="parameter-input" id="electrolysis_specific_energy" value="48.52" step="0.01">
                     </div>
                 </div>
 
@@ -1390,6 +1401,11 @@
                         <div class="parameter-label">RO OPEX per m³ <span class="parameter-unit">(€/m³)</span></div>
                         <input type="number" class="parameter-input" id="ro_opex_per_m3" value="0.3825" step="0.01">
                     </div>
+                    <div class="parameter-item">
+                        <div class="parameter-number">4.2.5</div>
+                        <div class="parameter-label">E_RO (Wasseraufbereitung Strom) <span class="parameter-unit">(GWh/a)</span></div>
+                        <input type="number" class="parameter-input" id="desalination_electricity_gwh_year" value="4.94" step="0.01" min="0" placeholder="0 = aus Bedarf berechnen">
+                    </div>
                 </div>
 
                 <div class="parameter-group">
@@ -1487,7 +1503,7 @@
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.1</div>
                         <div class="parameter-label">Nitrogen demand <span class="parameter-unit">(t N₂/day)</span></div>
-                        <input type="number" class="parameter-input" id="nitrogen_demand" value="1550" step="10">
+                        <input type="number" class="parameter-input" id="nitrogen_demand" value="1545" step="10">
                     </div>
 
                     <div class="parameter-item">
@@ -1505,13 +1521,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.4</div>
                         <div class="parameter-label">ASU electricity demand <span class="parameter-unit">(GWh/year)</span></div>
-                        <input type="number" class="parameter-input" id="asu_electricity" value="186.7" step="0.1">
+                        <input type="number" class="parameter-input" id="asu_electricity" value="186.04" step="0.01">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">5.1.5</div>
                         <div class="parameter-label">ASU capacity <span class="parameter-unit">(t N₂/day)</span></div>
-                        <input type="number" class="parameter-input" id="asu_capacity" value="1550" step="10">
+                        <input type="number" class="parameter-input" id="asu_capacity" value="1545" step="10">
                     </div>
 
                     <div class="parameter-item">
@@ -1572,13 +1588,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">6.1.1</div>
                         <div class="parameter-label">Ammonia production <span class="parameter-unit">(t NH₃/day)</span></div>
-                        <input type="number" class="parameter-input" id="ammonia_production" value="1995" step="10">
+                        <input type="number" class="parameter-input" id="ammonia_production" value="1876" step="10">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">6.1.2</div>
                         <div class="parameter-label">Annual ammonia demand <span class="parameter-unit">(kt NH₃/year)</span></div>
-                        <input type="number" class="parameter-input" id="ammonia_annual_demand" value="684.5" step="0.1">
+                        <input type="number" class="parameter-input" id="ammonia_annual_demand" value="684.694" step="0.01">
                     </div>
                 </div>
 
@@ -1600,13 +1616,13 @@
                     <div class="parameter-item">
                         <div class="parameter-number">6.2.3</div>
                         <div class="parameter-label">Haber-Bosch electricity <span class="parameter-unit">(GWh/year)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_electricity" value="376.5" step="0.1">
+                        <input type="number" class="parameter-input" id="haber_bosch_electricity" value="376.50" step="0.01">
                     </div>
 
                     <div class="parameter-item">
                         <div class="parameter-number">6.2.4</div>
                         <div class="parameter-label">Haber-Bosch capacity <span class="parameter-unit">(t NH₃/day)</span></div>
-                        <input type="number" class="parameter-input" id="haber_bosch_capacity" value="1995" step="10">
+                        <input type="number" class="parameter-input" id="haber_bosch_capacity" value="1876" step="10">
                     </div>
 
                     <div class="parameter-item">
@@ -2115,6 +2131,11 @@
                         <div class="parameter-label">H₂ recovery fraction <span class="parameter-unit">(-, fraction)</span></div>
                         <input type="number" class="parameter-input" id="h2_recovery_fraction" value="0.98" step="0.01" min="0" max="1">
                     </div>
+                    <div class="parameter-item">
+                        <div class="parameter-number">9.2.5</div>
+                        <div class="parameter-label">E_CRACK (Cracking Strom) <span class="parameter-unit">(GWh/a)</span></div>
+                        <input type="number" class="parameter-input" id="cracking_electricity_gwh_year" value="20.90" step="0.01" min="0" placeholder="0 = aus therm. Energie berechnen">
+                    </div>
                 </div>
 
                 <div class="page-results" id="page8_results">
@@ -2361,6 +2382,17 @@
                         <div style="font-size: 0.9em;">NH₃ Storage: <span id="comparison_gurobi_nh3">-</span></div>
                             </div>
                         </div>
+                        <div style="margin-top: 20px; padding: 15px; background: #ffffff; border-radius: 8px; border: 1px dashed #999;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h4 style="margin: 0; font-size: 1em; color: #333;">Automatische Design-Empfehlungen</h4>
+                                <button type="button" onclick="generateDesignRecommendations()" style="padding: 6px 12px; border-radius: 16px; border: none; background: #2E7D32; color: white; font-size: 0.8em; cursor: pointer;">
+                                    Empfehlungen aktualisieren
+                                </button>
+                            </div>
+                            <ul id="design_recommendations_list" style="margin: 0; padding-left: 18px; font-size: 0.85em; color: #444;">
+                                <li>Nach der Kostenberechnung und mind. einer Optimierung werden hier konkrete Vorschläge für P_el, H₂- und NH₃-Speicher angezeigt.</li>
+                            </ul>
+                        </div>
                     </div>
 
                     <!-- Optimization Chart -->
@@ -2594,6 +2626,144 @@
                 discountRate: getInput('discount_rate'),
                 lifetime: getInput('project_lifetime')
             };
+        }
+
+        // Automatische Design-Empfehlungen (auf Basis der Optimierungsergebnisse)
+        function generateDesignRecommendations() {
+            const listEl = document.getElementById('design_recommendations_list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            // aktuelle Konfiguration aus Vergleichs-Box lesen
+            const currCostText = document.getElementById('comparison_current_cost')?.textContent || '';
+            const currPelText = document.getElementById('comparison_current_pel')?.textContent || '';
+            const currH2Text = document.getElementById('comparison_current_h2')?.textContent || '';
+            const currNh3Text = document.getElementById('comparison_current_nh3')?.textContent || '';
+
+            const currentCost = parseFloat(currCostText.replace(' €/kg', '').trim());
+            const currentPel = parseFloat(currPelText);
+            const currentH2 = parseFloat(currH2Text) || 0;
+            const currentNh3 = parseFloat(currNh3Text) || 0;
+
+            const internal = window.internalOptBest || null;
+            const gurobi = window.gurobiOptBest || null;
+
+            if (!isFinite(currentCost) || currentCost <= 0 || (!internal && !gurobi)) {
+                const li = document.createElement('li');
+                li.textContent = 'Noch keine vollständigen Ergebnisse verfügbar. Bitte zunächst Kosten berechnen und mindestens eine Optimierung ausführen.';
+                listEl.appendChild(li);
+                return;
+            }
+
+            // Bester Optimierer (niedrigste Kosten) auswählen
+            let bestSource = null;
+            let best = null;
+            if (internal && gurobi) {
+                bestSource = internal.costPerKg <= gurobi.costPerKg ? 'Raster-Optimierung' : 'Gurobi-Optimierung';
+                best = internal.costPerKg <= gurobi.costPerKg ? internal : gurobi;
+            } else if (internal) {
+                bestSource = 'Raster-Optimierung';
+                best = internal;
+            } else if (gurobi) {
+                bestSource = 'Gurobi-Optimierung';
+                best = gurobi;
+            }
+
+            if (!best || !isFinite(best.costPerKg)) {
+                const li = document.createElement('li');
+                li.textContent = 'Optimierung konnte keine sinnvolle Kostenschätzung liefern.';
+                listEl.appendChild(li);
+                return;
+            }
+
+            // 1) Gesamtkosten-Vergleich
+            const liCost = document.createElement('li');
+            liCost.textContent = `Wechsle von der aktuellen Konfiguration (${currentCost.toFixed(4)} €/kg) auf die beste gefundene Konfiguration (${best.costPerKg.toFixed(4)} €/kg, ${bestSource}), um die spezifischen H₂-Kosten zu senken.`;
+            listEl.appendChild(liCost);
+
+            // Hilfsfunktion für relative Änderung
+            function relDiff(oldVal, newVal) {
+                if (!isFinite(oldVal) || oldVal <= 0) return 0;
+                return (newVal - oldVal) / oldVal;
+            }
+
+            // 2) Elektrolyseur-Leistung
+            if (isFinite(currentPel) && isFinite(best.pel)) {
+                const dRel = relDiff(currentPel, best.pel);
+                if (Math.abs(dRel) > 0.05) { // nur relevante Änderungen >5 %
+                    const li = document.createElement('li');
+                    if (best.pel > currentPel) {
+                        li.textContent = `Erhöhe die Elektrolyseur-Leistung von ${currentPel.toFixed(0)} MW auf etwa ${best.pel.toFixed(0)} MW, um mehr günstigen Windstrom nutzen zu können und die Fixkosten pro kg H₂ zu reduzieren.`;
+                    } else {
+                        li.textContent = `Reduziere die Elektrolyseur-Leistung von ${currentPel.toFixed(0)} MW auf etwa ${best.pel.toFixed(0)} MW, um überdimensionierte Kapazitäten und unnötigen CAPEX zu vermeiden.`;
+                    }
+                    listEl.appendChild(li);
+                }
+            }
+
+            // 3) H2-Speicher
+            if (isFinite(currentH2) && isFinite(best.h2Storage)) {
+                const dRel = relDiff(currentH2, best.h2Storage);
+                if (Math.abs(dRel) > 0.05) {
+                    const li = document.createElement('li');
+                    if (best.h2Storage > currentH2) {
+                        li.textContent = `Vergrößere den H₂-Speicher von ca. ${currentH2.toFixed(0)} t auf etwa ${best.h2Storage.toFixed(0)} t, um Windschwankungen besser abzufedern und Schiffsausfälle zu vermeiden.`;
+                    } else {
+                        li.textContent = `Reduziere den H₂-Speicher von ca. ${currentH2.toFixed(0)} t auf etwa ${best.h2Storage.toFixed(0)} t, um unnötige Speicher-CAPEX zu sparen, ohne die Versorgungssicherheit zu gefährden.`;
+                    }
+                    listEl.appendChild(li);
+                }
+            }
+
+            // 4) NH3-Speicher / Schiffe
+            if (isFinite(currentNh3) && isFinite(best.nh3Storage)) {
+                const dRel = relDiff(currentNh3, best.nh3Storage);
+                if (Math.abs(dRel) > 0.05) {
+                    const li = document.createElement('li');
+                    if (best.nh3Storage > currentNh3) {
+                        li.textContent = `Erhöhe die effektive NH₃-Speicher- bzw. Schiffs-Kapazität von ca. ${currentNh3.toFixed(0)} t auf etwa ${best.nh3Storage.toFixed(0)} t, damit alle geplanten Schiffsabfahrten ohne Ausfälle bedient werden können.`;
+                    } else {
+                        li.textContent = `Reduziere die NH₃-Speicher- bzw. Schiffs-Kapazität von ca. ${currentNh3.toFixed(0)} t auf etwa ${best.nh3Storage.toFixed(0)} t, um CAPEX der NH₃-Speicher zu senken, solange keine Schiffsausfälle auftreten.`;
+                    }
+                    listEl.appendChild(li);
+                }
+            }
+
+            // 5) Detaillierte Empfehlungen je nach Kostenanteil der Komponenten
+            if (Array.isArray(currentCostBreakdown) && currentCostBreakdown.length > 0) {
+                const totals = currentCostBreakdown.map(item => ({
+                    name: item.name,
+                    total: (item.capex || 0) + (item.opex || 0) + (item.variable || 0)
+                }));
+                const grandTotal = totals.reduce((sum, t) => sum + t.total, 0);
+                if (grandTotal > 0) {
+                    totals.sort((a, b) => b.total - a.total);
+                    const top = totals.slice(0, 3);
+
+                    top.forEach(t => {
+                        const share = (t.total / grandTotal) * 100;
+                        const li = document.createElement('li');
+                        if (t.name === 'Storage') {
+                            li.textContent = `Der Block „${t.name}“ trägt etwa ${share.toFixed(1)} % zu den H₂-Kosten bei. Prüfe insbesondere, ob H₂- und NH₃-Speicher (Tage, Schiffe) näher an den durch die Optimierung vorgeschlagenen Werten dimensioniert werden können, um CAPEX zu reduzieren.`;
+                        } else if (t.name === 'Transport') {
+                            li.textContent = `Der Block „${t.name}“ verursacht rund ${share.toFixed(1)} % der Gesamtkosten. Weitere Kostensenkung wäre vor allem über effizientere Logistik (z. B. größere Schiffe, weniger Fahrten, günstigere Treibstoff- oder Hafen-Konditionen) möglich – diese Parameter liegen teilweise außerhalb des Optimierungsraums des Modells.`;
+                        } else if (t.name === 'Electrolysis') {
+                            li.textContent = `„${t.name}“ macht etwa ${share.toFixed(1)} % der Kosten aus. Hier wirken sich Wahl der Technologie (AEL vs. PEM), Elektrolyseur-Leistung und Volllaststunden besonders stark auf €/kg aus – die Optimierungsergebnisse geben eine gute Zielgröße für die erforderliche Leistung vor.`;
+                        } else if (t.name === 'Wind Farm') {
+                            li.textContent = `„${t.name}“ trägt ca. ${share.toFixed(1)} % bei. Zusätzliche Kostensenkung wäre vor allem über niedrigere Stromgestehungskosten (LCOE) möglich, z. B. durch günstigere Windprojekte oder höhere Auslastung – das wird in diesem Modell über die Skalierung s und P_el nur teilweise abgebildet.`;
+                        } else {
+                            li.textContent = `Die Komponente „${t.name}“ liegt bei etwa ${share.toFixed(1)} % der H₂-Kosten. Eine detaillierte technische Optimierung dieser Anlage (z. B. effizientere Technologie, verbesserte Betriebsführung) könnte die Gesamtkosten weiter senken.`;
+                        }
+                        listEl.appendChild(li);
+                    });
+                }
+            }
+
+            if (!listEl.children.length) {
+                const li = document.createElement('li');
+                li.textContent = 'Die aktuelle Konfiguration liegt bereits sehr nahe an der kostengünstigsten Lösung; größere Designanpassungen sind aus Sicht des Modells nicht erforderlich.';
+                listEl.appendChild(li);
+            }
         }
 
         // Get H₂ reference quantity based on user choice
@@ -3105,7 +3275,8 @@
             const electricityPriceDesalination = windCostAnnual / (windElectricityAnnual * 1000);
 
             const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³
-            const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+            const eRoGwh = getInput('desalination_electricity_gwh_year') || 0;
+            const desalinationElectricityDemand = (eRoGwh > 0) ? (eRoGwh * 1e6) : (waterDemandAnnual * desalinationSpecificEnergy); // kWh (E_RO)
             const desalinationCAPEXannual = annualizeCAPEX(desalinationCAPEX, params.discountRate, params.lifetime);
             const desalinationElectricityCost = electricityPriceDesalination * desalinationElectricityDemand;
             const desalinationCostAnnual = desalinationCAPEXannual + desalinationOPEX + desalinationElectricityCost;
@@ -3702,6 +3873,156 @@
             });
         }
 
+        /**
+         * Bewertet eine Konfiguration { s, pel, h2Days, nh3Ships, waterTank } mit derselben
+         * Kostenlogik wie die interne Raster-Optimierung (JS). Gibt { costPerKg, h2Storage, nh3Storage }
+         * zurück oder null bei ungültiger Konfiguration.
+         */
+        function evaluateOptimizationComboJS(combo) {
+            const annualH2ProdKt = getInput('h2_production') || 120.799;
+            if (!annualH2ProdKt || annualH2ProdKt <= 0) return null;
+            const annualH2ProdT = annualH2ProdKt * 1000;
+            const h2StorageCapacity = (annualH2ProdT / 365.0) * combo.h2Days;
+
+            const optVesselTankVolume = getInput('vessel_tank_volume');
+            const optNh3Density = getInput('nh3_density');
+            const optFillFactor = getInput('fill_factor');
+            const optOneWayTime = getInput('transport_time');
+            const optPortTime = getInput('port_time');
+            const optNh3ShippingLoss = Math.min(Math.max(getInput('nh3_shipping_loss') / 100, 0), 0.95);
+            if (optVesselTankVolume > 0 && optNh3Density > 0 && optFillFactor > 0 && optOneWayTime > 0 && optPortTime >= 0) {
+                const payloadPerShipT = optVesselTankVolume * optNh3Density * optFillFactor;
+                const cycleTimeDays = 2 * optOneWayTime + optPortTime;
+                const tripsPerShipPerYear = 365 / cycleTimeDays;
+                const annualPerShipT = payloadPerShipT * tripsPerShipPerYear;
+                const annualNh3ProdT = annualH2ProdT * (17/3);
+                const nh3RequiredTransportT = annualNh3ProdT / (1 - optNh3ShippingLoss);
+                if (annualPerShipT > 0) {
+                    const minShipsPhysical = nh3RequiredTransportT / annualPerShipT;
+                    if (combo.nh3Ships + 1e-6 < minShipsPhysical) return null;
+                }
+            }
+
+            const params = getCommonParams();
+            const discountRate = (params.discountRate || 7) / 100;
+            const lifetime = params.lifetime || 20;
+            const usdToEur = 0.92;
+            if (!isFinite(discountRate) || discountRate <= 0 || discountRate >= 1 || !isFinite(lifetime) || lifetime <= 0) return null;
+
+            const windCapacityMW = getInput('wind_capacity');
+            const windCapacityKW = windCapacityMW * 1000;
+            const windCAPEXperMW = 2000000;
+            const windOPEXperKWperYear = 60;
+            const windCAPEX = windCAPEXperMW * windCapacityMW;
+            const windOPEX = windOPEXperKWperYear * windCapacityKW * lifetime;
+            const windCAPEXannual = annualizeCAPEX(windCAPEX, discountRate, lifetime);
+            const windOPEXannual = windOPEX / lifetime;
+            const windCostAnnual = windCAPEXannual + windOPEXannual;
+
+            const electrolyzerTech = getInput('electrolyzer_technology') || 'AEL';
+            const elParams = electrolyzerTech === 'AEL' ? { capex: 464, opex: 40.6, spec_kwh: 48.0 } : { capex: 580, opex: 24.36, spec_kwh: 48.0 };
+            const electrolysisPowerMW = combo.pel;
+            const electrolysisPowerKW = electrolysisPowerMW * 1000;
+            const electrolysisCAPEX = elParams.capex * electrolysisPowerKW * usdToEur;
+            const electrolysisCAPEXannual = annualizeCAPEX(electrolysisCAPEX, discountRate, lifetime);
+            const electrolysisOPEX = elParams.opex * electrolysisPowerKW * lifetime * usdToEur;
+            const electrolysisOPEXannual = electrolysisOPEX / lifetime;
+            const electrolysisCostAnnual = electrolysisCAPEXannual + electrolysisOPEXannual;
+
+            const h2StorageCAPEXperT = 33000 * usdToEur;
+            const h2StorageCAPEX = h2StorageCapacity * h2StorageCAPEXperT;
+            const h2StorageCAPEXannual = annualizeCAPEX(h2StorageCAPEX, discountRate, lifetime);
+            const h2StorageOPEX = h2StorageCAPEX * 0.03 * lifetime;
+            const h2StorageOPEXannual = h2StorageOPEX / lifetime;
+
+            const nh3TargetPerShipT = (annualH2ProdT * 17/3) / 12;
+            const nh3StorageCapacity = combo.nh3Ships * nh3TargetPerShipT;
+            const nh3StorageCAPEXperT = 810 * usdToEur;
+            const nh3StorageCAPEX = nh3StorageCapacity * nh3StorageCAPEXperT;
+            const nh3StorageCAPEXannual = annualizeCAPEX(nh3StorageCAPEX, discountRate, lifetime);
+            const nh3StorageOPEX = nh3StorageCAPEX * 0.02 * lifetime;
+            const nh3StorageOPEXannual = nh3StorageOPEX / lifetime;
+
+            const waterTankCAPEXperM3 = 50 * usdToEur;
+            const waterTankCAPEX = combo.waterTank * waterTankCAPEXperM3;
+            const waterTankCAPEXannual = annualizeCAPEX(waterTankCAPEX, discountRate, lifetime);
+            const waterTankOPEX = waterTankCAPEX * 0.02 * lifetime;
+            const waterTankOPEXannual = waterTankOPEX / lifetime;
+
+            const storageCostAnnual = h2StorageCAPEXannual + h2StorageOPEXannual + nh3StorageCAPEXannual + nh3StorageOPEXannual + waterTankCAPEXannual + waterTankOPEXannual;
+
+            const roWaterKgPerKgH2 = 10.0;
+            const roCAPEXperM3perDay = 1200 * usdToEur;
+            const roOPEXfrac = 0.05;
+            const roOPEXperM3 = 0;
+            const h2KgPerHDesign = (electrolysisPowerMW * 1000) / elParams.spec_kwh;
+            const roM3PerHDesign = (h2KgPerHDesign * roWaterKgPerKgH2) / 1000.0;
+            const roM3PerDayDesign = roM3PerHDesign * 24.0;
+            const roCAPEX = roCAPEXperM3perDay * roM3PerDayDesign;
+            const roCAPEXannual = annualizeCAPEX(roCAPEX, discountRate, lifetime);
+            const roOPEX = roCAPEX * roOPEXfrac * lifetime;
+            const annualWaterM3 = (annualH2ProdT * 1000 * roWaterKgPerKgH2) / 1000;
+            const roOPEXvar = roOPEXperM3 * annualWaterM3 * lifetime;
+            const roOPEXannual = (roOPEX + roOPEXvar) / lifetime;
+            const roCostAnnual = roCAPEXannual + roOPEXannual;
+
+            const hbCapacityTNH3perDay = (annualH2ProdT * 17/3) / 365;
+            const hbCapacityTNH3perYear = hbCapacityTNH3perDay * 365;
+            const hbCAPEXperTNH3perYear = 491.4 * usdToEur;
+            const hbCAPEX = hbCAPEXperTNH3perYear * hbCapacityTNH3perYear;
+            const hbCAPEXannual = annualizeCAPEX(hbCAPEX, discountRate, lifetime);
+            const annualNH3ProdT = annualH2ProdT * 17/3;
+            const hbOPEXperTNH3 = 16.8 * 1000000 / annualNH3ProdT;
+            const hbOPEX = hbOPEXperTNH3 * annualNH3ProdT * lifetime;
+            const hbOPEXannual = hbOPEX / lifetime;
+            const hbCostAnnual = hbCAPEXannual + hbOPEXannual;
+
+            const n2KgPerKgNH3 = 28.0 / 34.0;
+            const hbCapacityTNH3perH = hbCapacityTNH3perDay / 24.0;
+            const n2CapacityKgPerH = hbCapacityTNH3perH * 1000.0 * n2KgPerKgNH3;
+            const n2CAPEXperKgN2perH = 1700 * usdToEur;
+            const n2CAPEX = n2CAPEXperKgN2perH * n2CapacityKgPerH;
+            const n2CAPEXannual = annualizeCAPEX(n2CAPEX, discountRate, lifetime);
+            const n2OPEXfrac = 0.03;
+            const n2OPEX = n2CAPEX * n2OPEXfrac * lifetime;
+            const n2OPEXannual = n2OPEX / lifetime;
+            const n2CostAnnual = n2CAPEXannual + n2OPEXannual;
+
+            let transportCostAnnual = 0;
+            const transportEl = document.getElementById('transport_cost_annual');
+            if (transportEl && transportEl.textContent) {
+                const raw = String(transportEl.textContent).replace(' M€/year', '').replace(' M€/a', '').trim();
+                const v = parseFloat(raw);
+                if (isFinite(v)) transportCostAnnual = v * 1000000;
+            }
+            let crackingCostAnnual = 0;
+            const crackingEl = document.getElementById('cracking_cost_annual');
+            if (crackingEl && crackingEl.textContent) {
+                const raw = String(crackingEl.textContent).replace(' M€/year', '').replace(' M€/a', '').trim();
+                const v = parseFloat(raw);
+                if (isFinite(v)) crackingCostAnnual = v * 1000000;
+            }
+
+            const totalAnnualCost = windCostAnnual + electrolysisCostAnnual + roCostAnnual + n2CostAnnual + hbCostAnnual + storageCostAnnual + transportCostAnnual + crackingCostAnnual;
+            const h2ReferenceKg = annualH2ProdT * 1000;
+            let haberBoschLoss = parseFloat(getInput('haber_bosch_loss'));
+            if (isNaN(haberBoschLoss)) haberBoschLoss = 0;
+            let storageLossRate = parseFloat(getInput('storage_loss_rate'));
+            if (isNaN(storageLossRate)) storageLossRate = 0;
+            let nh3ShippingLoss = parseFloat(getInput('nh3_shipping_loss'));
+            if (isNaN(nh3ShippingLoss)) nh3ShippingLoss = 0;
+            let crackingEff = parseFloat(getInput('cracking_efficiency'));
+            if (isNaN(crackingEff) || crackingEff <= 0) crackingEff = 100;
+            const chainEfficiency = (1 - haberBoschLoss / 100) * (1 - storageLossRate / 100) * (1 - nh3ShippingLoss / 100) * (crackingEff / 100);
+            if (!isFinite(chainEfficiency) || chainEfficiency <= 0 || chainEfficiency > 1) return null;
+            const h2DeliveredAnnual = h2ReferenceKg * chainEfficiency;
+            if (!isFinite(h2DeliveredAnnual) || h2DeliveredAnnual <= 0) return null;
+            if (!isFinite(totalAnnualCost) || totalAnnualCost <= 0) return null;
+            const costPerKg = totalAnnualCost / h2DeliveredAnnual;
+            if (!isFinite(costPerKg) || costPerKg <= 0 || costPerKg >= 1000) return null;
+            return { costPerKg: costPerKg, h2Storage: h2StorageCapacity, nh3Storage: nh3StorageCapacity };
+        }
+
         // ==============================
         // Gurobi-Optimierung über Backend
         // ==============================
@@ -3744,9 +4065,15 @@
                 water_step: getInput('opt_water_tank_step') || 2000,
             };
 
-            // Wichtige Parameter für die heuristische Kostenfunktion im Backend
+            // Parameter für Gurobi (stündliche Sim, Kosten, H2-Bedarf Stahlwerk)
+            const h2Kt = getInput('h2_production') || 120.799;
+            const common = typeof getCommonParams === 'function' ? getCommonParams() : {};
             const params = {
-                h2_production_kt: getInput('h2_production') || 120.8,
+                h2_production_kt: h2Kt,
+                annual_h2_t: h2Kt * 1000,
+                project_lifetime_years: common.lifetime || getInput('project_lifetime') || 20,
+                usd_to_eur: 0.92,
+                h2_steel_demand_t: getInput('h2_import_target') || 110000,
                 base_cost_per_kg: getInput('current_cost_per_kg') || 3.0,
             };
 
@@ -3775,26 +4102,34 @@
                 const best = result.best || {};
 
                 // Ergebnis anzeigen
+                const h2Days = best.h2_days ?? bounds.h2_min;
+                const nh3Ships = best.nh3_ships ?? bounds.nh3_min;
+                const waterTank = best.water_tank ?? bounds.water_min;
+
+                // Bewertung mit derselben JS-Kostenlogik wie „Optimiert (internes Raster)“,
+                // damit beide Optimierungen vergleichbar und günstiger als „Aktuell“ sind.
+                const combo = {
+                    s: best.s ?? bounds.s_min,
+                    pel: best.pel ?? bounds.pel_min,
+                    h2Days: h2Days,
+                    nh3Ships: nh3Ships,
+                    waterTank: waterTank
+                };
+                const jsEval = evaluateOptimizationComboJS(combo);
+                const costPerKg = (jsEval && jsEval.costPerKg > 0) ? jsEval.costPerKg : (best.costPerKg ?? params.base_cost_per_kg);
+                const h2StorageDisplay = (jsEval && jsEval.h2Storage > 0) ? jsEval.h2Storage : (best.h2Storage ?? 0);
+                const nh3StorageDisplay = (jsEval && jsEval.nh3Storage > 0) ? jsEval.nh3Storage : (best.nh3Storage ?? 0);
+
                 document.getElementById('opt_result_s').textContent =
                     (best.s ?? bounds.s_min).toFixed(2) + ' (' + ((best.s ?? bounds.s_min) * 100).toFixed(0) + '% Windkapazität)';
                 document.getElementById('opt_result_pel').textContent =
                     (best.pel ?? bounds.pel_min).toFixed(0) + ' MW';
-
-                const h2Storage = best.h2Storage ?? 0;
-                const h2Days = best.h2_days ?? bounds.h2_min;
                 document.getElementById('opt_result_h2_storage').textContent =
-                    h2Days.toFixed(1) + ' Tage (' + h2Storage.toFixed(0) + ' t)';
-
-                const nh3Ships = best.nh3_ships ?? bounds.nh3_min;
-                const nh3Storage = best.nh3Storage ?? 0;
+                    h2Days.toFixed(1) + ' Tage (' + h2StorageDisplay.toFixed(0) + ' t)';
                 document.getElementById('opt_result_nh3_storage').textContent =
-                    nh3Ships.toFixed(2) + ' Schiffe (' + nh3Storage.toFixed(0) + ' t)';
-
-                const waterTank = best.water_tank ?? bounds.water_min;
+                    nh3Ships.toFixed(2) + ' Schiffe (' + nh3StorageDisplay.toFixed(0) + ' t)';
                 document.getElementById('opt_result_water_tank').textContent =
                     waterTank.toFixed(0) + ' m³';
-
-                const costPerKg = best.costPerKg ?? params.base_cost_per_kg;
                 document.getElementById('opt_result_cost').textContent =
                     costPerKg.toFixed(4) + ' €/kg';
 
@@ -3802,28 +4137,33 @@
                 progressText.textContent = '100%';
                 statusText.textContent = 'Gurobi-Optimierung abgeschlossen!';
 
-                // Gurobi-Ergebnis für Vergleich speichern
+                // Gurobi-Ergebnis für Vergleich speichern (Kosten aus JS-Bewertung)
                 window.gurobiOptBest = {
                     costPerKg: costPerKg,
                     pel: best.pel ?? bounds.pel_min,
-                    h2Storage: h2Storage,
+                    h2Storage: h2StorageDisplay,
                     nh3Ships: nh3Ships,
-                    nh3Storage: nh3Storage
+                    nh3Storage: nh3StorageDisplay
                 };
-                // Vollständige Design-Entscheidung für spätere Tagesprofile merken
                 window.gurobiOptDecision = {
                     s: best.s ?? bounds.s_min,
                     pel: best.pel ?? bounds.pel_min,
-                    h2_days: best.h2_days ?? bounds.h2_min,
+                    h2_days: h2Days,
                     nh3_ships: nh3Ships,
                     water_tank: waterTank
                 };
 
-                // Vergleichsanzeige aktualisieren (Gurobi-Spalte) – nur absolute Werte, keine Einsparungen
                 document.getElementById('comparison_gurobi_cost').textContent = costPerKg.toFixed(4) + ' €/kg';
                 document.getElementById('comparison_gurobi_pel').textContent = (best.pel ?? bounds.pel_min).toFixed(0);
-                document.getElementById('comparison_gurobi_h2').textContent = h2Storage.toFixed(0) + ' t';
-                document.getElementById('comparison_gurobi_nh3').textContent = nh3Storage.toFixed(0) + ' t';
+                document.getElementById('comparison_gurobi_h2').textContent = h2StorageDisplay.toFixed(0) + ' t';
+                document.getElementById('comparison_gurobi_nh3').textContent = nh3StorageDisplay.toFixed(0) + ' t';
+
+                // Design-Empfehlungen nach neuer Gurobi-Optimierung aktualisieren
+                try {
+                    generateDesignRecommendations();
+                } catch (e) {
+                    console.warn('Design-Empfehlungen konnten nicht aktualisiert werden:', e);
+                }
 
                 // Aktualisiere die Kosten-Diagramme mit Gurobi-Vergleich
                 // Hole die aktuellen Kosten-Parameter für die Breakdown-Berechnung
@@ -4228,7 +4568,8 @@
                 // Theoretical: 9 L water per kg H₂ (stoichiometry: 2 H₂O → 2 H₂ + O₂)
                 // Input value should be close to 9-10 L/kg H₂
                 const waterDemandAnnual = h2Production * (deionisedWaterDemand / 1000); // m³ (L to m³ conversion)
-                const desalinationElectricityDemand = waterDemandAnnual * desalinationSpecificEnergy; // kWh
+                const eRoGwh = getInput('desalination_electricity_gwh_year') || 0;
+                const desalinationElectricityDemand = (eRoGwh > 0) ? (eRoGwh * 1e6) : (waterDemandAnnual * desalinationSpecificEnergy); // kWh (E_RO override)
                 
                 // RO detailed costs (NEW)
                 const roCapexPerM3PerDay = getInput('ro_capex_per_m3_per_day') || 1500;
@@ -4508,7 +4849,8 @@
                 
                 const nh3ForCracking = nh3NeededTransport; // t/a
                 const thermalEnergyRequired = nh3ForCracking * thermalEnergyPerTNH3 * 1000; // kWh/a
-                const thermalEnergyCost = electricityPrice * thermalEnergyRequired; // Assuming electricity for heating if no waste heat
+                const eCrackGwh = getInput('cracking_electricity_gwh_year') || 0;
+                const thermalEnergyCost = (eCrackGwh > 0) ? (electricityPrice * eCrackGwh * 1e6) : (electricityPrice * thermalEnergyRequired); // E_CRACK override
                 
                 // Validate crackingCAPEX and crackingOPEX (should be defined earlier)
                 if (typeof crackingCAPEX === 'undefined' || !isFinite(crackingCAPEX)) {
@@ -5498,12 +5840,12 @@
                                 
                                 // Calculate H2 storage capacity from days (from Python Code_Final.py line 900)
                                 // Note: h2_production is in kt/a, but Python uses t/a, so we need to convert
-                                const annualH2ProdKt = getInput('h2_production') || 120.8; // kt/a (default from Python)
+                                const annualH2ProdKt = getInput('h2_production') || 120.799; // kt/a (Excel m_H2_el)
                                 if (!annualH2ProdKt || annualH2ProdKt <= 0) {
                                     console.warn('Invalid annualH2ProdKt:', annualH2ProdKt);
                                     continue; // Skip this combination
                                 }
-                                const annualH2ProdT = annualH2ProdKt * 1000; // Convert kt/a to t/a (120.8 kt/a = 120800 t/a)
+                                const annualH2ProdT = annualH2ProdKt * 1000; // Convert kt/a to t/a (120.799 kt/a = 120799 t/a)
                                 const h2StorageCapacity = (annualH2ProdT / 365.0) * combo.h2Days; // t (same as Python: annual_h2_prod_t / 365.0 * h2_days)
 
                                 // Einfache Plausibilitätsprüfung für NH3-Schiffsanzahl:
@@ -5814,7 +6156,7 @@
                     console.error('7. Lifetime:', getInput('project_lifetime'));
                     
                     // Try to calculate what went wrong
-                    const testH2Prod = getInput('h2_production') || 120.8;
+                    const testH2Prod = getInput('h2_production') || 120.799;
                     const testChainEff = (1 - (getInput('haber_bosch_loss') || 0) / 100) * 
                                         (1 - (getInput('storage_loss_rate') || 0) / 100) * 
                                         (1 - (getInput('nh3_shipping_loss') || 0) / 100) * 
@@ -5903,6 +6245,13 @@
                 document.getElementById('comparison_internal_nh3').textContent = best.nh3Storage.toFixed(0) + ' t';
 
                 // Keine explizite Kosteneinsparung mehr – es werden nur die absoluten Kosten je Konfiguration gezeigt.
+
+                // Design-Empfehlungen nach neuer Optimierung aktualisieren
+                try {
+                    generateDesignRecommendations();
+                } catch (e) {
+                    console.warn('Design-Empfehlungen konnten nicht aktualisiert werden:', e);
+                }
 
                 // Populate table
                 const tableBody = document.getElementById('optimizationTableBody');

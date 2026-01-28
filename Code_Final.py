@@ -8,10 +8,10 @@ from IPython.display import display
 
 # %%
 # -----------------------------
-# Projektannahmen
+# Projektannahmen (Excel Wasserstoffberechnungen (3).xlsx)
 # -----------------------------
 ships_per_year = 12                 # Schiffe/Jahr
-annual_h2_prod_t = 120800       # t H2 pro Jahr unter betrachtung Cracking + Transport
+annual_h2_prod_t = 120799           # t H2/a (m_H2_el), Excel Wasserstoffbilanz
 
 # Startbuffer in Schiffsladungen NH3 0, weil Projektstart
 startup_buffer_ships = 0

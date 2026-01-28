@@ -1,23 +1,18 @@
 """
-Einfacher Backend-Server für die Wasserstoff-Simulation mit (optionaler) Gurobi-Optimierung.
+Gurobi-Backend für die Wasserstoff-Simulation (Version 2).
+
+- Optimierung auf stündlicher Auflösung (simulate_hourly_system mit df2/df2_sim).
+- Alle kostenbeeinflussenden Parameter werden berücksichtigt (Wind, EL, H2/NH3-Speicher,
+  RO, N2, HB, Water-Tank; cost_components_proxy; annual_h2_t, Lebensdauer, USD/EUR).
+- Feste Mindestgrenzen (minimale Zahlen): P_el, H2-Tage, NH3-Schiffe, Water-Tank werden
+  nicht unter feste Minima gesenkt, damit die angeforderte H2-Menge fürs Stahlwerk
+  (z.B. 110 000 t/a) sicher erbracht werden kann. Diese Minima werden aus dem
+  Code_Final-Raster abgeleitet und können durch User-Bounds nicht unterschritten werden.
 
 Nutzung:
-    1. Stelle sicher, dass Python, Flask und (optional) gurobipy installiert sind:
-           pip install flask
-           pip install gurobipy   # nur mit gültiger Gurobi-Lizenz
-
-    2. Starte diesen Server im Projektordner:
-           python gurobi_server.py
-
-    3. Öffne dann im Browser die HTML-Datei (z.B. wasserstoff_simulation.html) und
-       verwende dort den Button "Optimierung (Gurobi)", sobald wir ihn im Frontend ergänzt haben.
-
-Hinweis:
-    - Dieses Backend ist so gebaut, dass es auch ohne Gurobi funktioniert.
-    - Wenn gurobipy verfügbar ist, wird es verwendet, um aus einer Menge von Kandidaten
-      die beste Konfiguration via MILP auszuwählen.
-    - Die detaillierte Kostenfunktion kann bei Bedarf aus Code_Final.py übernommen und
-      im evaluate_configuration()-Placeholder implementiert werden.
+    pip install flask
+    pip install gurobipy   # optional, mit gültiger Lizenz
+    python gurobi_server.py
 """
 
 from __future__ import annotations
@@ -25,14 +20,12 @@ from __future__ import annotations
 import sys
 import io
 
-# Setze UTF-8 Encoding für stdout/stderr (löst Windows cp932 Probleme)
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-if sys.stderr.encoding != 'utf-8':
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+if sys.stdout.encoding != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+if sys.stderr.encoding != "utf-8":
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
-import math
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 
 from flask import Flask, request, jsonify
 
@@ -43,23 +36,38 @@ try:
 except ImportError:
     HAS_GUROBI = False
 
-# Versuche, das detaillierte Python-Modell zu laden (Code_Final.py)
 try:
     import Code_Final as cf
     HAS_CODE_FINAL = True
-except Exception as exc:  # noqa: F841
+except Exception:
     HAS_CODE_FINAL = False
 
 
 app = Flask(__name__)
 
 
+# Feste Mindestgrenzen: nicht unterschreiten, damit H2-Bedarf Stahlwerk erfüllt werden kann.
+# Abgeleitet aus Code_Final-Raster (pel 1000+, h2_days 1+, nh3_ships 1+, water 500+).
+MINIMUM_BOUNDS = {
+    "pel_min": 1000.0,
+    "h2_days_min": 1.0,
+    "nh3_ships_min": 1.0,
+    "water_tank_min": 500.0,
+}
+
+
+def get_hourly_profile(params: Dict[str, Any]):
+    """Stuendliches Windprofil: df2 (1 Jahr) oder df2_sim (Mehrjahr), falls use_multiyear."""
+    if not HAS_CODE_FINAL:
+        return None
+    df2_sim = getattr(cf, "df2_sim", None)
+    if params.get("use_multiyear") and df2_sim is not None:
+        return df2_sim
+    return getattr(cf, "df2", None)
+
+
 @app.after_request
 def add_cors_headers(response):
-    """
-    Erlaube Zugriffe aus lokalen HTML-Dateien (CORS).
-    Achtung: Für lokale Entwicklung ok, nicht für Produktion.
-    """
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
@@ -68,29 +76,30 @@ def add_cors_headers(response):
 
 @app.route("/", methods=["GET"])
 def index() -> Any:
-    """
-    Einfache Info-Seite, damit Aufrufe auf http://127.0.0.1:8000/ keinen 404 mehr liefern.
-    """
     return (
         "<html><body>"
-        "<h2>Gurobi-Server für Wasserstoff-Simulation</h2>"
-        "<p>Der Server läuft. Die Weboberfläche ruft "
-        "<code>/optimize_gurobi</code> per POST auf, wenn du in der "
-        "Simulation auf <strong>&quot;OPTIMIERUNG (GUROBI-SERVER)&quot;</strong> klickst.</p>"
+        "<h2>Gurobi-Server Wasserstoff-Simulation (v2)</h2>"
+        "<p>Stuendliche Aufloesung, alle kostenrelevanten Parameter, feste Mindestgrenzen "
+        "fuer H2-Bedarf Stahlwerk.</p>"
+        "<p>POST <code>/optimize_gurobi</code> wird von der Weboberflaeche aufgerufen.</p>"
         "</body></html>",
         200,
         {"Content-Type": "text/html; charset=utf-8"},
     )
 
 
-def evaluate_configuration(params: Dict[str, Any], decision: Dict[str, float]) -> float:
+def evaluate_configuration(
+    params: Dict[str, Any],
+    decision: Dict[str, float],
+    df_profile=None,
+) -> Tuple[float, bool]:
     """
-    Bewertet eine gegebene Konfiguration und liefert Kosten pro kg H2 (modellabhängig).
+    Bewertet eine Konfiguration: Kosten pro kg H2 (EUR) und Machbarkeit (ships_failed == 0).
 
-    Wenn Code_Final.py erfolgreich importiert wurde (HAS_CODE_FINAL), wird die dort
-    implementierte detaillierte Kostenfunktion verwendet (simulate_hourly_system +
-    cost_components_proxy). Andernfalls fällt die Funktion auf eine vereinfachte
-    heuristische Kostenfunktion zurück.
+    Verwendet stündliche Simulation (simulate_hourly_system) und cost_components_proxy.
+    Alle kostenbeeinflussenden Parameter (Wind, EL, H2/NH3-Speicher, RO, N2, HB, Water-Tank)
+    fließen ueber Code_Final ein. Zusaetzlich: annual_h2_t, project_lifetime_years, usd_to_eur
+    aus params.
     """
     s = float(decision["s"])
     pel = float(decision["pel"])
@@ -98,22 +107,25 @@ def evaluate_configuration(params: Dict[str, Any], decision: Dict[str, float]) -
     nh3_ships = float(decision["nh3_ships"])
     water_tank = float(decision["water_tank"])
 
-    if HAS_CODE_FINAL:
+    if HAS_CODE_FINAL and df_profile is not None:
         try:
-            # Jahres-H2-Produktion aus dem Python-Modell (t/a)
             annual_h2_t = float(
-                getattr(cf, "annual_h2_prod_t", params.get("annual_h2_t", 120800.0))
+                params.get("annual_h2_t")
+                or getattr(cf, "annual_h2_prod_t", 120800.0)
             )
-            years = float(cf.cost_params["general"]["project_lifetime_years"])
+            years = float(
+                params.get("project_lifetime_years")
+                or (cf.cost_params["general"]["project_lifetime_years"] if hasattr(cf, "cost_params") else 20)
+            )
+            usd_to_eur = float(params.get("usd_to_eur", 0.92))
 
-            # H2-Speicher-Design aus Tagen
             h2_storage_t_design = (annual_h2_t / 365.0) * h2_days
 
-            # Wir erlauben beide Elektrolyseur-Technologien (AEL und PEM)
-            # und nehmen für die Bewertung jeweils die günstigere.
             best_cost = float("inf")
+            best_tech = "AEL"
+            any_feasible = False
+
             for tech in ("AEL", "PEM"):
-                # Stündliche Systemsimulation auf Jahresbasis (ohne Zeitreihen-Rückgabe)
                 _, kpi = cf.simulate_hourly_system(
                     s=s,
                     p_el_mw=pel,
@@ -122,21 +134,20 @@ def evaluate_configuration(params: Dict[str, Any], decision: Dict[str, float]) -
                     nh3_storage_ships=nh3_ships,
                     water_tank_m3_max=water_tank,
                     return_timeseries=False,
-                    df_profile=cf.df2,
+                    df_profile=df_profile,
                 )
 
-                # Harte Nebenbedingung: keine Schiffsfehlschläge zulassen
                 ships_failed = int(kpi.get("ships_failed_count", 0))
+                feasible = ships_failed == 0
+
                 if ships_failed > 0:
-                    # sehr große Strafkosten
                     trial_cost = 1e6 + 1e5 * ships_failed
                 else:
+                    any_feasible = True
                     nh3_storage_t = float(kpi.get("nh3_storage_max_t", 0.0))
-
-                    # Komponenten-Kosten wie im Raster (Total_proxy ist Lebenszykluskosten in USD)
                     (
-                        _wind_total,
-                        *_other,
+                        _w,
+                        *_o,
                         total_proxy,
                     ) = cf.cost_components_proxy(
                         s=s,
@@ -146,220 +157,203 @@ def evaluate_configuration(params: Dict[str, Any], decision: Dict[str, float]) -
                         water_tank_m3_design=water_tank,
                         technology=tech,
                     )
-
-                    # Umrechnung auf Kosten pro kg H2 über die Projektlebensdauer
-                    # annual_h2_t: t H2/a -> kg/a
                     annual_h2_kg = annual_h2_t * 1000.0
                     denom = annual_h2_kg * years
                     if denom <= 0:
                         trial_cost = 1e6
                     else:
-                        # Falls im Modell USD verwendet werden: einfache Umrechnung mit USD->EUR-Faktor aus params (optional)
-                        usd_to_eur = float(params.get("usd_to_eur", 0.92))
-                        total_cost_eur = float(total_proxy) * usd_to_eur
-                        trial_cost = total_cost_eur / denom
+                        total_eur = float(total_proxy) * usd_to_eur
+                        trial_cost = total_eur / denom
 
                 if trial_cost < best_cost:
                     best_cost = trial_cost
                     best_tech = tech
-                    print(f"[PROBE] Neue beste Technologie: {tech} mit Kosten {best_cost:.4f} EUR/kg")
-            
-            print(f"[PROBE] Stuendliche Simulation abgeschlossen. Beste Technologie: {best_tech}, Kosten: {best_cost:.4f} EUR/kg")
-            
-            # Untergrenze, um numerische Ausreißer zu vermeiden
-            return float(max(best_cost, 0.1))
+
+            cost = float(max(best_cost, 0.1))
+            return (cost, any_feasible and best_cost < 1e5)
 
         except Exception as exc:
-            # Fallback auf Heuristik, falls etwas im Python-Modell schiefgeht
-            print("WARNUNG: evaluate_configuration() mit Code_Final fehlgeschlagen:", str(exc))
+            print("WARNUNG: evaluate_configuration (Code_Final) fehlgeschlagen:", str(exc))
 
-    # --- Fallback: heuristische Kostenfunktion (wie zuvor) ---
-    a_pel = 0.0008
-    a_h2 = 0.05
-    a_ships = 0.15
-    a_water = 0.00001
-    a_s = -0.5  # höhere s senkt Kosten leicht
-
+    # Fallback: Heuristik
     base = float(params.get("base_cost_per_kg", 3.0))
-
-    cost = (
-        base
-        + a_pel * pel
-        + a_h2 * h2_days
-        + a_ships * nh3_ships
-        + a_water * water_tank
-        + a_s * (s - 1.0)
-    )
-
-    return max(cost, 0.1)
+    cost = base + 0.0008 * pel + 0.05 * h2_days + 0.15 * nh3_ships + 0.00001 * water_tank - 0.5 * (s - 1.0)
+    return (max(cost, 0.1), True)
 
 
-def generate_candidate_grid(bounds: Dict[str, Any]) -> List[Dict[str, float]]:
-    """Erzeuge ein einfaches Gitter von Kandidaten im 5D-Raum."""
+def compute_minimum_bounds(params: Dict[str, Any]) -> Dict[str, float]:
+    """
+    Feste Mindestgrenzen fuer das Suchgitter. Unterschreiten nicht erlaubt, damit
+    die angeforderte H2-Menge fuer das Stahlwerk (z.B. 110 000 t/a) erricht werden kann.
+    """
+    return dict(MINIMUM_BOUNDS)
+
+
+def clamp_grid_bounds(
+    user_bounds: Dict[str, Any],
+    minimum_bounds: Dict[str, float],
+    defaults: Dict[str, float],
+) -> Dict[str, float]:
+    """
+    Grid-Bounds aus User-Input, aber Minima werden auf die festen Mindestgrenzen
+    angehoben (niemals darunter).
+    """
+    def b(key: str, default: float) -> float:
+        return float(user_bounds.get(key, default))
+
+    pel_min = max(b("pel_min", defaults["pel_min"]), minimum_bounds["pel_min"])
+    h2_min = max(b("h2_min", defaults["h2_min"]), minimum_bounds["h2_days_min"])
+    nh3_min = max(b("nh3_min", defaults["nh3_min"]), minimum_bounds["nh3_ships_min"])
+    water_min = max(b("water_min", defaults["water_min"]), minimum_bounds["water_tank_min"])
+
+    return {
+        "s_min": b("s_min", defaults["s_min"]),
+        "s_max": b("s_max", defaults["s_max"]),
+        "s_step": b("s_step", defaults["s_step"]),
+        "pel_min": pel_min,
+        "pel_max": max(b("pel_max", defaults["pel_max"]), pel_min),
+        "pel_step": b("pel_step", defaults["pel_step"]),
+        "h2_min": h2_min,
+        "h2_max": max(b("h2_max", defaults["h2_max"]), h2_min),
+        "h2_step": b("h2_step", defaults["h2_step"]),
+        "nh3_min": nh3_min,
+        "nh3_max": max(b("nh3_max", defaults["nh3_max"]), nh3_min),
+        "nh3_step": b("nh3_step", defaults["nh3_step"]),
+        "water_min": water_min,
+        "water_max": max(b("water_max", defaults["water_max"]), water_min),
+        "water_step": b("water_step", defaults["water_step"]),
+    }
+
+
+def generate_candidate_grid(bounds: Dict[str, float]) -> List[Dict[str, float]]:
+    """Gitter von Kandidaten (s, pel, h2_days, nh3_ships, water_tank)."""
     def frange(start, stop, step):
         x = start
         while x <= stop + 1e-9:
             yield x
             x += step
 
-    s_vals = list(frange(bounds["s_min"], bounds["s_max"], bounds["s_step"]))
-    pel_vals = list(frange(bounds["pel_min"], bounds["pel_max"], bounds["pel_step"]))
-    h2_vals = list(frange(bounds["h2_min"], bounds["h2_max"], bounds["h2_step"]))
-    nh3_vals = list(frange(bounds["nh3_min"], bounds["nh3_max"], bounds["nh3_step"]))
-    water_vals = list(frange(bounds["water_min"], bounds["water_max"], bounds["water_step"]))
-
-    candidates: List[Dict[str, float]] = []
-    for s in s_vals:
-        for pel in pel_vals:
-            for h2 in h2_vals:
-                for nh3 in nh3_vals:
-                    for wat in water_vals:
-                        candidates.append(
-                            {
-                                "s": float(s),
-                                "pel": float(pel),
-                                "h2_days": float(h2),
-                                "nh3_ships": float(nh3),
-                                "water_tank": float(wat),
-                            }
-                        )
-    return candidates
+    out: List[Dict[str, float]] = []
+    for s in frange(bounds["s_min"], bounds["s_max"], bounds["s_step"]):
+        for pel in frange(bounds["pel_min"], bounds["pel_max"], bounds["pel_step"]):
+            for h2 in frange(bounds["h2_min"], bounds["h2_max"], bounds["h2_step"]):
+                for nh3 in frange(bounds["nh3_min"], bounds["nh3_max"], bounds["nh3_step"]):
+                    for wat in frange(bounds["water_min"], bounds["water_max"], bounds["water_step"]):
+                        out.append({
+                            "s": float(s),
+                            "pel": float(pel),
+                            "h2_days": float(h2),
+                            "nh3_ships": float(nh3),
+                            "water_tank": float(wat),
+                        })
+    return out
 
 
 @app.route("/optimize_gurobi", methods=["OPTIONS"])
 def optimize_gurobi_options() -> Any:
-    """
-    CORS-Preflight für Fetch aus dem Browser.
-    """
     return ("", 204)
 
 
 @app.route("/optimize_gurobi", methods=["POST"])
 def optimize_gurobi() -> Any:
     data = request.get_json(force=True) or {}
+    bounds = data.get("bounds", {}) or {}
+    params = data.get("params", {}) or {}
 
     try:
-        bounds = data.get("bounds", {})
-        params = data.get("params", {})
-
-        # Fallback-Bounds, falls etwas fehlt
-        def b(key, default):
-            return float(bounds.get(key, default))
-
-        # Standardbereiche, abgeleitet aus Code_Final.py (Windpark 2.47 GW, 120 800 t H2/a etc.)
-        # - s:   0.8–1.2 (80–120 % der Referenz-Windparkgröße)
-        # - P_el: 200–2000 MW (realistische Bandbreite für 120 800 t/a)
-        # - H2:  1–7 Tage Speicher
-        # - NH3: 3–8 Schiffe (um 1.2 Schiffe Zielniveau bei 12 Schiffen/Jahr abzubilden)
-        # - Water: 0–10000 m³
-        grid_bounds = {
-            "s_min": b("s_min", 0.8),
-            "s_max": b("s_max", 1.2),
-            "s_step": b("s_step", 0.05),
-            "pel_min": b("pel_min", 200.0),
-            "pel_max": b("pel_max", 2000.0),
-            "pel_step": b("pel_step", 100.0),
-            "h2_min": b("h2_min", 1.0),
-            "h2_max": b("h2_max", 7.0),
-            "h2_step": b("h2_step", 1.0),
-            "nh3_min": b("nh3_min", 3.0),
-            "nh3_max": b("nh3_max", 8.0),
-            "nh3_step": b("nh3_step", 1.0),
-            "water_min": b("water_min", 0.0),
-            "water_max": b("water_max", 10000.0),
-            "water_step": b("water_step", 2000.0),
+        defaults = {
+            "s_min": 0.95,
+            "s_max": 1.0,
+            "s_step": 0.01,
+            "pel_min": 1000.0,
+            "pel_max": 2500.0,
+            "pel_step": 100.0,
+            "h2_min": 1.0,
+            "h2_max": 7.0,
+            "h2_step": 1.0,
+            "nh3_min": 3.0,
+            "nh3_max": 8.0,
+            "nh3_step": 1.0,
+            "water_min": 500.0,
+            "water_max": 10000.0,
+            "water_step": 2000.0,
         }
+
+        minimum_bounds = compute_minimum_bounds(params)
+        grid_bounds = clamp_grid_bounds(bounds, minimum_bounds, defaults)
 
         candidates = generate_candidate_grid(grid_bounds)
         if not candidates:
-            return jsonify(success=False, message="Keine Kandidaten im Gitter erzeugt."), 400
+            return jsonify(
+                success=False,
+                message="Keine Kandidaten im Gitter (evtl. Min > Max nach Clamp).",
+            ), 400
 
-        # PROBE: Bestaetigung der stuendlichen Simulation
-        if HAS_CODE_FINAL:
-            print(f"[PROBE] === GUROBI-OPTIMIERUNG MIT STUENDLICHER SIMULATION ===")
-            print(f"[PROBE] Anzahl Kandidaten: {len(candidates)}")
-            print(f"[PROBE] Zeitreihen-Daten: {len(cf.df2)} Stunden ({len(cf.df2)/8760:.2f} Jahre)")
-            print(f"[PROBE] Jeder Kandidat wird mit stuendlicher Aufloesung simuliert...")
-        else:
-            print("[WARNUNG] Code_Final.py nicht verfuegbar - verwende Fallback-Heuristik")
+        df_profile = get_hourly_profile(params) if HAS_CODE_FINAL else None
+        if HAS_CODE_FINAL and df_profile is None:
+            df_profile = cf.df2
 
-        # Kosten aller Kandidaten vorab berechnen (jeder mit stuendlicher Simulation)
-        costs = [evaluate_configuration(params, c) for c in candidates]
-        
-        if HAS_CODE_FINAL:
-            print(f"[PROBE] Alle {len(candidates)} Kandidaten wurden stuendlich simuliert.")
+        n_hours = len(df_profile) if df_profile is not None else 0
+        sim_note = f"Stuendliche Simulation, {n_hours} h" if n_hours else "keine Zeitreihe"
 
-        if HAS_GUROBI:
-            # MILP: wähle genau einen Kandidaten mit minimalen Kosten
-            m = gp.Model("h2_opt_grid")
-            m.Params.OutputFlag = 0
+        costs: List[float] = []
+        feasible_mask: List[bool] = []
+        for c in candidates:
+            cost, feasible = evaluate_configuration(params, c, df_profile)
+            costs.append(cost)
+            feasible_mask.append(feasible)
 
-            y = m.addVars(len(candidates), vtype=GRB.BINARY, name="y")
-            m.addConstr(gp.quicksum(y[i] for i in range(len(candidates))) == 1, "one_choice")
-            m.setObjective(gp.quicksum(costs[i] * y[i] for i in range(len(candidates))), GRB.MINIMIZE)
+        feasible_indices = [i for i in range(len(candidates)) if feasible_mask[i]]
+        if not feasible_indices:
+            h2_demand = params.get("h2_steel_demand_t", 110000.0)
+            return jsonify(
+                success=False,
+                message=(
+                    f"Keine zulaessige Konfiguration. Der H2-Bedarf Stahlwerk "
+                    f"({h2_demand:.0f} t/a) kann mit den gewaehlten Grenzen nicht erfuellt werden "
+                    f"(z.B. Schiffsausfaelle). Minima sind fest: P_el>={minimum_bounds['pel_min']:.0f} MW, "
+                    f"H2-Tage>={minimum_bounds['h2_days_min']:.0f}, NH3-Schiffe>={minimum_bounds['nh3_ships_min']:.1f}, "
+                    f"Water>={minimum_bounds['water_tank_min']:.0f} m3."
+                ),
+            ), 400
 
-            m.optimize()
-
-            if m.Status != GRB.OPTIMAL:
-                best_idx = min(range(len(candidates)), key=lambda i: costs[i])
-            else:
-                best_idx = max(range(len(candidates)), key=lambda i: y[i].X)
-        else:
-            # Fallback ohne Gurobi: einfache Python-Minimierung
-            best_idx = min(range(len(candidates)), key=lambda i: costs[i])
-
+        best_idx = min(feasible_indices, key=lambda i: costs[i])
         best = candidates[best_idx].copy()
         best_cost = float(costs[best_idx])
 
-        # Grobe Ableitung von H2- und NH3-Speicher für Anzeige (analog zur JS-Optimierung)
-        annual_h2_kt = float(params.get("h2_production_kt", 120.8))
+        annual_h2_kt = float(params.get("h2_production_kt", 120.799))
         annual_h2_t = annual_h2_kt * 1000.0
         h2_storage_t = (annual_h2_t / 365.0) * best["h2_days"]
         nh3_per_h2 = 17.0 / 3.0
         annual_nh3_t = annual_h2_t * nh3_per_h2
         nh3_storage_t = annual_nh3_t / 12.0 * best["nh3_ships"]
 
-        best.update(
-            {
-                "costPerKg": best_cost,
-                "h2Storage": h2_storage_t,
-                "nh3Storage": nh3_storage_t,
-            }
-        )
+        best["costPerKg"] = best_cost
+        best["h2Storage"] = h2_storage_t
+        best["nh3Storage"] = nh3_storage_t
 
-        # Bestaetigung: Stuendliche Simulation wurde verwendet
-        simulation_info = ""
-        if HAS_CODE_FINAL:
-            simulation_info = f" (Stuendliche Simulation mit {len(cf.df2)} Stunden Daten)"
-        
         return jsonify(
             success=True,
-            message=f"Gurobi-Optimierung erfolgreich (Grid-basiert){simulation_info}.",
+            message=f"Optimierung erfolgreich (Grid, {sim_note}). Feste Minima eingehalten.",
             best=best,
         )
 
     except Exception as exc:
-        error_msg = str(exc).encode('utf-8', errors='replace').decode('utf-8')
-        return jsonify(success=False, message=f"Fehler in /optimize_gurobi: {error_msg}"), 500
+        err = str(exc).encode("utf-8", errors="replace").decode("utf-8")
+        return jsonify(success=False, message=f"Fehler in /optimize_gurobi: {err}"), 500
 
 
 @app.route("/gurobi_daily_profile", methods=["POST"])
 def gurobi_daily_profile() -> Any:
-    """
-    Liefert Tagesprofile (ein Punkt pro Tag) für die beste Gurobi-Konfiguration.
-
-    Erwartet im Body:
-        {
-          "decision": { "s": ..., "pel": ..., "h2_days": ..., "nh3_ships": ..., "water_tank": ... },
-          "params": { "annual_h2_t": ..., "usd_to_eur": ... (optional) }
-        }
-    """
     if not HAS_CODE_FINAL:
-        return jsonify(success=False, message="Code_Final.py nicht verfügbar – keine Zeitreihen-Auswertung möglich."), 500
+        return jsonify(
+            success=False,
+            message="Code_Final.py nicht verfuegbar – keine Zeitreihen-Auswertung.",
+        ), 500
 
     data = request.get_json(force=True) or {}
-    decision = data.get("decision", {}) or {}
-    params = data.get("params", {}) or {}
+    decision = (data.get("decision") or {}).copy()
+    params = data.get("params") or {}
 
     try:
         s = float(decision.get("s"))
@@ -368,18 +362,16 @@ def gurobi_daily_profile() -> Any:
         nh3_ships = float(decision.get("nh3_ships"))
         water_tank = float(decision.get("water_tank"))
     except Exception:
-        return jsonify(success=False, message="Ungültige oder fehlende decision-Parameter."), 400
+        return jsonify(success=False, message="Ungueltige oder fehlende decision-Parameter."), 400
 
     try:
-        # Für die Tagesprofile reicht eine einzige, detaillierte stündliche Simulation.
-        # Wir verwenden hier AEL als Referenz-Technologie (wie im ursprünglichen Modell).
-        # Wichtig: Es geht um die zeitliche Dynamik, nicht um eine erneute Kostenoptimierung.
         annual_h2_t = float(
-            getattr(cf, "annual_h2_prod_t", params.get("annual_h2_t", 120800.0))
+            params.get("annual_h2_t") or getattr(cf, "annual_h2_prod_t", 120800.0)
         )
         h2_storage_t_design = (annual_h2_t / 365.0) * h2_days
+        df_profile = get_hourly_profile(params) or cf.df2
 
-        out, kpi = cf.simulate_hourly_system(
+        out, _ = cf.simulate_hourly_system(
             s=s,
             p_el_mw=pel,
             technology="AEL",
@@ -387,34 +379,28 @@ def gurobi_daily_profile() -> Any:
             nh3_storage_ships=nh3_ships,
             water_tank_m3_max=water_tank,
             return_timeseries=True,
-            df_profile=cf.df2,
+            df_profile=df_profile,
         )
 
-        # Tagesmittel der wichtigsten Größen bilden
-        df = out.copy()
-        df = df.resample("D").mean()
-
+        df = out.copy().resample("D").mean()
         days = []
         for idx, row in df.iterrows():
-            days.append(
-                {
-                    "date": idx.strftime("%Y-%m-%d"),
-                    "day_index": len(days) + 1,
-                    "h2_t": float(row.get("h2_soc_kg", 0.0) / 1000.0),
-                    "nh3_t": float(row.get("nh3_soc_t", 0.0)),
-                    "water_m3": float(row.get("water_soc_m3", 0.0)),
-                    "p_wind_mw": float(row.get("p_wind_mw", 0.0)),
-                    "p_el_mw": float(row.get("p_el_mw", 0.0)),
-                }
-            )
+            days.append({
+                "date": idx.strftime("%Y-%m-%d"),
+                "day_index": len(days) + 1,
+                "h2_t": float(row.get("h2_soc_kg", 0.0) / 1000.0),
+                "nh3_t": float(row.get("nh3_soc_t", 0.0)),
+                "water_m3": float(row.get("water_soc_m3", 0.0)),
+                "p_wind_mw": float(row.get("p_wind_mw", 0.0)),
+                "p_el_mw": float(row.get("p_el_mw", 0.0)),
+            })
 
         return jsonify(success=True, technology="AEL", days=days)
 
     except Exception as exc:
-        error_msg = str(exc).encode('utf-8', errors='replace').decode('utf-8')
-        return jsonify(success=False, message=f"Fehler in /gurobi_daily_profile: {error_msg}"), 500
+        err = str(exc).encode("utf-8", errors="replace").decode("utf-8")
+        return jsonify(success=False, message=f"Fehler in /gurobi_daily_profile: {err}"), 500
 
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8000, debug=True)
-

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Parameterübersicht – Wasserstoff-Kostenrechner</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 24px;
+      line-height: 1.5;
+    }
+    h1, h2, h3 {
+      color: #1a237e;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+    th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    caption {
+      text-align: left;
+      font-weight: 600;
+      margin: 12px 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Parameterübersicht – Wasserstoff-Kostenrechner</h1>
+  <p>
+    Zusammenfassung der wichtigsten Modellparameter aus
+    <code>Code_Final.py</code>, der Excel-Tabelle und
+    <code>wasserstoff_simulation.html</code>. Diese Datei kann im Browser
+    geöffnet und als PDF exportiert werden (z.&nbsp;B. „Drucken → Als PDF speichern“).
+  </p>
+
+  <h2>A. Globale Annahmen</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Projektlaufzeit</td><td>project_lifetime</td><td>20</td><td>a</td><td>Code_Final / HTML</td></tr>
+    <tr><td>Diskontsatz</td><td>discount_rate</td><td>5</td><td>%</td><td>HTML (eingabbar)</td></tr>
+    <tr><td>Jährliche H₂-Produktion</td><td>annual_h2_prod_t / h2_production</td><td>120&nbsp;799 / 120.799</td><td>t/a / kt/a</td><td>Excel, Code_Final</td></tr>
+    <tr><td>H₂-Bedarf Stahlwerk</td><td>h2_steel_demand</td><td>110</td><td>kt/a</td><td>Excel, HTML</td></tr>
+    <tr><td>H₂-Importziel</td><td>h2_import_target</td><td>110&nbsp;000</td><td>t/a</td><td>Excel, HTML</td></tr>
+    <tr><td>LHV H₂</td><td>lhv_h2</td><td>33&nbsp;300</td><td>kWh/t</td><td>Excel, HTML</td></tr>
+    <tr><td>LHV NH₃</td><td>lhv_nh3</td><td>5&nbsp;200</td><td>kWh/t</td><td>Excel, HTML</td></tr>
+  </table>
+
+  <h2>B. Windpark</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Installierte Windleistung</td><td>p_wind_rated_mw / wind_capacity</td><td>2.47</td><td>GW (2&nbsp;470 MW)</td><td>Code_Final, HTML</td></tr>
+    <tr><td>Wind CAPEX</td><td>capex_eur_per_mw / wind_capex</td><td>2&nbsp;000&nbsp;000 / 4.94·10⁹</td><td>€/MW / €</td><td>Code_Final, HTML</td></tr>
+    <tr><td>Wind OPEX</td><td>opex_eur_per_kw_per_year / wind_opex</td><td>60 / 148.2·10⁶</td><td>€/kW·a / €/a</td><td>Code_Final, HTML</td></tr>
+  </table>
+
+  <h2>C. Elektrolyseur (AEL / PEM)</h2>
+  <table>
+    <caption>Gemeinsame Größen</caption>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Technologie</td><td>electrolyzer_technology</td><td>AEL / PEM</td><td>–</td><td>HTML (Auswahl)</td></tr>
+    <tr><td>H₂-spez. Energie</td><td>spec_kwh_per_kgH2 / electrolysis_specific_energy</td><td>≈ 48–48.52</td><td>kWh/kg H₂</td><td>Code_Final, Excel, HTML</td></tr>
+  </table>
+
+  <table>
+    <caption>AEL-spezifisch</caption>
+    <tr><th>Parameter</th><th>Symbol</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>CAPEX</td><td>capex_usd_per_kw</td><td>464</td><td>$/kW</td><td>Code_Final</td></tr>
+    <tr><td>OPEX</td><td>opex_usd_per_kw_per_year</td><td>40.6</td><td>$/kW·a</td><td>Code_Final</td></tr>
+    <tr><td>Min. Lastanteil</td><td>min_load_frac</td><td>0.20</td><td>–</td><td>Code_Final</td></tr>
+  </table>
+
+  <table>
+    <caption>PEM-spezifisch</caption>
+    <tr><th>Parameter</th><th>Symbol</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>CAPEX</td><td>capex_usd_per_kw</td><td>580</td><td>$/kW</td><td>Code_Final</td></tr>
+    <tr><td>OPEX</td><td>opex_usd_per_kw_per_year</td><td>24.36</td><td>$/kW·a</td><td>Code_Final</td></tr>
+    <tr><td>Min. Lastanteil</td><td>min_load_frac</td><td>0.05</td><td>–</td><td>Code_Final</td></tr>
+  </table>
+
+  <h2>D. Wasser / RO / Water-Tank</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Wasserbedarf</td><td>water_kg_per_kgH2</td><td>10.0</td><td>kg/kg H₂</td><td>Code_Final</td></tr>
+    <tr><td>RO-spez. Energie</td><td>desalination_specific_energy / spec_kwh_per_m3</td><td>4.0</td><td>kWh/m³</td><td>Code_Final, HTML</td></tr>
+    <tr><td>RO-CAPEX</td><td>ro_capex_per_m3_per_day</td><td>1500</td><td>$/m³·d</td><td>Code_Final, HTML</td></tr>
+    <tr><td>RO-OPEX Fraktion</td><td>ro_opex_fraction_per_year</td><td>0</td><td>–</td><td>Code_Final</td></tr>
+    <tr><td>RO-OPEX je m³</td><td>ro_opex_per_m3</td><td>0.3825</td><td>€/m³</td><td>Code_Final, HTML</td></tr>
+    <tr><td>Water-Tank CAPEX</td><td>water_tank_capex_per_m3</td><td>200</td><td>$/m³</td><td>Code_Final</td></tr>
+    <tr><td>Water-Tank OPEX</td><td>opex_fraction_per_year</td><td>0.02</td><td>–</td><td>Code_Final</td></tr>
+    <tr><td>Water-Tank Verluste</td><td>loss_frac_per_hour</td><td>0.001</td><td>1/h</td><td>Code_Final</td></tr>
+  </table>
+
+  <h2>E. ASU (N₂)</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Spec. Energie</td><td>spec_kwh_per_kgN2</td><td>0.33</td><td>kWh/kg N₂</td><td>Code_Final</td></tr>
+    <tr><td>CAPEX</td><td>capex_usd_per_kgN2_per_h</td><td>1700</td><td>$/kg N₂/h</td><td>Code_Final</td></tr>
+    <tr><td>OPEX-Fraktion</td><td>opex_fraction_per_year</td><td>0.03</td><td>–</td><td>Code_Final</td></tr>
+    <tr><td>N₂-Kapazität</td><td>asu_capacity</td><td>1545</td><td>t/d</td><td>Excel, HTML</td></tr>
+  </table>
+
+  <h2>F. Haber-Bosch / NH₃</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol / ID</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>Verfügbarkeit</td><td>availability</td><td>0.94</td><td>–</td><td>Code_Final</td></tr>
+    <tr><td>CAPEX</td><td>capex_usd_per_tNH3_per_year</td><td>491.4</td><td>$/t NH₃/a</td><td>Code_Final</td></tr>
+    <tr><td>OPEX</td><td>opex_usd_per_tNH3</td><td>24.57</td><td>$/t NH₃</td><td>Code_Final</td></tr>
+    <tr><td>Spec. Energie</td><td>spec_kwh_per_kgNH3</td><td>0.55</td><td>kWh/kg NH₃</td><td>Code_Final</td></tr>
+    <tr><td>Jahresproduktion NH₃</td><td>ammonia_annual_demand</td><td>684&nbsp;694</td><td>t/a</td><td>Excel, HTML</td></tr>
+  </table>
+
+  <h2>G. H₂- und NH₃-Speicher (Kosten)</h2>
+  <table>
+    <tr><th>Parameter</th><th>Symbol</th><th>Wert</th><th>Einheit</th><th>Quelle</th></tr>
+    <tr><td>H₂-Storage CAPEX</td><td>capex_usd_per_tH2</td><td>33&nbsp;000</td><td>$/t H₂</td><td>Code_Final</td></tr>
+    <tr><td>H₂-Storage OPEX</td><td>opex_fraction_per_year</td><td>0.03</td><td>–</td><td>Code_Final</td></tr>
+    <tr><td>NH₃-Storage CAPEX</td><td>capex_usd_per_tNH3</td><td>810</td><td>$/t NH₃</td><td>Code_Final</td></tr>
+    <tr><td>NH₃-Storage OPEX</td><td>opex_fraction_per_year</td><td>0.02</td><td>–</td><td>Code_Final</td></tr>
+  </table>
+
+</body>
+</html>
+

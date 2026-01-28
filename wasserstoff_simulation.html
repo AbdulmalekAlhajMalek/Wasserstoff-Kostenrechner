@@ -1239,7 +1239,7 @@
                         <div class="parameter-label">Elektrolyseur-Technologie <span class="parameter-unit">(-)</span></div>
                         <select class="parameter-input" id="electrolyzer_technology">
                             <option value="AEL">AEL (Alkaline Electrolyzer)</option>
-                            <option value="PEM">PEM (Proton Exchange Membrane)</option>
+                            <option value="PEM" selected>PEM (Proton Exchange Membrane)</option>
                         </select>
                     </div>
 
@@ -2234,11 +2234,11 @@
                         <div class="parameter-number"></div>
                         <div class="parameter-label">Optimierungsbereich Elektrolyseur-Leistung <span class="parameter-unit">(MW)</span></div>
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                            <input type="number" class="parameter-input" id="opt_pel_min" value="200" step="50">
+                            <input type="number" class="parameter-input" id="opt_pel_min" value="800" step="50">
                             <div style="text-align: center; color: #666; font-weight: 500;">bis</div>
-                            <input type="number" class="parameter-input" id="opt_pel_max" value="2000" step="100">
+                            <input type="number" class="parameter-input" id="opt_pel_max" value="1500" step="50">
                             <div style="margin-top: 8px; color: #666; font-weight: 500;">Schritt:</div>
-                            <input type="number" class="parameter-input" id="opt_pel_step" value="100" step="10">
+                            <input type="number" class="parameter-input" id="opt_pel_step" value="50" step="10">
                         </div>
                     </div>
 
@@ -4074,6 +4074,7 @@
                 project_lifetime_years: common.lifetime || getInput('project_lifetime') || 20,
                 usd_to_eur: 0.92,
                 h2_steel_demand_t: getInput('h2_import_target') || 110000,
+                use_multiyear: true,
                 base_cost_per_kg: getInput('current_cost_per_kg') || 3.0,
             };
 

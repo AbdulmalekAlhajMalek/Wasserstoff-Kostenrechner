@@ -118,6 +118,9 @@ def evaluate_configuration(
                 or (cf.cost_params["general"]["project_lifetime_years"] if hasattr(cf, "cost_params") else 20)
             )
             usd_to_eur = float(params.get("usd_to_eur", 0.92))
+            # Zusatz: Stack-Lebensdauer und Stack-Kostenanteil (Literaturwerte, anpassbar über params)
+            stack_life_years = float(params.get("electrolyzer_stack_lifetime_years", 10.0))
+            stack_share = float(params.get("electrolyzer_stack_capex_share", 0.4))
 
             h2_storage_t_design = (annual_h2_t / 365.0) * h2_days
 
@@ -162,6 +165,12 @@ def evaluate_configuration(
                     if denom <= 0:
                         trial_cost = 1e6
                     else:
+                        # Stack-Erneuerung approximieren: zusätzliche CAPEX über Lebensdauer
+                        # Stack-Anteil stack_share * el_capex, alle stack_life_years ein Tausch
+                        # el_capex steckt im Rückgabewert an Position el_capex (Index 5 im Tuple)
+                        # -> wir nutzen hier eine grobe Approx.: repl_factor * (stack_share * el_capex)
+                        # Hinweis: Hier haben wir el_capex im *_o-Tuple nicht explizit; daher
+                        # wird die detaillierte Stack-Korrektur in evaluate_configuration_detailed vorgenommen.
                         total_eur = float(total_proxy) * usd_to_eur
                         trial_cost = total_eur / denom
 
@@ -221,6 +230,8 @@ def evaluate_configuration_detailed(
             or (cf.cost_params["general"]["project_lifetime_years"] if hasattr(cf, "cost_params") else 20)
         )
         usd_to_eur = float(params.get("usd_to_eur", 0.92))
+        stack_life_years = float(params.get("electrolyzer_stack_lifetime_years", 10.0))
+        stack_share = float(params.get("electrolyzer_stack_capex_share", 0.4))
 
         h2_storage_t_design = (annual_h2_t / 365.0) * h2_days
 
@@ -331,7 +342,12 @@ def evaluate_configuration_detailed(
             result["costPerKg"] = float(1e6)
             return result
 
-        total_eur = float(total_proxy) * usd_to_eur
+        # Stack-Erneuerung für Gesamt- und Komponenten-Kosten berücksichtigen
+        repl_factor = max(0.0, years / stack_life_years - 1.0)
+        stack_repl_usd = max(0.0, stack_share * float(el_capex) * repl_factor)
+        total_proxy_with_repl = float(total_proxy) + stack_repl_usd
+
+        total_eur = total_proxy_with_repl * usd_to_eur
         cost_per_kg = total_eur / denom
 
         def comp_per_kg(total_usd: float) -> float:
@@ -340,7 +356,8 @@ def evaluate_configuration_detailed(
 
         components = {
             "wind": comp_per_kg(wind_total),
-            "electrolysis": comp_per_kg(el_capex + el_opex_total),
+            # Stack-Replacements schlagen vollständig im Elektrolyse-Block zu Buche
+            "electrolysis": comp_per_kg(el_capex + el_opex_total + stack_repl_usd),
             "haber_bosch": comp_per_kg(hb_capex + hb_opex_total),
             "n2": comp_per_kg(n2_capex + n2_opex_total),
             "ro": comp_per_kg(ro_capex + ro_opex_total),
@@ -349,10 +366,27 @@ def evaluate_configuration_detailed(
             "nh3_storage": comp_per_kg(nh3_capex + nh3_opex_total),
         }
 
+        # Wichtige KPIs aus der stündlichen Simulation für realistische Empfehlungen
+        kpi_out = {}
+        if best_kpi is not None:
+            for key in [
+                "ships_failed_count",
+                "nh3_storage_max_t",
+                "h2_storage_max_t",
+                "water_storage_max_m3",
+                "curtail_GWh_per_sim",
+                "sim_years_est",
+                "ship_out_total_t",
+            ]:
+                if key in best_kpi:
+                    kpi_out[key] = float(best_kpi.get(key))
+
         result["feasible"] = True
         result["costPerKg"] = float(max(cost_per_kg, 0.1))
         result["technology"] = str(best_tech)
         result["componentsPerKg"] = components
+        if kpi_out:
+            result["kpi"] = kpi_out
         return result
 
     except Exception as exc:
@@ -513,6 +547,7 @@ def optimize_gurobi() -> Any:
         details = evaluate_configuration_detailed(params, best, df_profile=df_profile)
         tech = details.get("technology")
         comp_per_kg = details.get("componentsPerKg") or {}
+        kpi = details.get("kpi") or {}
         cost_per_kg_detail = details.get("costPerKg", best_cost)
 
         best["costPerKg"] = float(cost_per_kg_detail)
@@ -522,6 +557,8 @@ def optimize_gurobi() -> Any:
             best["technology"] = tech
         if comp_per_kg:
             best["componentsPerKg"] = comp_per_kg
+        if kpi:
+            best["kpi"] = kpi
 
         return jsonify(
             success=True,

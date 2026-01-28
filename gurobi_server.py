@@ -181,6 +181,187 @@ def evaluate_configuration(
     return (max(cost, 0.1), True)
 
 
+def evaluate_configuration_detailed(
+    params: Dict[str, Any],
+    decision: Dict[str, float],
+    df_profile=None,
+) -> Dict[str, Any]:
+    """
+    Wie evaluate_configuration(), aber mit zusätzlichen Details für Empfehlungen:
+    - gewählte Technologie (AEL/PEM)
+    - Komponenten-Kostenanteile in EUR/kg (Wind, Electrolysis, HB, N2, RO, WaterTank, H2-Storage, NH3-Storage)
+    """
+    result: Dict[str, Any] = {
+        "feasible": False,
+        "costPerKg": None,
+        "technology": None,
+        "componentsPerKg": {},
+    }
+
+    if not HAS_CODE_FINAL or df_profile is None:
+        # Fallback: einfache Heuristik ohne Komponentenzerlegung
+        cost, feasible = evaluate_configuration(params, decision, df_profile=None)
+        result["feasible"] = bool(feasible)
+        result["costPerKg"] = float(cost)
+        return result
+
+    s = float(decision["s"])
+    pel = float(decision["pel"])
+    h2_days = float(decision["h2_days"])
+    nh3_ships = float(decision["nh3_ships"])
+    water_tank = float(decision["water_tank"])
+
+    try:
+        annual_h2_t = float(
+            params.get("annual_h2_t")
+            or getattr(cf, "annual_h2_prod_t", 120800.0)
+        )
+        years = float(
+            params.get("project_lifetime_years")
+            or (cf.cost_params["general"]["project_lifetime_years"] if hasattr(cf, "cost_params") else 20)
+        )
+        usd_to_eur = float(params.get("usd_to_eur", 0.92))
+
+        h2_storage_t_design = (annual_h2_t / 365.0) * h2_days
+
+        best_cost = float("inf")
+        best_tech = None
+        best_kpi = None
+
+        for tech in ("AEL", "PEM"):
+            _, kpi = cf.simulate_hourly_system(
+                s=s,
+                p_el_mw=pel,
+                technology=tech,
+                h2_storage_t_max=h2_storage_t_design,
+                nh3_storage_ships=nh3_ships,
+                water_tank_m3_max=water_tank,
+                return_timeseries=False,
+                df_profile=df_profile,
+            )
+
+            ships_failed = int(kpi.get("ships_failed_count", 0))
+            if ships_failed > 0:
+                trial_cost = 1e6 + 1e5 * ships_failed
+            else:
+                nh3_storage_t = float(kpi.get("nh3_storage_max_t", 0.0))
+                (
+                    wind_total,
+                    wind_capex,
+                    wind_opex,
+                    wind_dapex,
+                    el_capex,
+                    el_opex_total,
+                    hb_capex,
+                    hb_opex_total,
+                    n2_capex,
+                    n2_opex_total,
+                    ro_capex,
+                    ro_opex_total,
+                    water_tank_capex,
+                    water_tank_opex_total,
+                    h2_capex,
+                    h2_opex_total,
+                    nh3_capex,
+                    nh3_opex_total,
+                    total_proxy,
+                ) = cf.cost_components_proxy(
+                    s=s,
+                    p_el_mw=pel,
+                    nh3_storage_t=nh3_storage_t,
+                    h2_storage_t_design=h2_storage_t_design,
+                    water_tank_m3_design=water_tank,
+                    technology=tech,
+                )
+
+                annual_h2_kg = annual_h2_t * 1000.0
+                denom = annual_h2_kg * years
+                if denom <= 0:
+                    trial_cost = 1e6
+                else:
+                    total_eur = float(total_proxy) * usd_to_eur
+                    trial_cost = total_eur / denom
+
+            if trial_cost < best_cost:
+                best_cost = trial_cost
+                best_tech = tech
+                best_kpi = kpi
+
+        if best_tech is None or best_cost >= 1e5:
+            # keine sinnvolle, machbare Lösung gefunden
+            result["feasible"] = False
+            result["costPerKg"] = float(max(best_cost, 0.1))
+            return result
+
+        # Komponentenzerlegung für die beste Technologie erneut berechnen
+        nh3_storage_t = float(best_kpi.get("nh3_storage_max_t", 0.0)) if best_kpi is not None else 0.0
+        (
+            wind_total,
+            wind_capex,
+            wind_opex,
+            wind_dapex,
+            el_capex,
+            el_opex_total,
+            hb_capex,
+            hb_opex_total,
+            n2_capex,
+            n2_opex_total,
+            ro_capex,
+            ro_opex_total,
+            water_tank_capex,
+            water_tank_opex_total,
+            h2_capex,
+            h2_opex_total,
+            nh3_capex,
+            nh3_opex_total,
+            total_proxy,
+        ) = cf.cost_components_proxy(
+            s=s,
+            p_el_mw=pel,
+            nh3_storage_t=nh3_storage_t,
+            h2_storage_t_design=h2_storage_t_design,
+            water_tank_m3_design=water_tank,
+            technology=best_tech,
+        )
+
+        annual_h2_kg = annual_h2_t * 1000.0
+        denom = annual_h2_kg * years
+        if denom <= 0:
+            result["feasible"] = False
+            result["costPerKg"] = float(1e6)
+            return result
+
+        total_eur = float(total_proxy) * usd_to_eur
+        cost_per_kg = total_eur / denom
+
+        def comp_per_kg(total_usd: float) -> float:
+            eur = float(total_usd) * usd_to_eur
+            return float(eur / denom)
+
+        components = {
+            "wind": comp_per_kg(wind_total),
+            "electrolysis": comp_per_kg(el_capex + el_opex_total),
+            "haber_bosch": comp_per_kg(hb_capex + hb_opex_total),
+            "n2": comp_per_kg(n2_capex + n2_opex_total),
+            "ro": comp_per_kg(ro_capex + ro_opex_total),
+            "water_tank": comp_per_kg(water_tank_capex + water_tank_opex_total),
+            "h2_storage": comp_per_kg(h2_capex + h2_opex_total),
+            "nh3_storage": comp_per_kg(nh3_capex + nh3_opex_total),
+        }
+
+        result["feasible"] = True
+        result["costPerKg"] = float(max(cost_per_kg, 0.1))
+        result["technology"] = str(best_tech)
+        result["componentsPerKg"] = components
+        return result
+
+    except Exception as exc:
+        print("WARNUNG: evaluate_configuration_detailed fehlgeschlagen:", str(exc))
+        cost, feasible = evaluate_configuration(params, decision, df_profile=None)
+        result["feasible"] = bool(feasible)
+        result["costPerKg"] = float(cost)
+        return result
+
 def compute_minimum_bounds(params: Dict[str, Any]) -> Dict[str, float]:
     """
     Feste Mindestgrenzen fuer das Suchgitter. Unterschreiten nicht erlaubt, damit
@@ -328,9 +509,19 @@ def optimize_gurobi() -> Any:
         annual_nh3_t = annual_h2_t * nh3_per_h2
         nh3_storage_t = annual_nh3_t / 12.0 * best["nh3_ships"]
 
-        best["costPerKg"] = best_cost
+        # Detaillierte Bewertung der besten Konfiguration (inkl. Technologie & Komponenten)
+        details = evaluate_configuration_detailed(params, best, df_profile=df_profile)
+        tech = details.get("technology")
+        comp_per_kg = details.get("componentsPerKg") or {}
+        cost_per_kg_detail = details.get("costPerKg", best_cost)
+
+        best["costPerKg"] = float(cost_per_kg_detail)
         best["h2Storage"] = h2_storage_t
         best["nh3Storage"] = nh3_storage_t
+        if tech:
+            best["technology"] = tech
+        if comp_per_kg:
+            best["componentsPerKg"] = comp_per_kg
 
         return jsonify(
             success=True,
